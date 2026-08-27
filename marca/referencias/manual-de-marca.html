@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de Marca — Samara Soares</title>
+<style>
+  /* ---------- Fontes ---------- */
+  @font-face {
+    font-family: 'SF Pro Display';
+    src: url('fonts/SFProDisplay-Regular.otf') format('opentype');
+    font-weight: 100 450;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'SF Pro Display';
+    src: url('fonts/SFProDisplay-Medium.otf') format('opentype');
+    font-weight: 451 599;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'SF Pro Display';
+    src: url('fonts/SFProDisplay-Bold.otf') format('opentype');
+    font-weight: 600 900;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Kepler Std';
+    src: url('fonts/KeplerStdDisp.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Kepler Std';
+    src: url('fonts/KeplerStdItDisp.otf') format('opentype');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Kepler Std';
+    src: url('fonts/KeplerStdSemiboldDisp.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Kepler Std';
+    src: url('fonts/KeplerStdSemiboldItDisp.otf') format('opentype');
+    font-weight: 600;
+    font-style: italic;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Kepler Std';
+    src: url('fonts/KeplerStdBoldDisp.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Kepler Std';
+    src: url('fonts/KeplerStdBoldItDisp.otf') format('opentype');
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
+  }
+</style>
+<style>
+  :root {
+    --navy:       #091422;
+    --navy-mid:   #0E1F38;
+    --navy-light: #152A4A;
+    --gold:       #C9A47A;
+    --gold-soft:  #E2C9A4;
+    --white:      #FFFFFF;
+    --off-white:  #FFFCF9;
+    --muted:      rgba(255,252,249,0.45);
+    --muted-strong: rgba(255,252,249,0.70);
+
+    --space-1: 4px;  --space-2: 8px;  --space-3: 16px; --space-4: 24px;
+    --space-5: 32px; --space-6: 48px; --space-7: 64px; --space-8: 96px;
+
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'SF Pro Display', system-ui, -apple-system, sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--off-white);
+    background: var(--navy);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Layout ---------- */
+  .shell { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    position: sticky; top: 0; height: 100vh;
+    background: #050E18;
+    padding: 36px 24px;
+    overflow-y: auto;
+    border-right: 1px solid rgba(201,164,122,0.10);
+    display: flex; flex-direction: column;
+  }
+  .sidebar-brand {
+    display: flex; flex-direction: column; gap: 6px;
+    margin-bottom: 48px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(201,164,122,0.12);
+  }
+  .sidebar-brand .initials {
+    font-family: 'Kepler Std', 'Bodoni Moda', serif;
+    font-style: italic; font-weight: 700;
+    font-size: 32px; color: var(--gold);
+    line-height: 1;
+  }
+  .sidebar-brand .full-name {
+    font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--muted-strong);
+    font-weight: 400;
+  }
+  .sidebar-brand .tagline {
+    font-size: 11px; color: var(--muted); font-weight: 300;
+    margin-top: 2px;
+  }
+  .sidebar nav { flex: 1; }
+  .sidebar nav .section-label {
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(201,164,122,0.45); font-weight: 500;
+    display: block; padding: 28px 10px 10px;
+  }
+  .sidebar nav ul { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+  .sidebar nav ul > li:first-child .section-label { padding-top: 0; }
+  .sidebar nav a {
+    display: block; padding: 7px 10px; border-radius: 6px;
+    color: var(--muted-strong); text-decoration: none; font-size: 13px;
+    font-weight: 300; transition: all 180ms var(--ease-out);
+  }
+  .sidebar nav a:hover { background: rgba(201,164,122,0.08); color: var(--gold); }
+  .sidebar .foot {
+    margin-top: 24px; padding-top: 20px;
+    border-top: 1px solid rgba(201,164,122,0.10);
+    font-size: 11px; color: var(--muted); line-height: 1.6;
+  }
+
+  /* ---------- Main ---------- */
+  main { min-width: 0; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    background: var(--navy);
+    padding: 100px 80px 120px;
+    position: relative; overflow: hidden;
+    border-bottom: 1px solid rgba(201,164,122,0.10);
+  }
+  .hero::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: radial-gradient(700px circle at 75% 30%, rgba(201,164,122,0.07), transparent 60%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: "";
+    position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,164,122,0.3), transparent);
+  }
+  .hero .overline {
+    font-size: 11px; letter-spacing: 0.20em; text-transform: uppercase;
+    color: var(--gold); font-weight: 400; margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Kepler Std', 'Bodoni Moda', serif;
+    font-style: italic; font-weight: 700;
+    font-size: clamp(52px, 7vw, 100px);
+    color: var(--off-white);
+    line-height: 1.0; letter-spacing: -0.01em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero .subtitle {
+    font-size: 16px; font-weight: 300;
+    color: var(--muted-strong); max-width: 480px; line-height: 1.7;
+  }
+  .hero .meta {
+    display: flex; gap: 32px; margin-top: 52px;
+    font-size: 12px; color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+  .hero .meta span { display: flex; flex-direction: column; gap: 3px; }
+  .hero .meta strong { color: var(--off-white); font-weight: 400; font-size: 13px; }
+
+  /* ---------- Sections ---------- */
+  .section {
+    padding: 80px 80px;
+    border-bottom: 1px solid rgba(255,252,249,0.06);
+  }
+  .section:last-child { border-bottom: none; }
+  .section-alt { background: #050E18; }
+
+  .section-header { margin-bottom: 52px; }
+  .section-header .section-num {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--gold); font-weight: 400; margin-bottom: 12px; display: block;
+  }
+  .section-header h2 {
+    font-size: 32px; font-weight: 300; color: var(--off-white);
+    letter-spacing: -0.01em; line-height: 1.2;
+  }
+  .section-header p {
+    margin-top: 12px; font-size: 15px; color: var(--muted-strong);
+    max-width: 560px; line-height: 1.7; font-weight: 300;
+  }
+
+  /* ---------- Paleta ---------- */
+  .palette-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+  }
+  .swatch {
+    border-radius: 12px; overflow: hidden;
+    border: 1px solid rgba(255,252,249,0.07);
+  }
+  .swatch-color { height: 100px; }
+  .swatch-info { padding: 16px; background: rgba(255,252,249,0.03); }
+  .swatch-name { font-size: 13px; font-weight: 500; color: var(--off-white); margin-bottom: 4px; }
+  .swatch-hex {
+    font-size: 12px; color: var(--muted-strong); letter-spacing: 0.06em;
+    font-weight: 400; font-variant-numeric: tabular-nums;
+  }
+  .swatch-role { font-size: 11px; color: var(--muted); margin-top: 6px; font-weight: 300; }
+
+  /* ---------- Tipografia ---------- */
+  .type-samples { display: flex; flex-direction: column; gap: 40px; }
+  .type-sample {
+    padding: 36px 40px;
+    background: rgba(255,252,249,0.02);
+    border: 1px solid rgba(255,252,249,0.06);
+    border-radius: 12px;
+    display: grid; grid-template-columns: 1fr 220px;
+    gap: 32px; align-items: center;
+  }
+  .type-preview { overflow: hidden; }
+  .type-meta { border-left: 1px solid rgba(255,252,249,0.08); padding-left: 32px; }
+  .type-meta .label { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 400; margin-bottom: 16px; display: block; }
+  .type-meta table { width: 100%; border-collapse: collapse; }
+  .type-meta td { padding: 5px 0; font-size: 12px; vertical-align: top; }
+  .type-meta td:first-child { color: var(--muted); width: 80px; font-weight: 300; }
+  .type-meta td:last-child { color: var(--off-white); font-weight: 400; }
+
+  .display-sample {
+    font-family: 'Kepler Std', 'Bodoni Moda', serif;
+    font-style: italic; font-weight: 700;
+    font-size: clamp(42px, 6vw, 72px);
+    color: var(--off-white); line-height: 1.05;
+    text-transform: uppercase;
+  }
+  .display-sample span { color: var(--gold); }
+  .body-sample { font-size: 22px; font-weight: 300; color: var(--off-white); line-height: 1.5; }
+  .body-sample strong { font-weight: 600; }
+  .label-sample {
+    font-size: 12px; letter-spacing: 0.20em;
+    text-transform: uppercase; color: var(--muted-strong); font-weight: 300;
+  }
+  .quote-sample {
+    font-size: 20px; font-weight: 300; color: var(--off-white);
+    text-transform: uppercase; text-align: center; line-height: 1.4;
+  }
+  .quote-sample strong { font-weight: 600; color: var(--gold); }
+
+  /* ---------- Escala ---------- */
+  .scale-grid { display: flex; flex-direction: column; gap: 12px; }
+  .scale-row {
+    display: flex; align-items: baseline; gap: 24px;
+    padding: 16px 0; border-bottom: 1px solid rgba(255,252,249,0.05);
+  }
+  .scale-row:last-child { border-bottom: none; }
+  .scale-label { font-size: 11px; color: var(--muted); width: 80px; flex-shrink: 0; font-weight: 400; letter-spacing: 0.06em; }
+  .scale-preview { flex: 1; color: var(--off-white); }
+
+  /* ---------- Layout Slides ---------- */
+  .slides-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .slide-card {
+    border-radius: 12px; overflow: hidden;
+    border: 1px solid rgba(255,252,249,0.08);
+  }
+  .slide-preview {
+    aspect-ratio: 4/5;
+    position: relative; overflow: hidden;
+  }
+  .slide-meta { padding: 20px 24px; background: rgba(255,252,249,0.02); }
+  .slide-title { font-size: 13px; font-weight: 500; color: var(--off-white); margin-bottom: 4px; }
+  .slide-desc { font-size: 12px; color: var(--muted-strong); font-weight: 300; line-height: 1.5; }
+
+  /* Split slide mockup */
+  .mock-split { width: 100%; height: 100%; display: flex; flex-direction: column; }
+  .mock-panel {
+    flex: 1; position: relative; display: flex;
+    flex-direction: column; justify-content: flex-end;
+    padding: 20px;
+  }
+  .mock-panel-top { background: var(--navy-mid); }
+  .mock-panel-bot { background: var(--navy); }
+  .mock-panel::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.48) 45%, transparent 72%);
+    pointer-events: none;
+  }
+  .mock-header {
+    position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 6px; z-index: 2;
+    white-space: nowrap;
+  }
+  .mock-avatar {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--gold); flex-shrink: 0;
+  }
+  .mock-handle { font-size: 9px; color: var(--off-white); font-weight: 300; letter-spacing: 0.04em; }
+  .mock-text {
+    position: relative; z-index: 2;
+    font-size: 7px; text-align: center; width: 100%;
+    text-transform: uppercase; color: var(--off-white);
+    font-weight: 300; letter-spacing: 0.08em; line-height: 1.6;
+  }
+  .mock-text em {
+    display: block;
+    font-family: 'Kepler Std', 'Bodoni Moda', serif;
+    font-style: italic; font-weight: 700;
+    font-size: 11px; letter-spacing: 0;
+    color: var(--gold); text-transform: uppercase; margin-top: 2px;
+  }
+
+  /* Full slide mockup */
+  .mock-full {
+    width: 100%; height: 100%;
+    background: var(--navy-mid);
+    position: relative; display: flex;
+    align-items: flex-end; padding: 24px;
+  }
+  .mock-full::after {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.50) 40%, rgba(0,0,0,0.10) 65%, transparent 100%),
+      linear-gradient(to right, rgba(0,0,0,0.60) 0%, transparent 45%),
+      linear-gradient(to left, rgba(0,0,0,0.40) 0%, transparent 40%),
+      linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 35%);
+    pointer-events: none;
+  }
+  .mock-full-text {
+    position: relative; z-index: 2;
+    font-size: 9px; color: var(--off-white); font-weight: 300;
+    text-align: left; line-height: 1.7;
+  }
+  .mock-full-text strong { font-weight: 600; }
+
+  /* CTA slide mockup */
+  .mock-cta {
+    width: 100%; height: 100%;
+    background: linear-gradient(160deg, #0E1F38 0%, #091422 60%, #050E18 100%);
+    position: relative; display: flex;
+    flex-direction: column; align-items: center; justify-content: center;
+    padding: 32px;
+  }
+  .mock-cta::before {
+    content: ""; position: absolute; inset: 0;
+    background: rgba(0,0,0,0.20); pointer-events: none;
+  }
+  .mock-cta-isologo {
+    position: absolute; top: 20%;
+    font-size: 11px; color: var(--gold-soft);
+    letter-spacing: 0.08em; text-align: center; z-index: 2;
+    font-weight: 300;
+  }
+  .mock-cta-pre {
+    font-size: 11px; color: var(--off-white); font-weight: 300;
+    position: relative; z-index: 2; text-align: center;
+  }
+  .mock-cta-display {
+    font-family: 'Kepler Std', 'Bodoni Moda', serif; font-style: italic; font-weight: 700;
+    font-size: 22px; color: var(--off-white);
+    position: relative; z-index: 2; text-align: center; line-height: 1.0;
+    text-transform: uppercase;
+  }
+  .mock-cta-sub {
+    font-size: 8px; color: var(--muted-strong); font-weight: 300;
+    position: relative; z-index: 2; text-align: center; margin-top: 6px;
+    letter-spacing: 0.06em;
+  }
+  .mock-cta-sub strong { font-weight: 700; color: var(--gold-soft); }
+  .mock-cta-name {
+    position: absolute; bottom: 18%;
+    font-size: 8px; letter-spacing: 0.30em; text-transform: uppercase;
+    color: var(--muted-strong); font-weight: 300; z-index: 2;
+  }
+
+  /* ---------- Vinheta ---------- */
+  .vinheta-demo {
+    border-radius: 12px; overflow: hidden;
+    border: 1px solid rgba(255,252,249,0.08);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  }
+  .vinheta-panel {
+    aspect-ratio: 1;
+    position: relative;
+    display: flex; align-items: flex-end; padding: 20px;
+  }
+  .vinheta-label-top {
+    position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+    font-size: 10px; color: var(--gold); letter-spacing: 0.12em;
+    text-transform: uppercase; font-weight: 400; z-index: 3;
+    white-space: nowrap;
+  }
+  .vinheta-split-bg {
+    background: linear-gradient(135deg, #152A4A 0%, #0E1F38 100%);
+  }
+  .vinheta-split-bg::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.48) 45%, transparent 72%);
+  }
+  .vinheta-full-bg {
+    background: linear-gradient(135deg, #0E1F38 0%, #091422 100%);
+    border-left: 1px solid rgba(255,252,249,0.06);
+  }
+  .vinheta-full-bg::after {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to top,    rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.50) 40%, rgba(0,0,0,0.10) 65%, transparent 100%),
+      linear-gradient(to right,  rgba(0,0,0,0.60) 0%, transparent 45%),
+      linear-gradient(to left,   rgba(0,0,0,0.40) 0%, transparent 40%),
+      linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 35%);
+  }
+  .vinheta-text {
+    position: relative; z-index: 2;
+    font-size: 12px; font-weight: 300; color: var(--off-white);
+    text-align: center; width: 100%; text-transform: uppercase;
+    letter-spacing: 0.06em; line-height: 1.6;
+  }
+
+  /* ---------- Código ---------- */
+  .code-block {
+    background: #050E18;
+    border: 1px solid rgba(255,252,249,0.07);
+    border-radius: 10px; padding: 24px 28px;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 13px; line-height: 1.7;
+    color: var(--off-white);
+    overflow-x: auto;
+  }
+  .code-block .kw { color: var(--gold); }
+  .code-block .val { color: var(--gold-soft); }
+  .code-block .cm { color: var(--muted); font-style: italic; }
+
+  /* ---------- Dos Donts ---------- */
+  .rules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .rules-col { }
+  .rules-col-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 24px; padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,252,249,0.08);
+  }
+  .rules-col-header .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+  .dot-green { background: #6FC878; }
+  .dot-red { background: #F34D4D; }
+  .rules-col-header h3 { font-size: 14px; font-weight: 500; color: var(--off-white); }
+  .rules-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .rules-list li {
+    display: flex; gap: 12px;
+    font-size: 14px; color: var(--muted-strong);
+    font-weight: 300; line-height: 1.5;
+  }
+  .rules-list li::before {
+    content: "—"; color: var(--muted); flex-shrink: 0;
+    font-weight: 300;
+  }
+
+  /* ---------- Voz ---------- */
+  .pillars-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .pillar-card {
+    padding: 28px 24px;
+    background: rgba(255,252,249,0.02);
+    border: 1px solid rgba(255,252,249,0.07);
+    border-radius: 12px;
+    text-align: center;
+  }
+  .pillar-card .pillar-icon { font-size: 24px; margin-bottom: 12px; }
+  .pillar-card h4 { font-size: 14px; font-weight: 500; color: var(--off-white); margin-bottom: 6px; }
+  .pillar-card p { font-size: 12px; color: var(--muted-strong); font-weight: 300; line-height: 1.5; }
+
+  .voice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 32px; }
+  .voice-card {
+    padding: 28px 32px;
+    background: rgba(255,252,249,0.02);
+    border: 1px solid rgba(255,252,249,0.07);
+    border-radius: 12px;
+  }
+  .voice-card h4 { font-size: 13px; font-weight: 500; color: var(--gold); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px; }
+  .voice-card ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .voice-card ul li { font-size: 14px; color: var(--muted-strong); font-weight: 300; line-height: 1.5; padding-left: 12px; position: relative; }
+  .voice-card ul li::before { content: "·"; position: absolute; left: 0; color: var(--gold); }
+
+  /* ---------- Responsivo ---------- */
+  @media (max-width: 960px) {
+    .shell { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .hero, .section { padding: 60px 32px; }
+    .type-sample { grid-template-columns: 1fr; }
+    .type-meta { border-left: none; padding-left: 0; border-top: 1px solid rgba(255,252,249,0.08); padding-top: 20px; }
+    .slides-grid, .rules-grid, .pillars-grid, .voice-grid { grid-template-columns: 1fr; }
+    .vinheta-demo { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/isologo.svg" alt="Samara Soares" style="height:36px;width:auto;margin-bottom:4px;filter:brightness(0) invert(78%) sepia(20%) saturate(580%) hue-rotate(355deg) brightness(95%) contrast(85%);">
+      <span class="full-name">Samara Soares</span>
+      <span class="tagline">Manual de Identidade Visual</span>
+    </div>
+    <nav>
+      <ul>
+        <li><span class="section-label">Identidade Visual</span></li>
+        <li><a href="#cores">Paleta de Cores</a></li>
+        <li><a href="#tipografia">Tipografia</a></li>
+        <li><a href="#logo">Logo & Isologo</a></li>
+      </ul>
+    </nav>
+    <div class="foot">
+      Beza Media · 2026<br>
+      @samaraesoares
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main>
+
+    <!-- Hero -->
+    <section class="hero">
+      <p class="overline">Manual de Identidade Visual</p>
+      <h1>SAMARA<br><span>SOARES</span></h1>
+      <p class="subtitle">
+        Estrategista de vendas, liderança e legado.
+        Uma marca que confronta a mediocridade e ativa propósitos.
+      </p>
+      <div class="meta">
+        <span><strong>@samaraesoares</strong>Instagram</span>
+        <span><strong>Negócios · Liderança · Fé</strong>Pilares</span>
+        <span><strong>EUA</strong>Localização</span>
+        <span><strong>Beza Media · 2026</strong>Produção</span>
+      </div>
+    </section>
+
+    <!-- Paleta -->
+    <section class="section" id="cores">
+      <div class="section-header">
+        <span class="section-num">01 — Paleta de Cores</span>
+        <h2>Escuridão com profundidade</h2>
+        <p>Tons de azul marinho com o dourado como único acento. A paleta comunica autoridade, sofisticação e propósito.</p>
+      </div>
+      <div class="palette-grid">
+        <div class="swatch">
+          <div class="swatch-color" style="background:#091422;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Navy</div>
+            <div class="swatch-hex">#091422</div>
+            <div class="swatch-role">Fundo principal</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#0E1F38;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Navy Médio</div>
+            <div class="swatch-hex">#0E1F38</div>
+            <div class="swatch-role">Fundo secundário, painéis</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#152A4A;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Navy Light</div>
+            <div class="swatch-hex">#152A4A</div>
+            <div class="swatch-role">Hover states, variações</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#C9A47A;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Gold</div>
+            <div class="swatch-hex">#C9A47A</div>
+            <div class="swatch-role">Acento, destaques, CTA</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#E2C9A4;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Gold Soft</div>
+            <div class="swatch-hex">#E2C9A4</div>
+            <div class="swatch-role">Textos sobre navy escuro</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#FFFFFF; border: 1px solid rgba(255,255,255,0.1);"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Branco</div>
+            <div class="swatch-hex">#FFFFFF</div>
+            <div class="swatch-role">Textos principais</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#FFFCF9; border: 1px solid rgba(255,255,255,0.1);"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Off-white</div>
+            <div class="swatch-hex">#FFFCF9</div>
+            <div class="swatch-role">Bege quente, textos suaves</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tipografia -->
+    <section class="section section-alt" id="tipografia">
+      <div class="section-header">
+        <span class="section-num">02 — Tipografia</span>
+        <h2>Kepler Std + SF Pro Display</h2>
+        <p>SF Pro Display para leitura — neutra, técnica, com clareza. Kepler Std Italic Bold (Display) para as palavras que precisam ser lembradas.</p>
+      </div>
+
+      <!-- Regra crítica: Kepler sempre em CAPS -->
+      <div style="margin-bottom:40px;padding:24px 28px;background:linear-gradient(135deg,rgba(201,164,122,0.10),rgba(201,164,122,0.02));border:1px solid rgba(201,164,122,0.30);border-left:3px solid var(--gold);border-radius:10px;display:flex;gap:20px;align-items:center;">
+        <div style="font-family:'Kepler Std',serif;font-style:italic;font-weight:700;font-size:42px;color:var(--gold);line-height:1;text-transform:uppercase;flex-shrink:0;">Aa</div>
+        <div>
+          <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:8px;">Regra inegociável</div>
+          <div style="font-size:15px;color:var(--off-white);font-weight:400;line-height:1.55;">Kepler Std é <strong style="color:var(--gold);font-weight:600;">sempre em UPPERCASE</strong>. Nunca aparece em caixa baixa ou title case. A textura serifada italic + caps é a assinatura visual da marca.</div>
+        </div>
+      </div>
+
+      <div class="type-samples">
+
+        <!-- Display -->
+        <div class="type-sample">
+          <div class="type-preview">
+            <div class="display-sample">
+              Você não precisa<br>ser técnica.<br>Seja <span>estratégica.</span>
+            </div>
+            <div style="font-size:11px;color:var(--gold);font-weight:400;letter-spacing:0.14em;text-transform:uppercase;margin-top:14px;">↑ renderizado sempre em UPPERCASE via CSS</div>
+          </div>
+          <div class="type-meta">
+            <span class="label">Display / Impacto</span>
+            <table>
+              <tr><td>Fonte</td><td>Kepler Std (Display)</td></tr>
+              <tr><td>Estilo</td><td>Italic Bold</td></tr>
+              <tr><td>Peso</td><td>700</td></tr>
+              <tr><td>Caixa</td><td style="color:var(--gold);">UPPERCASE — sempre</td></tr>
+              <tr><td>Uso</td><td>Palavras de impacto, CTA display, títulos heroicos</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- Corpo -->
+        <div class="type-sample">
+          <div class="type-preview">
+            <div class="body-sample">
+              O que eu li para<br>vender <strong>10 milhões<br>de dólares.</strong>
+            </div>
+          </div>
+          <div class="type-meta">
+            <span class="label">Corpo / Narrativo</span>
+            <table>
+              <tr><td>Fonte</td><td>SF Pro Display</td></tr>
+              <tr><td>Peso</td><td>Light 300</td></tr>
+              <tr><td>Destaque</td><td>SemiBold 600</td></tr>
+              <tr><td>Uso</td><td>Full slides, texto narrativo, legendas</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- Quote/Response (carrossel) -->
+        <div class="type-sample">
+          <div class="type-preview">
+            <div class="quote-sample">
+              Não tenho talento<br>para vender<br><br>
+              <strong>TALENTO É TREINO.</strong><br>
+              <span style="font-size:14px;color:var(--muted-strong);font-weight:300;text-transform:none;display:block;margin-top:12px;">— quotes do carrossel split</span>
+            </div>
+          </div>
+          <div class="type-meta">
+            <span class="label">Quote / Response</span>
+            <table>
+              <tr><td>Fonte</td><td>SF Pro Display</td></tr>
+              <tr><td>Peso</td><td>Light 300</td></tr>
+              <tr><td>Destaque</td><td>SemiBold 600</td></tr>
+              <tr><td>Case</td><td>UPPERCASE</td></tr>
+              <tr><td>Alinhamento</td><td>Centro</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- Label / Assinatura -->
+        <div class="type-sample">
+          <div class="type-preview">
+            <div class="label-sample">SAMARA SOARES &nbsp;·&nbsp; @samaraesoares</div>
+          </div>
+          <div class="type-meta">
+            <span class="label">Label / Assinatura</span>
+            <table>
+              <tr><td>Fonte</td><td>SF Pro Display</td></tr>
+              <tr><td>Peso</td><td>Light 300</td></tr>
+              <tr><td>Tracking</td><td>0.20em – 0.35em</td></tr>
+              <tr><td>Uso</td><td>Rodapé CTA, handle, nome no header</td></tr>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Escala de tamanhos -->
+      <div style="margin-top:48px;">
+        <h3 style="font-size:14px;font-weight:500;color:var(--gold);letter-spacing:0.10em;text-transform:uppercase;margin-bottom:28px;">Escala nos slides (1080px)</h3>
+        <div class="scale-grid">
+          <div class="scale-row">
+            <span class="scale-label">130px</span>
+            <div class="scale-preview" style="font-family:'Kepler Std','Bodoni Moda',serif;font-style:italic;font-weight:700;font-size:clamp(28px,4vw,60px);">IDENTIFICOU</div>
+          </div>
+          <div class="scale-row">
+            <span class="scale-label">72px</span>
+            <div class="scale-preview" style="font-size:clamp(20px,3vw,44px);font-weight:300;">Se você se</div>
+          </div>
+          <div class="scale-row">
+            <span class="scale-label">54px</span>
+            <div class="scale-preview" style="font-size:clamp(16px,2.5vw,36px);font-weight:300;">Texto narrativo no full slide</div>
+          </div>
+          <div class="scale-row">
+            <span class="scale-label">44px</span>
+            <div class="scale-preview" style="font-size:clamp(14px,2vw,30px);font-weight:700;">DESTRAVAR</div>
+          </div>
+          <div class="scale-row">
+            <span class="scale-label">38px</span>
+            <div class="scale-preview" style="font-size:clamp(12px,1.8vw,26px);font-weight:300;text-transform:uppercase;letter-spacing:0.04em;">QUOTE / RESPONSE</div>
+          </div>
+          <div class="scale-row">
+            <span class="scale-label">17px</span>
+            <div class="scale-preview" style="font-size:13px;font-weight:300;letter-spacing:0.30em;text-transform:uppercase;">SAMARA SOARES</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Logo -->
+    <section class="section" id="logo">
+      <div class="section-header">
+        <span class="section-num">03 — Logo & Isologo</span>
+        <h2>Assinatura visual</h2>
+        <p>Lockup completo, isologo isolado e wordmark. O isologo é o único elemento de marca nos slides — nunca duplicar com o wordmark. Arquivos SVG vetoriais.</p>
+      </div>
+      <!-- Lockup completo -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
+        <div style="padding:80px 40px;background:var(--navy-mid);border-radius:12px;border:1px solid rgba(255,252,249,0.08);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;min-height:280px;">
+          <div style="font-size:11px;color:var(--muted);letter-spacing:0.14em;text-transform:uppercase;font-weight:400;">Lockup · Sobre fundo escuro</div>
+          <img src="assets/logo-lockup.svg" alt="Samara Soares" style="width:60%;max-width:340px;height:auto;">
+          <div style="font-size:11px;color:var(--muted);margin-top:8px;">Arquivo: <code style="background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:4px;font-size:11px;">assets/logo-lockup.svg</code></div>
+        </div>
+        <div style="padding:80px 40px;background:var(--off-white);border-radius:12px;border:1px solid rgba(255,252,249,0.08);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;min-height:280px;">
+          <div style="font-size:11px;color:rgba(9,20,34,0.55);letter-spacing:0.14em;text-transform:uppercase;font-weight:400;">Lockup · Sobre fundo claro</div>
+          <img src="assets/logo-lockup.svg" alt="Samara Soares" style="width:60%;max-width:340px;height:auto;filter:brightness(0) saturate(100%) invert(7%) sepia(28%) saturate(2287%) hue-rotate(186deg) brightness(96%) contrast(96%);">
+          <div style="font-size:11px;color:rgba(9,20,34,0.55);margin-top:8px;">Versão invertida (navy #091422)</div>
+        </div>
+      </div>
+
+      <!-- Isologo + Wordmark separados -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+        <div style="padding:60px 40px;background:var(--navy-mid);border-radius:12px;border:1px solid rgba(255,252,249,0.08);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;min-height:200px;">
+          <div style="font-size:11px;color:var(--muted);letter-spacing:0.14em;text-transform:uppercase;font-weight:400;">Isologo (símbolo)</div>
+          <img src="assets/isologo.svg" alt="Isologo Samara Soares" style="height:90px;width:auto;">
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Arquivo: <code style="background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:4px;font-size:11px;">assets/isologo.svg</code></div>
+        </div>
+        <div style="padding:60px 40px;background:var(--navy-mid);border-radius:12px;border:1px solid rgba(255,252,249,0.08);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;min-height:200px;">
+          <div style="font-size:11px;color:var(--muted);letter-spacing:0.14em;text-transform:uppercase;font-weight:400;">Wordmark (assinatura)</div>
+          <img src="assets/wordmark.svg" alt="SAMARA SOARES" style="width:80%;max-width:380px;height:auto;">
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Arquivo: <code style="background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:4px;font-size:11px;">assets/wordmark.svg</code></div>
+        </div>
+      </div>
+      <div style="margin-top:20px;padding:20px 24px;background:rgba(201,164,122,0.06);border:1px solid rgba(201,164,122,0.15);border-radius:10px;font-size:13px;color:var(--muted-strong);font-weight:300;line-height:1.6;">
+        <strong style="color:var(--gold);font-weight:500;">Posicionamento nos slides:</strong> &nbsp;Isologo aparece apenas no <strong style="font-weight:500;color:var(--off-white);">slide CTA (8)</strong>, posição <code style="background:rgba(255,255,255,0.06);padding:1px 6px;border-radius:4px;font-size:12px;">top: 220px, centralizado</code>. Nos demais slides, sem marca — só avatar circular + @handle no header.
+      </div>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   PADRÃO INSTAGRAM — SAMARA SOARES / ALL IN
+   Especificação: marca/instagram.md (aprovado em 2026-08-26)
+   ============================================================ */
+
+@font-face {
+  font-family: 'Kepler Std';
+  src: url('../../../marca/fontes/KeplerStdDisp.otf') format('opentype');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Kepler Std';
+  src: url('../../../marca/fontes/KeplerStdSemiboldDisp.otf') format('opentype');
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Kepler Std';
+  src: url('../../../marca/fontes/KeplerStdBoldItDisp.otf') format('opentype');
+  font-weight: 700; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('../../../marca/fontes/SFProDisplay-Regular.otf') format('opentype');
+  font-weight: 100 450; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('../../../marca/fontes/SFProDisplay-Bold.otf') format('opentype');
+  font-weight: 600 900; font-style: normal; font-display: swap;
+}
+
+:root {
+  --navy:       #091422;
+  --navy-mid:   #0E1F38;
+  --gold:       #C9A47A;
+  --gold-soft:  #E2C9A4;
+  --white:      #FFFFFF;
+  --off-white:  #FFFCF9;
+  --preta:      #0D0D0D;
+
+  /* Kepler primeiro; Bodoni Moda é o fallback enquanto as fontes não estão instaladas */
+  --serif: 'Kepler Std', 'Bodoni Moda', Georgia, serif;
+  --sans:  'SF Pro Display', 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--navy); }
+
+.peca {
+  position: relative;
+  overflow: hidden;
+  background: var(--navy);
+}
+.peca.carrossel { width: 1080px; height: 1350px; }
+.peca.split     { width: 1080px; height: 1080px; }
+.peca.story     { width: 1080px; height: 1920px; background: var(--off-white); }
+
+.foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.sem-foto { position: absolute; inset: 0; background: var(--navy); }
+
+/* ---------- Contador de slides ---------- */
+.contador {
+  position: absolute; top: 24px; right: 24px;
+  font-family: var(--sans); font-weight: 400; font-size: 28px;
+  color: var(--off-white); letter-spacing: 0.02em;
+  text-shadow: 0 2px 12px rgba(9,20,34,0.45);
+  z-index: 5;
+}
+
+/* ---------- Rodapé — obrigatório em toda lâmina ---------- */
+.rodape {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 88px; background: var(--navy);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--sans); font-weight: 300; font-size: 26px;
+  color: var(--off-white); letter-spacing: 0.06em;
+  z-index: 5;
+}
+.rodape .sep { color: var(--gold); margin: 0 18px; }
+
+/* ============================================================
+   SISTEMA 1 — CARROSSEL  (1080×1350)
+   Foto sem escurecimento + caixas sólidas empilhadas
+   ============================================================ */
+.caixas {
+  position: absolute; left: 0; right: 0; bottom: 148px;
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+  padding: 0 80px;
+  z-index: 4;
+}
+.caixa {
+  font-family: var(--serif); font-weight: 500; font-size: 58px;
+  line-height: 1.22; text-align: center;
+  padding: 28px 40px;
+  border-radius: 0;            /* retangular — nunca arredondar */
+  max-width: 100%;
+}
+.caixa .kw { text-transform: uppercase; font-weight: 600; }
+
+.caixa.preta   { background: var(--preta);     color: var(--off-white); }
+.caixa.dourada { background: var(--gold);      color: var(--off-white); }
+.caixa.branca  { background: var(--off-white); color: var(--navy); }
+
+/* Capa e CTA: punch em uppercase italic — regra do manual */
+.punch {
+  position: absolute; left: 80px; right: 80px; bottom: 200px;
+  font-family: var(--serif); font-style: italic; font-weight: 700;
+  font-size: 104px; line-height: 1.02; text-transform: uppercase;
+  color: var(--off-white); text-align: center;
+  text-shadow: 0 4px 28px rgba(9,20,34,0.55);
+  z-index: 4;
+}
+.punch .gold { color: var(--gold); }
+
+/* ============================================================
+   SISTEMA 2 — LÂMINA SPLIT  (1080×1080)
+   Duas fotos, ambas escurecidas com overlay navy 55%
+   ============================================================ */
+.metade { position: absolute; left: 0; right: 0; height: 496px; overflow: hidden; }
+.metade.topo   { top: 0; }
+.metade.base   { top: 496px; }
+.metade .foto  { position: absolute; inset: 0; }
+.metade::after {
+  content: ""; position: absolute; inset: 0;
+  background: rgba(9,20,34,0.55);
+}
+.metade .conteudo {
+  position: absolute; inset: 0; z-index: 2;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 0 90px; text-align: center;
+}
+
+.declaracao {
+  font-family: var(--serif); font-weight: 500; font-size: 86px;
+  line-height: 1.12; color: var(--off-white);
+}
+/* O divisor dourado: linha 1px + losango de 4 pontas no centro */
+.divisor {
+  position: relative; width: 55%; height: 1px;
+  background: rgba(201,164,122,0.6);
+  margin-top: 34px;
+}
+.divisor::after {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  width: 16px; height: 16px; transform: translate(-50%,-50%) rotate(45deg);
+  background: var(--gold);
+}
+.divisor.barra { width: 140px; height: 4px; background: var(--gold); }
+.divisor.barra::after { display: none; }
+
+.desdobramento {
+  font-family: var(--sans); font-weight: 300; font-size: 44px;
+  line-height: 1.35; color: var(--off-white);
+}
+
+/* ============================================================
+   SISTEMA 3 — STORY  (1080×1920) — texto puro, fundo off-white
+   ============================================================ */
+.story-corpo {
+  position: absolute; left: 110px; right: 110px; top: 50%;
+  transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 46px;
+}
+.citacao {
+  font-family: var(--sans); font-weight: 300; font-size: 56px;
+  line-height: 1.3; color: var(--navy);
+  border-left: 6px solid var(--gold); padding-left: 24px;
+}
+.resposta-comum {
+  font-family: var(--sans); font-weight: 300; font-size: 62px;
+  line-height: 1.25; color: var(--navy);
+}
+.punch-story {
+  font-family: var(--serif); font-style: italic; font-weight: 700;
+  font-size: 82px; line-height: 1.08; text-transform: uppercase;
+  color: var(--navy);
+}
+.rodape-story {
+  position: absolute; bottom: 150px; left: 0; right: 0;
+  text-align: center;
+  font-family: var(--sans); font-weight: 300; font-size: 26px;
+  text-transform: uppercase; letter-spacing: 0.20em;
+  color: rgba(9,20,34,0.35);
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     EXEMPLO A — SISTEMA 1 · lâmina de desenvolvimento
+     Trocar a foto, as caixas e o contador.
+     Ordem narrativa: preta (setup) → dourada (virada) → branca (resolução)
+     ============================================================ -->
+<div class="peca carrossel">
+  <img class="foto" src="../../../marca/fotos/palco/EXEMPLO.jpg" alt="">
+  <div class="contador">2/6</div>
+
+  <div class="caixas">
+    <div class="caixa preta">Seu evento lotou.</div>
+    <div class="caixa dourada">E mesmo assim ninguém comprou.</div>
+    <div class="caixa branca">O problema não é <span class="kw">público</span>. É jornada.</div>
+  </div>
+
+  <div class="rodape">
+    All In <span class="sep">•</span> Pitch Imparável® <span class="sep">•</span> @samaraesoares
+  </div>
+</div>
+
+<!-- ============================================================
+     EXEMPLO B — SISTEMA 1 · capa com punch
+     ============================================================ -->
+<div class="peca carrossel">
+  <img class="foto" src="../../../marca/fotos/palco/EXEMPLO.jpg" alt="">
+  <div class="contador">1/6</div>
+
+  <div class="punch">Vender não<br>é dom.<br><span class="gold">É método.</span></div>
+
+  <div class="rodape">
+    All In <span class="sep">•</span> Pitch Imparável® <span class="sep">•</span> @samaraesoares
+  </div>
+</div>
+
+<!-- ============================================================
+     EXEMPLO C — SISTEMA 2 · lâmina split
+     ============================================================ -->
+<div class="peca split">
+  <div class="metade topo">
+    <img class="foto" src="../../../marca/fotos/bastidor/EXEMPLO.jpg" alt="">
+    <div class="conteudo">
+      <div class="declaracao">O não precisa ser<br>combustível, não sentença.</div>
+      <div class="divisor"></div>
+    </div>
+  </div>
+
+  <div class="metade base">
+    <img class="foto" src="../../../marca/fotos/palco/EXEMPLO.jpg" alt="">
+    <div class="conteudo">
+      <div class="desdobramento">Uma objeção não define sua capacidade.<br>Ela mostra o que você precisa ajustar.</div>
+    </div>
+  </div>
+
+  <div class="rodape">
+    All In <span class="sep">•</span> Pitch Imparável® <span class="sep">•</span> @samaraesoares
+  </div>
+</div>
+
+<!-- ============================================================
+     EXEMPLO D — SISTEMA 3 · story
+     ============================================================ -->
+<div class="peca story">
+  <div class="story-corpo">
+    <div class="citacao">"Quais são seus hobbies?"</div>
+    <div class="resposta-comum">Eu gosto de vender,</div>
+    <div class="punch-story">vendendo eu estou sempre bem</div>
+  </div>
+  <div class="rodape-story">All In &nbsp;•&nbsp; @samaraesoares</div>
+</div>
+
+</body>
+</html>

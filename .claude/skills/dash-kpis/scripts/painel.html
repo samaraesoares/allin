@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel do negócio</title>
+<style>
+:root{
+  --bg:#FFFFFF;--bg-soft:#F4F4F5;--text:#111111;--text-muted:#6B6B6B;
+  --accent:#111111;--border:#E4E4E7;--verde:#166534;--vermelho:#991B1B;
+  --font:system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0B0B0C;--bg-soft:#18181B;--text:#FAFAFA;--text-muted:#A1A1AA;
+        --accent:#FAFAFA;--border:#27272A;--verde:#4ADE80;--vermelho:#F87171;}
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.5;padding:40px 24px 80px}
+.pagina{max-width:1100px;margin:0 auto}
+header{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:12px;margin-bottom:40px}
+h1{font-size:28px;font-weight:600;letter-spacing:-.02em}
+.etiqueta{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)}
+h2{font-size:15px;font-weight:600;margin:48px 0 16px;letter-spacing:-.01em}
+
+.cartoes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.cartao{border:1px solid var(--border);border-radius:12px;padding:20px;background:var(--bg-soft)}
+.cartao .valor{font-size:30px;font-weight:600;letter-spacing:-.02em;margin-top:6px;font-variant-numeric:tabular-nums}
+.cartao .nota{font-size:13px;color:var(--text-muted);margin-top:6px}
+.verde{color:var(--verde)}.vermelho{color:var(--vermelho)}
+
+.barra{height:6px;background:var(--border);border-radius:99px;overflow:hidden;margin-top:12px}
+.barra div{height:100%;background:var(--accent);border-radius:99px;transition:width .4s}
+
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:11px 10px;border-bottom:1px solid var(--border)}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);font-weight:400}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pilula{display:inline-block;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+  border:1px solid var(--border);border-radius:99px;padding:3px 10px;color:var(--text-muted)}
+
+.registrar{margin-top:56px;border:1px solid var(--border);border-radius:12px;padding:24px}
+.registrar form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;align-items:end;margin-top:16px}
+label{display:block;font-size:12px;color:var(--text-muted);margin-bottom:4px}
+input,select{width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);
+  color:var(--text);font-family:var(--font);font-size:15px}
+button{padding:11px 20px;border:0;border-radius:8px;background:var(--accent);color:var(--bg);
+  font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer}
+.aviso{font-size:13px;color:var(--text-muted);margin-top:12px;min-height:20px}
+.vazio{color:var(--text-muted);font-size:15px;padding:24px 0}
+footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);font-size:13px;color:var(--text-muted)}
+</style>
+</head>
+<body>
+<div class="pagina">
+
+  <header>
+    <div>
+      <p class="etiqueta" id="mes">—</p>
+      <h1 id="negocio">Painel do negócio</h1>
+    </div>
+    <span class="pilula" id="atualizado">carregando</span>
+  </header>
+
+  <div class="cartoes" id="cartoes"></div>
+
+  <h2>Funil</h2>
+  <div class="cartoes" id="funil"></div>
+
+  <h2>Carteira</h2>
+  <div id="carteira"></div>
+
+  <h2>Leads abertos</h2>
+  <div id="leads"></div>
+
+  <h2>Meses fechados</h2>
+  <div id="historico"></div>
+
+  <div class="registrar">
+    <p class="etiqueta">Registrar</p>
+    <form id="form">
+      <div>
+        <label for="acao">O quê</label>
+        <select id="acao">
+          <option value="leads">Lead novo</option>
+          <option value="mover">Mover lead</option>
+          <option value="clientes">Cliente novo</option>
+          <option value="recebimentos">Recebimento</option>
+          <option value="churn">Saída de cliente</option>
+        </select>
+      </div>
+      <div><label for="nome">Nome</label><input id="nome" placeholder="nome da pessoa ou empresa"></div>
+      <div id="campo-empresa"><label for="empresa">Empresa</label><input id="empresa"></div>
+      <div id="campo-valor"><label for="valor">Valor</label><input id="valor" inputmode="decimal" placeholder="0"></div>
+      <div id="campo-estagio" hidden>
+        <label for="estagio">Estágio</label>
+        <select id="estagio">
+          <option value="conversa">conversa</option>
+          <option value="proposta">proposta</option>
+          <option value="negociacao">negociação</option>
+          <option value="fechado">fechado</option>
+          <option value="perdido">perdido</option>
+        </select>
+      </div>
+      <div><button type="submit">Salvar</button></div>
+    </form>
+    <p class="aviso" id="aviso"></p>
+  </div>
+
+  <footer>
+    Os dados ficam só na sua máquina, em <code>financeiro/dash.db</code>.
+    Pra fechar o mês: <code>/fechamento-mes</code> na conversa, ou o botão do Claude.
+  </footer>
+
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+let M = "R$";
+
+const dinheiro = v => M + " " + Number(v || 0).toLocaleString("pt-BR", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+function cartao(titulo, valor, nota, classe) {
+  return `<div class="cartao"><p class="etiqueta">${titulo}</p>
+    <p class="valor ${classe || ""}">${valor}</p>
+    ${nota ? `<p class="nota">${nota}</p>` : ""}</div>`;
+}
+
+function tabela(colunas, linhas, vazio) {
+  if (!linhas.length) return `<p class="vazio">${vazio}</p>`;
+  return `<table><thead><tr>${colunas.map(c => `<th>${c}</th>`).join("")}</tr></thead>
+    <tbody>${linhas.join("")}</tbody></table>`;
+}
+
+async function carregar() {
+  const d = await (await fetch("/api/painel")).json();
+  M = d.moeda || "R$";
+
+  $("#negocio").textContent = d.negocio;
+  $("#mes").textContent = d.mes;
+  $("#atualizado").textContent = d.clientes_ativos + " clientes ativos";
+
+  const pct = d.percentual_meta;
+  const barra = pct === null ? "" : `<div class="barra"><div style="width:${Math.min(100, pct)}%"></div></div>`;
+
+  $("#cartoes").innerHTML = [
+    cartao("Recorrente", dinheiro(d.recorrente),
+      (pct === null ? "defina a meta com /dash-kpis" : `${pct}% da meta de ${dinheiro(d.meta_recorrente)}`) + barra),
+    cartao("Faturado no mês", dinheiro(d.faturado_mes),
+      d.meta_faturamento_mes ? `meta ${dinheiro(d.meta_faturamento_mes)}` : ""),
+    cartao("Sobra sobre o fixo", dinheiro(d.sobra),
+      `custo fixo ${dinheiro(d.custo_fixo_mes)}`, d.sobra < 0 ? "vermelho" : "verde"),
+    cartao("Movimento do mês", `+${d.entradas_mes} / −${d.saidas_mes}`, "entraram / saíram"),
+    cartao("Ticket médio", dinheiro(d.ticket_medio),
+      d.concentracao ? `maior cliente = ${d.concentracao}% do recorrente` : "",
+      d.concentracao > 40 ? "vermelho" : ""),
+    cartao("Pipeline aberto", dinheiro(d.pipeline),
+      d.taxa_fechamento === null
+        ? `${d.propostas_mes} propostas no mês`
+        : `${d.fechados_mes}/${d.propostas_mes} fecharam (${d.taxa_fechamento}%)`),
+  ].join("");
+
+  $("#funil").innerHTML = d.funil.map(f =>
+    cartao(f.estagio, f.quantidade, dinheiro(f.valor))).join("");
+
+  $("#carteira").innerHTML = tabela(
+    ["Cliente", "Tipo", "Desde", "Valor"],
+    d.carteira.map(c => `<tr><td>${c.nome}</td><td><span class="pilula">${c.tipo}</span></td>
+      <td>${c.entrada}</td><td class="n">${dinheiro(c.valor)}</td></tr>`),
+    "Nenhum cliente cadastrado ainda. Use o formulário abaixo ou peça pro Claude: \"cadastra o cliente X\"."
+  );
+
+  $("#leads").innerHTML = tabela(
+    ["Lead", "Empresa", "Estágio", "Origem", "Ticket"],
+    d.leads.map(l => `<tr><td>${l.nome}</td><td>${l.empresa || "—"}</td>
+      <td><span class="pilula">${l.estagio}</span></td><td>${l.origem}</td>
+      <td class="n">${dinheiro(l.ticket)}</td></tr>`),
+    "Nenhum lead aberto."
+  );
+
+  $("#historico").innerHTML = tabela(
+    ["Mês", "Faturado", "Recorrente", "Clientes", "Entradas", "Saídas"],
+    d.historico.map(h => `<tr><td>${h.mes}</td><td class="n">${dinheiro(h.faturado)}</td>
+      <td class="n">${dinheiro(h.recorrente)}</td><td class="n">${h.clientes_ativos}</td>
+      <td class="n">${h.entradas}</td><td class="n">${h.saidas}</td></tr>`),
+    "Nenhum mês fechado ainda. O primeiro fechamento é o que faz a comparação existir."
+  );
+}
+
+function ajustarCampos() {
+  const acao = $("#acao").value;
+  $("#campo-estagio").hidden = acao !== "mover";
+  $("#campo-empresa").hidden = acao !== "leads";
+  $("#campo-valor").hidden = acao === "churn";
+}
+$("#acao").addEventListener("change", ajustarCampos);
+ajustarCampos();
+
+$("#form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const acao = $("#acao").value;
+  const nome = $("#nome").value.trim();
+  const valor = Number(($("#valor").value || "0").replace(/\./g, "").replace(",", "."));
+  if (!nome) return ($("#aviso").textContent = "Falta o nome.");
+
+  const corpo = {
+    leads: {nome, empresa: $("#empresa").value.trim(), ticket: valor},
+    mover: {nome, estagio: $("#estagio").value, valor},
+    clientes: {nome, valor},
+    recebimentos: {cliente: nome, valor},
+    churn: {nome},
+  }[acao];
+
+  const r = await fetch("/api/" + acao, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(corpo),
+  });
+  const resposta = await r.json();
+  if (resposta.erro) return ($("#aviso").textContent = resposta.erro);
+
+  $("#aviso").textContent = "Salvo.";
+  $("#nome").value = $("#valor").value = $("#empresa").value = "";
+  carregar();
+});
+
+carregar();
+setInterval(carregar, 30000);
+</script>
+</body>
+</html>

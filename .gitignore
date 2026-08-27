@@ -1,0 +1,46 @@
+# O que NUNCA vai pro GitHub.
+#
+# Regra geral: o seu trabalho (cliente, proposta, conteúdo, financeiro, reunião)
+# É pra ir. É exatamente isso que o /syncar salva. Aqui ficam só segredo,
+# arquivo pesado e coisa que cada máquina refaz sozinha.
+
+# Segredo: chave de API, token, senha
+.env
+.env.local
+.env.*
+*.pem
+credenciais*.json
+service-account*.json
+
+# Banco do painel (os números vivem em texto no financeiro/, isto aqui é cache)
+financeiro/dash.db
+financeiro/dash.db-*
+financeiro/dash-exemplo.db*
+
+# Material pesado
+dados/garimpo/
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.m4a
+*.wav
+*.zip
+*.MOV
+*.MP4
+*.HEIC
+*.psd
+*.PSD
+
+# Ponte pro Codex enxergar as skills — cada máquina cria a sua
+.agents/
+
+# Exportação temporária da agenda
+agenda.ics
+
+# Sistema
+.DS_Store
+Thumbs.db
+node_modules/
+__pycache__/
+*.pyc
