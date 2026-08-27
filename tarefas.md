@@ -15,7 +15,7 @@
 
 ## Esta semana
 
-- [x] **Instalar o Python** — 3.14.7 instalado. Os atalhos falsos da Microsoft Store sequestravam `python` e `python3`; resolvido com shims em `C:SERSSAMARBIN` (PRIMEIRA PASTA DO PATH). NãO MEXER EM "ALIASES DE EXECUçãO DE APLICATIVO" · 2026-08-26
+- [x] **Instalar o Python** — 3.14.7 instalado. Os atalhos falsos da Microsoft Store sequestravam `python` e `python3`; resolvido com atalhos em `C:\Users\samar\bin`, que é a primeira pasta do PATH. **Não mexer em "Aliases de execução de aplicativo"** — se o aviso do Python aparecer, ignorar · 2026-08-26
 - [ ] Cadastrar clientes e valores no painel · `/dash-kpis` · #financeiro
 - [ ] Confirmar: *Mentoria All In VIP* e *All In Seller* são nomes antigos da escada atual ou ofertas separadas? · #comercial
 - [ ] Confirmar status de Michelle, Dra. Natália e Taiza: cliente, proposta ou lead? · #comercial
