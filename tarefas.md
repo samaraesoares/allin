@@ -15,7 +15,7 @@
 
 ## Esta semana
 
-- [ ] **Instalar o Python** — o painel `/dash-kpis` e o `/fluxo-caixa` não rodam sem ele · https://python.org/downloads · #sistema
+- [x] **Instalar o Python** — 3.14.7 instalado. Os atalhos falsos da Microsoft Store sequestravam `python` e `python3`; resolvido com shims em `C:SERSSAMARBIN` (PRIMEIRA PASTA DO PATH). NãO MEXER EM "ALIASES DE EXECUçãO DE APLICATIVO" · 2026-08-26
 - [ ] Cadastrar clientes e valores no painel · `/dash-kpis` · #financeiro
 - [ ] Confirmar: *Mentoria All In VIP* e *All In Seller* são nomes antigos da escada atual ou ofertas separadas? · #comercial
 - [ ] Confirmar status de Michelle, Dra. Natália e Taiza: cliente, proposta ou lead? · #comercial
