@@ -1,0 +1,882 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>O Pitch que Vende</title>
+<meta name="description" content="Monte seu pitch em 3 fases. O app do workshop gratuito O Pitch que Vende, com Samara Soares.">
+<meta property="og:title" content="O Pitch que Vende · Monte seu pitch em 3 fases">
+<meta property="og:description" content="Descubra em qual das 3 fases você perde mais oportunidades e saia com o seu pitch montado.">
+<meta name="theme-color" content="#0A1628">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0A1628;
+    --navy-2: #0F1F37;
+    --navy-3: #162A48;
+    --gold: #C8A046;
+    --gold-soft: #E3C98A;
+    --gold-a10: rgba(200,160,70,0.10);
+    --gold-a20: rgba(200,160,70,0.22);
+    --gold-a40: rgba(200,160,70,0.45);
+    --white: #FFFFFF;
+    --text: rgba(255,255,255,0.92);
+    --muted: rgba(255,255,255,0.62);
+    --faint: rgba(255,255,255,0.38);
+    --line: rgba(255,255,255,0.08);
+    --serif: 'Cormorant Garamond', 'Times New Roman', serif;
+    --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --r: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--navy); color: var(--text); }
+  body {
+    font-family: var(--sans); font-weight: 300; font-size: 16px; line-height: 1.6;
+    min-height: 100vh; -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -5%, rgba(200,160,70,0.10), transparent 70%),
+      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(22,42,72,0.9), transparent 70%);
+  }
+  button, input, textarea, select { font: inherit; color: inherit; }
+  strong { font-weight: 600; color: var(--white); }
+
+  /* ---------- Topo: progresso ---------- */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+    background: rgba(10,22,40,0.86); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 20px 12px;
+  }
+  .topbar-inner { max-width: 720px; margin: 0 auto; }
+  .steps { display: flex; justify-content: space-between; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); margin-bottom: 9px; }
+  .steps span { transition: color .4s var(--ease); cursor: default; }
+  .steps span.done { color: var(--muted); cursor: pointer; }
+  .steps span.now { color: var(--gold); }
+  .track { height: 2px; background: var(--line); border-radius: 2px; overflow: hidden; }
+  .track i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--gold), var(--gold-soft)); transition: width .8s var(--ease); }
+  @media (max-width: 520px) { .steps .lbl { display: none; } }
+
+  /* ---------- Rodapé fixo ---------- */
+  .foot {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 20;
+    display: flex; justify-content: space-between;
+    padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
+    font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted);
+    background: linear-gradient(to top, var(--navy) 55%, transparent);
+  }
+  .foot b { color: var(--gold); font-weight: 500; }
+
+  main { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 96px 20px 110px; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  .screen.active .rv { animation: rise .9s var(--ease) both; }
+  .screen.active .rv:nth-child(2) { animation-delay: .06s; }
+  .screen.active .rv:nth-child(3) { animation-delay: .12s; }
+  .screen.active .rv:nth-child(4) { animation-delay: .18s; }
+  .screen.active .rv:nth-child(5) { animation-delay: .24s; }
+  .screen.active .rv:nth-child(n+6) { animation-delay: .3s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+  /* ---------- Tipografia ---------- */
+  .eyebrow { font-size: 11px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--gold); font-weight: 500; display: inline-flex; align-items: center; gap: 10px; }
+  .eyebrow::before { content: ''; width: 22px; height: 1px; background: var(--gold); }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 500; color: var(--white); letter-spacing: -0.005em; }
+  h1 { font-size: clamp(46px, 11vw, 84px); line-height: 0.98; margin: 18px 0 14px; }
+  h1 em, h2 em, h3 em { font-style: italic; color: var(--gold); }
+  h2 { font-size: clamp(34px, 7.4vw, 52px); line-height: 1.05; margin: 14px 0 16px; }
+  h3 { font-size: clamp(24px, 5vw, 30px); line-height: 1.15; margin-bottom: 10px; }
+  .sub { font-family: var(--serif); font-style: italic; font-size: clamp(22px, 5vw, 28px); color: var(--gold-soft); margin-bottom: 26px; }
+  .lead { font-size: 18px; color: var(--muted); max-width: 580px; }
+  .lead strong { color: var(--white); }
+  p + p { margin-top: 12px; }
+
+  /* ---------- Botões ---------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 17px 28px; border-radius: 10px; border: 1px solid var(--gold);
+    background: var(--gold); color: var(--navy);
+    font-size: 14px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; text-decoration: none; text-align: center;
+    transition: transform .35s var(--ease), background .35s var(--ease), box-shadow .35s var(--ease);
+  }
+  .btn:hover { background: var(--gold-soft); transform: translateY(-2px); box-shadow: 0 10px 30px -12px rgba(200,160,70,0.6); }
+  .btn.ghost { background: transparent; color: var(--gold-soft); border-color: var(--gold-a40); }
+  .btn.ghost:hover { background: var(--gold-a10); box-shadow: none; }
+  .btn.block { width: 100%; }
+  .btn.sm { padding: 11px 16px; font-size: 12px; }
+  .btn .arr { transition: transform .35s var(--ease); }
+  .btn:hover .arr { transform: translateX(4px); }
+  .nav { display: flex; gap: 12px; margin-top: 40px; }
+  .nav .btn:last-child { flex: 1; }
+  .linkback { background: none; border: 0; color: var(--faint); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; cursor: pointer; padding: 0 6px; }
+  .linkback:hover { color: var(--white); }
+
+  /* ---------- Boas-vindas ---------- */
+  .welcome { min-height: calc(100vh - 220px); display: flex; flex-direction: column; justify-content: center; }
+  .phases-mini { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 34px 0 36px; }
+  .phases-mini div { border-top: 1px solid var(--gold-a40); padding-top: 12px; }
+  .phases-mini span { display: block; font-family: var(--serif); font-size: 30px; color: var(--gold); line-height: 1; }
+  .phases-mini small { font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .event-pill { margin-top: 22px; font-size: 13px; color: var(--faint); letter-spacing: 0.04em; }
+  .event-pill b { color: var(--gold-soft); font-weight: 500; }
+
+  /* ---------- Autodiagnóstico ---------- */
+  .cards { display: grid; gap: 14px; margin: 28px 0 10px; }
+  .pcard {
+    position: relative; text-align: left; width: 100%; cursor: pointer;
+    padding: 22px 22px 22px 84px; border-radius: var(--r);
+    background: var(--navy-2); border: 1px solid var(--line);
+    transition: border-color .4s var(--ease), background .4s var(--ease), transform .4s var(--ease);
+  }
+  .pcard:hover { border-color: var(--gold-a40); transform: translateY(-2px); }
+  .pcard .n { position: absolute; left: 22px; top: 20px; font-family: var(--serif); font-size: 40px; line-height: 1; color: var(--gold); opacity: .55; transition: opacity .4s; }
+  .pcard b { display: block; font-family: var(--serif); font-size: 25px; font-weight: 500; color: var(--white); line-height: 1.1; margin-bottom: 4px; }
+  .pcard span.d { color: var(--muted); font-size: 15px; }
+  .pcard .chk { position: absolute; right: 18px; top: 18px; width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--gold-a40); display: grid; place-items: center; font-size: 13px; color: transparent; transition: all .4s var(--ease); }
+  .pcard.sel { border-color: var(--gold); background: linear-gradient(135deg, rgba(200,160,70,0.12), var(--navy-2) 60%); }
+  .pcard.sel .n { opacity: 1; }
+  .pcard.sel .chk { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+
+  .scores { margin-top: 34px; padding: 24px 22px; border-radius: var(--r); background: var(--navy-2); border: 1px solid var(--line); }
+  .scores h3 { font-size: 24px; }
+  .scores > p { color: var(--muted); font-size: 14.5px; margin-bottom: 18px; }
+  .srow { padding: 14px 0; border-top: 1px solid var(--line); }
+  .srow-h { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+  .srow-h span { font-size: 15px; color: var(--white); }
+  .srow-h output { font-family: var(--serif); font-size: 30px; color: var(--gold); line-height: 1; min-width: 60px; text-align: right; }
+  .srow-h output small { font-size: 16px; color: var(--faint); }
+  input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 26px; background: transparent; cursor: pointer; }
+  input[type=range]::-webkit-slider-runnable-track { height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--gold) var(--p,50%), rgba(255,255,255,0.12) var(--p,50%)); }
+  input[type=range]::-moz-range-track { height: 3px; border-radius: 3px; background: rgba(255,255,255,0.12); }
+  input[type=range]::-moz-range-progress { height: 3px; background: var(--gold); }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; margin-top: -9.5px; border-radius: 50%; background: var(--navy); border: 2px solid var(--gold); box-shadow: 0 0 0 5px rgba(200,160,70,0.14); }
+  input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--navy); border: 2px solid var(--gold); }
+  .scale { display: flex; justify-content: space-between; font-size: 11px; color: var(--faint); letter-spacing: 0.08em; }
+  .insight {
+    margin-top: 18px; padding: 16px 18px; border-radius: 10px; font-size: 15px;
+    background: var(--gold-a10); border: 1px solid var(--gold-a20); color: var(--text);
+    transition: opacity .4s;
+  }
+  .insight b { color: var(--gold-soft); }
+
+  /* ---------- Fases ---------- */
+  .phase-head { display: flex; align-items: flex-start; gap: 18px; }
+  .phase-num { font-family: var(--serif); font-size: clamp(80px, 20vw, 130px); line-height: .8; color: transparent; -webkit-text-stroke: 1px var(--gold-a40); flex: none; margin-top: 6px; }
+  .badge { display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; padding: 6px 12px; border-radius: 30px; font-size: 12px; letter-spacing: 0.08em; border: 1px solid var(--line); color: var(--muted); }
+  .badge.crit { border-color: var(--gold-a40); color: var(--gold-soft); background: var(--gold-a10); }
+  .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+  .thesis {
+    margin: 30px 0 38px; padding: 26px 24px; border-radius: var(--r);
+    background: var(--navy-2); border-left: 2px solid var(--gold);
+    font-family: var(--serif); font-size: clamp(23px, 5.2vw, 30px); line-height: 1.25; color: var(--white);
+  }
+  .sec-t { font-size: 11px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--gold); margin: 44px 0 16px; font-weight: 500; }
+  .moves { display: grid; gap: 12px; }
+  .move { border-radius: var(--r); background: var(--navy-2); border: 1px solid var(--line); overflow: hidden; transition: border-color .4s var(--ease); }
+  .move.open { border-color: var(--gold-a40); }
+  .move-h { width: 100%; background: none; border: 0; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 16px; padding: 18px 20px; }
+  .move-h .mn { font-family: var(--serif); font-size: 28px; color: var(--gold); line-height: 1; width: 26px; flex: none; }
+  .move-h .mt { flex: 1; font-size: 17px; color: var(--white); font-weight: 400; }
+  .move-h .pl { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--gold-a40); display: grid; place-items: center; color: var(--gold); transition: transform .5s var(--ease); flex: none; font-size: 16px; }
+  .move.open .move-h .pl { transform: rotate(45deg); }
+  .move-b { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .6s var(--ease); }
+  .move.open .move-b { grid-template-rows: 1fr; }
+  .move-b > div { overflow: hidden; }
+  .move-in { padding: 0 20px 20px 62px; }
+  @media (max-width: 520px) { .move-in { padding-left: 20px; } }
+  .script {
+    position: relative; font-family: var(--serif); font-style: italic; font-size: 21px; line-height: 1.35; color: var(--gold-soft);
+    padding: 14px 16px 14px 18px; border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--line); margin: 6px 0 10px;
+  }
+  .script + .script { margin-top: 8px; }
+  .listen { font-size: 14.5px; color: var(--muted); }
+  .listen b { color: var(--gold-soft); font-weight: 500; }
+  .deep { display: grid; gap: 8px; }
+  .concept { margin-top: 18px; font-size: 16px; color: var(--text); padding-left: 16px; border-left: 1px solid var(--gold-a40); }
+
+  .errors { display: grid; gap: 10px; }
+  .err-i { display: flex; gap: 14px; align-items: flex-start; padding: 15px 18px; border-radius: 12px; background: rgba(255,255,255,0.025); border: 1px solid var(--line); font-size: 15.5px; }
+  .err-i .x { flex: none; width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.25); display: grid; place-items: center; font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .anchor {
+    margin: 46px 0 8px; text-align: center; padding: 38px 16px;
+    border-top: 1px solid var(--gold-a20); border-bottom: 1px solid var(--gold-a20);
+    font-family: var(--serif); font-style: italic; font-size: clamp(27px, 6.4vw, 40px); line-height: 1.18; color: var(--white);
+  }
+  .anchor::before { content: '“'; display: block; font-size: 64px; line-height: .6; color: var(--gold); margin-bottom: 10px; font-style: normal; }
+
+  /* ---------- Construtor ---------- */
+  .builder {
+    margin-top: 46px; padding: 26px 22px; border-radius: 18px;
+    background: linear-gradient(160deg, rgba(200,160,70,0.08), var(--navy-2) 45%);
+    border: 1px solid var(--gold-a20);
+  }
+  .builder .eyebrow { margin-bottom: 6px; }
+  .builder > p { color: var(--muted); font-size: 15px; margin-bottom: 20px; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; font-weight: 500; }
+  .field label i { font-style: normal; text-transform: none; letter-spacing: 0; color: var(--faint); font-weight: 300; }
+  .field input, .field textarea, .field select {
+    width: 100%; padding: 14px 16px; border-radius: 10px; font-size: 16px; font-weight: 300;
+    background: rgba(10,22,40,0.7); border: 1px solid var(--line); color: var(--white); outline: none;
+    transition: border-color .3s var(--ease), box-shadow .3s var(--ease); resize: vertical;
+  }
+  .field textarea { min-height: 76px; line-height: 1.5; }
+  .field input:focus, .field textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(200,160,70,0.10); }
+  .field input::placeholder, .field textarea::placeholder { color: rgba(255,255,255,0.28); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .chip { padding: 8px 13px; border-radius: 30px; border: 1px solid var(--gold-a20); background: transparent; color: var(--gold-soft); font-size: 13.5px; cursor: pointer; transition: all .3s var(--ease); text-align: left; }
+  .chip:hover { background: var(--gold-a10); }
+  .chip.on { background: var(--gold); color: var(--navy); border-color: var(--gold); font-weight: 500; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 520px) { .row2 { grid-template-columns: 1fr; } }
+  .hide { display: none !important; }
+
+  .output { margin-top: 22px; border-radius: 14px; background: var(--navy); border: 1px solid var(--gold-a40); overflow: hidden; display: none; }
+  .output.show { display: block; animation: rise .7s var(--ease) both; }
+  .output-h { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px 12px 18px; border-bottom: 1px solid var(--line); }
+  .output-h span { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
+  .output-b { padding: 18px; white-space: pre-wrap; font-size: 16.5px; line-height: 1.65; color: var(--white); }
+  .output-b .ph, .pitch-doc .ph { color: var(--gold); background: var(--gold-a10); border-radius: 4px; padding: 0 4px; }
+  .output-b .lbl, .pitch-doc .lbl { display: block; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin: 16px 0 4px; }
+  .output-b .lbl:first-child, .pitch-doc .lbl:first-child { margin-top: 0; }
+  .output-b .note, .pitch-doc .note { color: var(--faint); font-size: 14px; font-style: italic; }
+
+  /* ---------- Resultado ---------- */
+  .result-top { display: grid; grid-template-columns: 1fr; gap: 16px; margin: 26px 0 8px; }
+  .meter { padding: 22px; border-radius: var(--r); background: var(--navy-2); border: 1px solid var(--line); }
+  .mrow { display: grid; grid-template-columns: 120px 1fr 44px; align-items: center; gap: 14px; padding: 11px 0; }
+  .mrow span { font-size: 14.5px; color: var(--text); }
+  .mrow .mb { height: 8px; border-radius: 8px; background: rgba(255,255,255,0.07); overflow: hidden; }
+  .mrow .mb i { display: block; height: 100%; width: 0; border-radius: 8px; background: rgba(200,160,70,0.5); transition: width 1.4s var(--ease); }
+  .mrow.crit .mb i { background: linear-gradient(90deg, var(--gold), var(--gold-soft)); }
+  .mrow.crit span { color: var(--gold-soft); font-weight: 500; }
+  .mrow output { font-family: var(--serif); font-size: 24px; color: var(--white); text-align: right; }
+  .crit-box { padding: 20px 22px; border-radius: var(--r); background: var(--gold-a10); border: 1px solid var(--gold-a40); }
+  .crit-box b { font-family: var(--serif); font-size: 26px; font-weight: 500; color: var(--white); display: block; margin: 4px 0 6px; }
+  .crit-box p { color: var(--text); font-size: 15.5px; }
+  .pitch-doc { margin-top: 18px; border-radius: 16px; background: var(--navy-2); border: 1px solid var(--line); }
+  .pitch-doc section { padding: 22px 22px 6px; border-bottom: 1px solid var(--line); }
+  .pitch-doc section:last-of-type { border-bottom: 0; }
+  .pitch-doc h4 { display: flex; align-items: center; gap: 12px; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); font-weight: 500; margin-bottom: 12px; }
+  .pitch-doc h4 em { font-family: var(--serif); font-style: normal; font-size: 24px; letter-spacing: 0; }
+  .pitch-doc .txt { white-space: pre-wrap; color: var(--white); font-size: 16px; line-height: 1.65; padding-bottom: 16px; }
+  .pitch-doc .empty { color: var(--faint); font-style: italic; font-size: 15px; padding-bottom: 16px; }
+  .pitch-doc .empty button { background: none; border: 0; color: var(--gold-soft); text-decoration: underline; cursor: pointer; font-style: normal; }
+  .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+  @media (max-width: 520px) { .actions { grid-template-columns: 1fr; } }
+
+  .cta {
+    margin-top: 54px; padding: 38px 24px; border-radius: 20px; text-align: center; position: relative; overflow: hidden;
+    background: radial-gradient(ellipse at 50% 0%, rgba(200,160,70,0.18), transparent 65%), var(--navy-2);
+    border: 1px solid var(--gold-a40);
+  }
+  .cta h2 { font-size: clamp(30px, 7vw, 44px); }
+  .cta .when { display: inline-grid; gap: 4px; margin: 6px 0 26px; padding: 14px 22px; border-radius: 12px; border: 1px solid var(--gold-a20); }
+  .cta .when b { font-family: var(--serif); font-size: 24px; font-weight: 500; color: var(--gold-soft); }
+  .cta .when span { font-size: 13.5px; color: var(--muted); letter-spacing: 0.04em; }
+  .cta .btns { display: grid; gap: 12px; max-width: 420px; margin: 0 auto; }
+  .cta small { display: block; margin-top: 16px; font-size: 12.5px; color: var(--faint); }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed; left: 50%; bottom: 74px; z-index: 50; transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+    padding: 12px 20px; border-radius: 30px; background: var(--gold); color: var(--navy); font-size: 14px; font-weight: 600;
+    transition: all .5s var(--ease); box-shadow: 0 12px 30px -10px rgba(0,0,0,.6);
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="steps" id="steps"></div>
+    <div class="track"><i id="track"></i></div>
+  </div>
+</div>
+
+<main>
+
+  <!-- ================= 1. BOAS-VINDAS ================= -->
+  <section class="screen active" data-step="0">
+    <div class="welcome">
+      <span class="eyebrow rv">Workshop gratuito · Samara Soares</span>
+      <h1 class="rv">O Pitch <em>que Vende</em></h1>
+      <p class="sub rv">Monte seu pitch em 3 fases</p>
+      <p class="lead rv">A maioria das pessoas tem segurança para vender. <strong>O problema é a estrutura do pitch.</strong> Descubra em qual das 3 fases você perde mais oportunidades e saia com o seu pitch montado.</p>
+      <div class="phases-mini rv">
+        <div><span>01</span><small>Rapport</small></div>
+        <div><span>02</span><small>Diagnóstico</small></div>
+        <div><span>03</span><small>Oferta</small></div>
+      </div>
+      <div class="rv"><button class="btn" onclick="go(1)">Começar meu diagnóstico <span class="arr">→</span></button></div>
+      <p class="event-pill rv">Ao vivo em <b>14 de outubro</b>, quarta-feira, 20h de Brasília · 7pm de Nova York</p>
+    </div>
+  </section>
+
+  <!-- ================= 2. AUTODIAGNÓSTICO ================= -->
+  <section class="screen" data-step="1">
+    <span class="eyebrow rv">Autodiagnóstico</span>
+    <h2 class="rv">Em qual fase você sente que <em>mais perde</em> oportunidades?</h2>
+    <p class="lead rv">Escolha uma. Confie na primeira resposta que vier.</p>
+
+    <div class="cards rv" id="cards">
+      <button class="pcard" data-p="rapport"><span class="n">01</span><span class="chk">✓</span><b>Rapport</b><span class="d">A conexão genuína no início do pitch</span></button>
+      <button class="pcard" data-p="diagnostico"><span class="n">02</span><span class="chk">✓</span><b>Diagnóstico</b><span class="d">As perguntas certas antes de apresentar</span></button>
+      <button class="pcard" data-p="oferta"><span class="n">03</span><span class="chk">✓</span><b>Estrutura de Oferta</b><span class="d">O caminho para a decisão</span></button>
+    </div>
+
+    <div class="scores rv">
+      <h3>Agora, dê uma nota para cada fase</h3>
+      <p>De 0 a 10, o quanto você domina cada uma hoje.</p>
+      <div class="srow"><div class="srow-h"><span>01 · Rapport</span><output id="o-rapport">5<small>/10</small></output></div><input type="range" min="0" max="10" value="5" id="r-rapport"><div class="scale"><span>não domino</span><span>domino</span></div></div>
+      <div class="srow"><div class="srow-h"><span>02 · Diagnóstico</span><output id="o-diagnostico">5<small>/10</small></output></div><input type="range" min="0" max="10" value="5" id="r-diagnostico"><div class="scale"><span>não domino</span><span>domino</span></div></div>
+      <div class="srow"><div class="srow-h"><span>03 · Estrutura de Oferta</span><output id="o-oferta">5<small>/10</small></output></div><input type="range" min="0" max="10" value="5" id="r-oferta"><div class="scale"><span>não domino</span><span>domino</span></div></div>
+      <div class="insight" id="insight">Mova as notas para ver a sua leitura.</div>
+    </div>
+
+    <div class="nav"><button class="linkback" onclick="go(0)">← Voltar</button><button class="btn" id="btn-diag" onclick="go(2)">Continuar <span class="arr">→</span></button></div>
+  </section>
+
+  <!-- ================= 3. FASE 01 · RAPPORT ================= -->
+  <section class="screen" data-step="2">
+    <div class="phase-head rv">
+      <div class="phase-num">01</div>
+      <div><span class="eyebrow">Fase 01</span><h2>Rapport</h2><span class="badge" data-badge="rapport"></span></div>
+    </div>
+    <div class="thesis rv">A venda se perde nos primeiros 2 minutos, antes de você falar do produto.</div>
+
+    <div class="sec-t rv">Os 3 movimentos</div>
+    <div class="moves rv">
+      <div class="move open">
+        <button class="move-h"><span class="mn">1</span><span class="mt">O nome</span><span class="pl">+</span></button>
+        <div class="move-b"><div><div class="move-in">
+          <div class="script">“[Nome], antes de eu te mostrar qualquer coisa, eu quero te conhecer.”</div>
+          <p class="listen">O nome é a primeira prova de que a conversa é sobre a outra pessoa, e não sobre você.</p>
+        </div></div></div>
+      </div>
+      <div class="move">
+        <button class="move-h"><span class="mn">2</span><span class="mt">Uma observação específica e verdadeira</span><span class="pl">+</span></button>
+        <div class="move-b"><div><div class="move-in">
+          <div class="script">“[Nome], eu vi que você [observação]. Isso me chamou a atenção porque [motivo].”</div>
+          <p class="listen">Específica e verdadeira. Se ela serviria para qualquer pessoa, é elogio genérico, e elogio genérico afasta.</p>
+        </div></div></div>
+      </div>
+      <div class="move">
+        <button class="move-h"><span class="mn">3</span><span class="mt">A pergunta de abertura</span><span class="pl">+</span></button>
+        <div class="move-b"><div><div class="move-in">
+          <div class="script">“O que te trouxe até aqui hoje?”</div>
+          <div class="script">“Se você pudesse resolver uma coisa nos próximos 90 dias, o que seria?”</div>
+          <div class="script">“Me conta: onde você está e onde quer chegar?”</div>
+          <p class="listen">Pergunta aberta. Ela entrega a palavra para a outra pessoa, e é aí que a conversa começa.</p>
+        </div></div></div>
+      </div>
+    </div>
+
+    <div class="sec-t rv">Erros fatais</div>
+    <div class="errors rv">
+      <div class="err-i"><span class="x">✕</span><span>Falar de você nos 2 primeiros minutos</span></div>
+      <div class="err-i"><span class="x">✕</span><span>Elogio genérico</span></div>
+      <div class="err-i"><span class="x">✕</span><span>Pergunta fechada que mata a conversa</span></div>
+    </div>
+
+    <div class="anchor rv">Quem se sente visto, escuta. Quem se sente ouvido, compra.</div>
+
+    <div class="builder rv">
+      <span class="eyebrow">Construtor</span>
+      <h3>Suas 3 primeiras linhas</h3>
+      <p>Preencha e o seu início de pitch fica pronto para usar.</p>
+      <div class="field"><label for="f-nome">Como você chama o seu cliente</label><input id="f-nome" data-k="nome" placeholder="Ex.: Ana, Dr. Paulo, pelo primeiro nome"></div>
+      <div class="field"><label for="f-obs">Uma observação genuína <i>(o que você viu e por que chamou a sua atenção)</i></label><textarea id="f-obs" data-k="obs" placeholder="Ex.: abriu uma turma nova este mês. Isso me chamou a atenção porque poucas pessoas têm coragem de lançar em outubro"></textarea></div>
+      <div class="field"><label for="f-perg">Uma pergunta de abertura</label><textarea id="f-perg" data-k="perg" placeholder="Escreva a sua ou escolha um modelo abaixo"></textarea>
+        <div class="chips" data-target="f-perg">
+          <button class="chip">O que te trouxe até aqui hoje?</button>
+          <button class="chip">Se você pudesse resolver uma coisa nos próximos 90 dias, o que seria?</button>
+          <button class="chip">Me conta: onde você está e onde quer chegar?</button>
+        </div>
+      </div>
+      <button class="btn block" onclick="generate('rapport')">Gerar minhas 3 linhas</button>
+      <div class="output" id="out-rapport"><div class="output-h"><span>Seu rapport</span><button class="btn ghost sm" onclick="copyPhase('rapport')">Copiar</button></div><div class="output-b" id="ob-rapport"></div></div>
+    </div>
+
+    <div class="nav"><button class="linkback" onclick="go(1)">← Voltar</button><button class="btn" onclick="go(3)">Fase 02 · Diagnóstico <span class="arr">→</span></button></div>
+  </section>
+
+  <!-- ================= 4. FASE 02 · DIAGNÓSTICO ================= -->
+  <section class="screen" data-step="3">
+    <div class="phase-head rv">
+      <div class="phase-num">02</div>
+      <div><span class="eyebrow">Fase 02</span><h2>Diagnóstico</h2><span class="badge" data-badge="diagnostico"></span></div>
+    </div>
+    <div class="thesis rv">Você não perde a venda na hora de apresentar. Você perde antes, na hora de perguntar.</div>
+
+    <div class="sec-t rv">As 4 perguntas</div>
+    <div class="moves rv">
+      <div class="move open">
+        <button class="move-h"><span class="mn">1</span><span class="mt">Situação</span><span class="pl">+</span></button>
+        <div class="move-b"><div><div class="move-in">
+          <div class="script">“O que está acontecendo hoje em [área]?”</div>
+          <p class="listen"><b>O que escutar:</b> fatos e números.</p>
+        </div></div></div>
+      </div>
+      <div class="move">
+        <button class="move-h"><span class="mn">2</span><span class="mt">Histórico</span><span class="pl">+</span></button>
+        <div class="move-b"><div><div class="move-in">
+          <div class="script">“O que você já tentou até aqui?”</div>
+          <p class="listen"><b>O que escutar:</b> o que falhou e o que quase funcionou.</p>
+        </div></div></div>
+      </div>
+      <div class="move">
+        <button class="move-h"><span class="mn">3</span><span class="mt">Custo</span><span class="pl">+</span></button>
+        <div class="move-b"><div><div class="move-in">
+          <div class="script">“O que custa para você continuar assim por mais 6 meses?”</div>
+          <p class="listen"><b>O que escutar:</b> é aqui que nasce a urgência.</p>
+        </div></div></div>
+      </div>
+      <div class="move">
+        <button class="move-h"><span class="mn">4</span><span class="mt">Futuro</span><span class="pl">+</span></button>
+        <div class="move-b"><div><div class="move-in">
+          <div class="script">“Se isso estivesse resolvido, como seria o seu dia a dia?”</div>
+          <p class="listen"><b>O que escutar:</b> a transformação, com as palavras da própria pessoa.</p>
+        </div></div></div>
+      </div>
+    </div>
+
+    <div class="sec-t rv">Perguntas de aprofundamento</div>
+    <div class="deep rv">
+      <div class="script">“Me conta mais sobre isso.”</div>
+      <div class="script">“O que mais?”</div>
+      <div class="script">“E como isso te faz sentir?”</div>
+    </div>
+    <p class="concept rv"><strong>A primeira resposta é educada. A verdade mora na segunda pergunta.</strong></p>
+
+    <div class="sec-t rv">Erros fatais</div>
+    <div class="errors rv">
+      <div class="err-i"><span class="x">✕</span><span>Presumir em vez de perguntar</span></div>
+      <div class="err-i"><span class="x">✕</span><span>Interromper a resposta para apresentar</span></div>
+      <div class="err-i"><span class="x">✕</span><span>Diagnosticar sem anotar</span></div>
+    </div>
+
+    <div class="anchor rv">Pergunta certa vale mais do que argumento bonito.</div>
+
+    <div class="builder rv">
+      <span class="eyebrow">Construtor</span>
+      <h3>Seu roteiro de diagnóstico</h3>
+      <p>Quatro respostas e as suas 4 perguntas ficam prontas, com o que escutar em cada uma.</p>
+      <div class="field"><label for="f-area">A área em que o seu cliente precisa de ajuda</label><input id="f-area" data-k="area" placeholder="Ex.: suas vendas, a sua equipe, a sua saúde financeira"></div>
+      <div class="field"><label for="f-tentou">O que o seu cliente costuma já ter tentado <i>(para você reconhecer na resposta)</i></label><input id="f-tentou" data-k="tentou" placeholder="Ex.: curso gravado, tráfego pago, contratar alguém"></div>
+      <div class="row2">
+        <div class="field"><label for="f-prazo">Prazo da pergunta de custo</label><input id="f-prazo" data-k="prazo" placeholder="6 meses"></div>
+        <div class="field"><label for="f-deep">Sua pergunta de aprofundamento</label><input id="f-deep" data-k="deep" placeholder="Me conta mais sobre isso."></div>
+      </div>
+      <div class="field"><label for="f-futuro">O resultado que o seu cliente deseja</label><input id="f-futuro" data-k="futuro" placeholder="Ex.: fechar 10 clientes por mês sem depender de indicação"></div>
+      <button class="btn block" onclick="generate('diagnostico')">Gerar meu roteiro</button>
+      <div class="output" id="out-diagnostico"><div class="output-h"><span>Seu diagnóstico</span><button class="btn ghost sm" onclick="copyPhase('diagnostico')">Copiar</button></div><div class="output-b" id="ob-diagnostico"></div></div>
+    </div>
+
+    <div class="nav"><button class="linkback" onclick="go(2)">← Voltar</button><button class="btn" onclick="go(4)">Fase 03 · Oferta <span class="arr">→</span></button></div>
+  </section>
+
+  <!-- ================= 5. FASE 03 · ESTRUTURA DE OFERTA ================= -->
+  <section class="screen" data-step="4">
+    <div class="phase-head rv">
+      <div class="phase-num">03</div>
+      <div><span class="eyebrow">Fase 03</span><h2>Estrutura de Oferta</h2><span class="badge" data-badge="oferta"></span></div>
+    </div>
+    <div class="thesis rv">Você sabe o que o cliente precisa. Falta dar a ele um motivo e um caminho para decidir agora.</div>
+
+    <div class="sec-t rv">As 3 peças</div>
+    <div class="moves rv">
+      <div class="move open">
+        <button class="move-h"><span class="mn">1</span><span class="mt">Oferta clara em 3 linhas</span><span class="pl">+</span></button>
+        <div class="move-b"><div><div class="move-in">
+          <div class="script">“O [nome] é [promessa]. Funciona assim: [formato]. Depois dele, você [transformação].”</div>
+          <p class="listen">Se a oferta não cabe em 3 linhas, ela ainda não está clara nem para você.</p>
+        </div></div></div>
+      </div>
+      <div class="move">
+        <button class="move-h"><span class="mn">2</span><span class="mt">Um motivo legítimo para decidir agora</span><span class="pl">+</span></button>
+        <div class="move-b"><div><div class="move-in">
+          <p class="listen" style="margin-bottom:10px;">Três tipos de motivo:</p>
+          <div class="script">Bônus · algo a mais para quem decide agora</div>
+          <div class="script">Condição · uma forma de pagamento ou de entrada especial</div>
+          <div class="script">Vagas · um limite real de pessoas atendidas</div>
+          <p class="concept"><strong>Motivo de verdade, nunca pressão falsa.</strong></p>
+        </div></div></div>
+      </div>
+      <div class="move">
+        <button class="move-h"><span class="mn">3</span><span class="mt">Um convite direto e simples</span><span class="pl">+</span></button>
+        <div class="move-b"><div><div class="move-in">
+          <div class="script">“O próximo passo é [ação]. Vamos fazer agora?”</div>
+          <div class="script">“Eu tenho [X vagas] para [período]. Quer uma delas?”</div>
+          <div class="script">“O link está [onde]. É só [ação].”</div>
+        </div></div></div>
+      </div>
+    </div>
+
+    <div class="sec-t rv">Erros fatais</div>
+    <div class="errors rv">
+      <div class="err-i"><span class="x">✕</span><span>Oferta vaga</span></div>
+      <div class="err-i"><span class="x">✕</span><span>“Só hoje” que se repete amanhã</span></div>
+      <div class="err-i"><span class="x">✕</span><span>Terminar sem convidar</span></div>
+    </div>
+
+    <div class="anchor rv">Oferta confusa não converte. Decisão precisa de caminho.</div>
+
+    <div class="builder rv">
+      <span class="eyebrow">Construtor</span>
+      <h3>Sua oferta estruturada</h3>
+      <p>Oferta, motivo e convite, na ordem em que o cliente precisa ouvir.</p>
+      <div class="field"><label for="f-onome">Nome da sua oferta</label><input id="f-onome" data-k="onome" placeholder="Ex.: Mentoria Pitch Imparável"></div>
+      <div class="field"><label for="f-prom">A promessa</label><input id="f-prom" data-k="prom" placeholder="Ex.: o caminho para transformar a sua autoridade em vendas previsíveis"></div>
+      <div class="field"><label for="f-form">O formato</label><input id="f-form" data-k="form" placeholder="Ex.: 8 encontros ao vivo, em 3 meses, com acompanhamento no WhatsApp"></div>
+      <div class="field"><label for="f-transf">A transformação <i>(complete a frase “Depois dele, você…”)</i></label><input id="f-transf" data-k="transf" placeholder="Ex.: sai com a oferta, o pitch e o processo de vendas prontos"></div>
+
+      <div class="field"><label>Tipo de motivo para decidir agora</label>
+        <div class="chips" id="motivo-chips">
+          <button class="chip" data-v="Bônus">Bônus</button>
+          <button class="chip" data-v="Condição">Condição</button>
+          <button class="chip" data-v="Vagas">Vagas</button>
+        </div>
+      </div>
+      <div class="field"><label for="f-motivo">Descreva o motivo <i>(tem que ser verdadeiro)</i></label><input id="f-motivo" data-k="motivo" placeholder="Ex.: quem entrar até sexta recebe uma sessão individual de revisão do pitch"></div>
+
+      <div class="field"><label>Modelo de convite</label>
+        <div class="chips" id="convite-chips">
+          <button class="chip" data-v="a">O próximo passo é…</button>
+          <button class="chip" data-v="b">Eu tenho X vagas…</button>
+          <button class="chip" data-v="c">O link está…</button>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field cv cv-a cv-c"><label for="f-acao">A ação</label><input id="f-acao" data-k="acao" placeholder="Ex.: garantir a sua vaga"></div>
+        <div class="field cv cv-b hide"><label for="f-vagas">Quantas vagas</label><input id="f-vagas" data-k="vagas" placeholder="Ex.: 5 vagas"></div>
+        <div class="field cv cv-b hide"><label for="f-periodo">Para qual período</label><input id="f-periodo" data-k="periodo" placeholder="Ex.: a turma de novembro"></div>
+        <div class="field cv cv-c hide"><label for="f-onde">Onde está o link</label><input id="f-onde" data-k="onde" placeholder="Ex.: aqui no chat"></div>
+      </div>
+      <button class="btn block" onclick="generate('oferta')">Gerar minha oferta</button>
+      <div class="output" id="out-oferta"><div class="output-h"><span>Sua oferta</span><button class="btn ghost sm" onclick="copyPhase('oferta')">Copiar</button></div><div class="output-b" id="ob-oferta"></div></div>
+    </div>
+
+    <div class="nav"><button class="linkback" onclick="go(3)">← Voltar</button><button class="btn" onclick="go(5)">Ver meu pitch montado <span class="arr">→</span></button></div>
+  </section>
+
+  <!-- ================= 6. SEU PITCH MONTADO ================= -->
+  <section class="screen" data-step="5">
+    <span class="eyebrow rv">Resultado</span>
+    <h2 class="rv">Seu pitch <em>montado</em></h2>
+    <p class="lead rv">As 3 fases, na ordem em que o seu cliente precisa viver cada uma.</p>
+
+    <div class="result-top rv">
+      <div class="meter" id="meter"></div>
+      <div class="crit-box" id="crit-box"></div>
+    </div>
+
+    <div class="pitch-doc rv" id="pitch-doc"></div>
+
+    <div class="actions rv">
+      <button class="btn" onclick="copyAll()">Copiar meu pitch completo</button>
+      <button class="btn ghost" onclick="shareCard()">Baixar card para o story</button>
+    </div>
+
+    <div class="cta rv">
+      <span class="eyebrow">Workshop gratuito</span>
+      <h2>Quer destravar tudo isso <em>ao vivo comigo?</em></h2>
+      <div class="when"><b>O Pitch que Vende</b><span>14 de outubro, quarta-feira · 20h de Brasília / 7pm de Nova York</span></div>
+      <div class="btns">
+        <a class="btn" href="https://www.samaraesoares.com/" target="_blank" rel="noopener">Quero participar <span class="arr">→</span></a>
+        <a class="btn ghost" href="https://chat.whatsapp.com/IhyjGQAgJMu7iX7bHQY1jS?s=cl&amp;p=i&amp;mlu=4&amp;ilr=4" target="_blank" rel="noopener">Entrar no grupo do WhatsApp</a>
+      </div>
+      <small>Ao vivo pelo Google Meet. Sem gravação.</small>
+    </div>
+    <div class="nav"><button class="linkback" onclick="go(4)">← Voltar</button></div>
+  </section>
+
+</main>
+
+<div class="foot"><b>All In</b><span>Samara Soares</span></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= Estado ================= */
+const PHASES = {
+  rapport:     { n: '01', name: 'Rapport',             short: 'Rapport' },
+  diagnostico: { n: '02', name: 'Diagnóstico',         short: 'Diagnóstico' },
+  oferta:      { n: '03', name: 'Estrutura de Oferta', short: 'Oferta' }
+};
+const CRIT_TEXT = {
+  rapport: 'A venda se perde antes de você falar do produto. Comece pelos 3 movimentos da Fase 01: o nome, a observação verdadeira e a pergunta aberta.',
+  diagnostico: 'Você chega na oferta sem saber o suficiente. As 4 perguntas da Fase 02 são o que transforma interesse em urgência.',
+  oferta: 'O cliente entende o valor, mas não encontra o caminho para decidir. As 3 peças da Fase 03 dão a ele o motivo e o convite.'
+};
+const STEPS = ['Início', 'Diagnóstico', 'Fase 01', 'Fase 02', 'Fase 03', 'Seu pitch'];
+const KEY = 'pitch-que-vende-v1';
+
+let S = { step: 0, maxStep: 0, pick: null, scores: { rapport: 5, diagnostico: 5, oferta: 5 }, f: {}, motivo: '', convite: 'a', gen: {} };
+try { const saved = JSON.parse(localStorage.getItem(KEY)); if (saved) S = Object.assign(S, saved); } catch (e) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/* ================= Navegação ================= */
+function renderSteps() {
+  $('#steps').innerHTML = STEPS.map((s, i) => {
+    const cls = i === S.step ? 'now' : (i <= S.maxStep ? 'done' : '');
+    return '<span class="' + cls + '" data-i="' + i + '">' + String(i + 1).padStart(2, '0') + '<span class="lbl"> ' + s + '</span></span>';
+  }).join('');
+  $('#track').style.width = (S.step / (STEPS.length - 1) * 100) + '%';
+}
+$('#steps').addEventListener('click', e => {
+  const el = e.target.closest('[data-i]'); if (!el) return;
+  const i = +el.dataset.i; if (i <= S.maxStep) go(i);
+});
+
+function go(i) {
+  if (i === 2 && !S.pick) { toast('Escolha a fase em que você mais perde oportunidades'); $('#cards').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+  S.step = i; S.maxStep = Math.max(S.maxStep, i); save();
+  $$('.screen').forEach(s => s.classList.toggle('active', +s.dataset.step === i));
+  renderSteps(); renderBadges();
+  if (i === 5) renderResult();
+  window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+}
+
+/* ================= Autodiagnóstico ================= */
+$$('.pcard').forEach(c => c.addEventListener('click', () => { S.pick = c.dataset.p; save(); paintCards(); updateInsight(); }));
+function paintCards() { $$('.pcard').forEach(c => c.classList.toggle('sel', c.dataset.p === S.pick)); }
+
+Object.keys(PHASES).forEach(p => {
+  const r = $('#r-' + p);
+  r.value = S.scores[p];
+  const paint = () => { r.style.setProperty('--p', (r.value * 10) + '%'); $('#o-' + p).innerHTML = r.value + '<small>/10</small>'; };
+  paint();
+  r.addEventListener('input', () => { S.scores[p] = +r.value; paint(); updateInsight(); save(); });
+});
+
+function weakest() {
+  // Menor nota; empate é decidido pela fase escolhida no cartão
+  const min = Math.min(...Object.values(S.scores));
+  const tied = Object.keys(S.scores).filter(p => S.scores[p] === min);
+  return tied.includes(S.pick) ? S.pick : tied[0];
+}
+function updateInsight() {
+  const w = weakest(), el = $('#insight');
+  const total = Object.values(S.scores).reduce((a, b) => a + b, 0);
+  let msg = 'Sua nota média é <b>' + (total / 3).toFixed(1).replace('.', ',') + '</b>. A fase com a menor nota é <b>' + PHASES[w].name + '</b>.';
+  if (S.pick && S.pick !== w) msg += ' Você sente que perde mais em <b>' + PHASES[S.pick].name + '</b>, mas dá a menor nota para <b>' + PHASES[w].name + '</b>. Vale olhar para as duas com atenção.';
+  else if (S.pick) msg += ' Sua percepção e a sua nota apontam para o mesmo lugar. É por aí que o seu pitch mais vaza.';
+  el.innerHTML = msg;
+}
+function renderBadges() {
+  const w = weakest();
+  $$('[data-badge]').forEach(b => {
+    const p = b.dataset.badge;
+    const crit = p === w;
+    b.className = 'badge' + (crit ? ' crit' : '');
+    b.innerHTML = (crit ? '<span class="dot"></span>Sua fase crítica · ' : 'Sua nota: ') + S.scores[p] + '/10';
+  });
+}
+
+/* ================= Acordeões ================= */
+$$('.move-h').forEach(h => h.addEventListener('click', () => h.parentElement.classList.toggle('open')));
+
+/* ================= Campos ================= */
+$$('[data-k]').forEach(el => {
+  if (S.f[el.dataset.k] != null) el.value = S.f[el.dataset.k];
+  el.addEventListener('input', () => {
+    S.f[el.dataset.k] = el.value; save();
+    const phase = el.closest('.screen').dataset.step;
+    const p = { 2: 'rapport', 3: 'diagnostico', 4: 'oferta' }[phase];
+    if (S.gen[p]) paintOutput(p); // atualiza ao vivo depois da primeira geração
+  });
+});
+$$('.chips[data-target]').forEach(box => {
+  const target = document.getElementById(box.dataset.target);
+  box.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
+    target.value = c.textContent; target.dispatchEvent(new Event('input'));
+    box.querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x === c));
+  }));
+});
+function bindChoice(id, key, after) {
+  const box = document.getElementById(id);
+  const paint = () => box.querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x.dataset.v === S[key]));
+  box.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => { S[key] = c.dataset.v; save(); paint(); after && after(); if (S.gen.oferta) paintOutput('oferta'); }));
+  paint(); after && after();
+}
+bindChoice('motivo-chips', 'motivo');
+bindChoice('convite-chips', 'convite', () => $$('.cv').forEach(f => f.classList.toggle('hide', !f.classList.contains('cv-' + S.convite))));
+
+/* ================= Geradores ================= */
+const v = (k, ph) => { const x = (S.f[k] || '').trim().replace(/[.?!]+$/, ''); return x ? { t: x, ok: true } : { t: '[' + ph + ']', ok: false }; };
+const lowerFirst = s => s.charAt(0).toLowerCase() + s.slice(1);
+
+function build(p) {
+  // Devolve blocos { label?, text } com marcação de campos vazios
+  if (p === 'rapport') {
+    const nome = v('nome', 'Nome'), obs = v('obs', 'observação'), perg = v('perg', 'sua pergunta de abertura');
+    const pergTxt = perg.ok ? { t: (S.f.perg || '').trim().replace(/[?]*$/, '?'), ok: true } : perg;
+    return [
+      { label: 'Linha 1 · o nome', parts: [nome, ', antes de eu te mostrar qualquer coisa, eu quero te conhecer.'] },
+      { label: 'Linha 2 · a observação', parts: [nome, ', eu vi que você ', obs.ok ? { t: lowerFirst(obs.t), ok: true } : obs, '.'] },
+      { label: 'Linha 3 · a pergunta', parts: [pergTxt] }
+    ];
+  }
+  if (p === 'diagnostico') {
+    const area = v('area', 'área'), prazo = S.f.prazo && S.f.prazo.trim() ? { t: S.f.prazo.trim(), ok: true } : { t: '6 meses', ok: true };
+    const deep = S.f.deep && S.f.deep.trim() ? { t: S.f.deep.trim(), ok: true } : { t: 'Me conta mais sobre isso.', ok: true };
+    const tentou = (S.f.tentou || '').trim(), futuro = (S.f.futuro || '').trim().replace(/[.]+$/, '');
+    return [
+      { label: '1 · Situação', parts: ['O que está acontecendo hoje em ', area.ok ? { t: lowerFirst(area.t), ok: true } : area, '?'], note: 'Escute fatos e números.' },
+      { label: '2 · Histórico', parts: ['O que você já tentou até aqui?'], note: 'Escute o que falhou e o que quase funcionou.' + (tentou ? ' Preste atenção em: ' + tentou + '.' : '') },
+      { label: '3 · Custo', parts: ['O que custa para você continuar assim por mais ', prazo, '?'], note: 'É aqui que nasce a urgência.' },
+      { label: '4 · Futuro', parts: futuro ? ['Se ', { t: lowerFirst(futuro), ok: true }, ' fosse a sua realidade hoje, como seria o seu dia a dia?'] : ['Se isso estivesse resolvido, como seria o seu dia a dia?'], note: 'Escute a transformação com as palavras da própria pessoa.' },
+      { label: 'Para aprofundar', parts: [deep, '\nO que mais?'], note: 'A primeira resposta é educada. A verdade mora na segunda pergunta.' }
+    ];
+  }
+  if (p === 'oferta') {
+    const nm = v('onome', 'nome'), pr = v('prom', 'promessa'), fo = v('form', 'formato'), tr = v('transf', 'transformação');
+    const mo = v('motivo', 'motivo para decidir agora');
+    let conv;
+    if (S.convite === 'b') conv = ['Eu tenho ', v('vagas', 'X vagas'), ' para ', v('periodo', 'período'), '. Quer uma delas?'];
+    else if (S.convite === 'c') conv = ['O link está ', v('onde', 'onde'), '. É só ', v('acao', 'ação'), '.'];
+    else conv = ['O próximo passo é ', v('acao', 'ação'), '. Vamos fazer agora?'];
+    const lc = x => x.ok ? { t: lowerFirst(x.t), ok: true } : x;
+    return [
+      { label: 'A oferta', parts: ['O ', nm, ' é ', lc(pr), '. Funciona assim: ', lc(fo), '. Depois dele, você ', lc(tr), '.'] },
+      { label: 'O motivo para decidir agora' + (S.motivo ? ' · ' + S.motivo : ''), parts: [mo.ok ? { t: mo.t + '.', ok: true } : mo] },
+      { label: 'O convite', parts: conv }
+    ];
+  }
+}
+const partsText = parts => parts.map(x => typeof x === 'string' ? x : x.t).join('');
+const partsHTML = parts => parts.map(x => typeof x === 'string' ? esc(x) : (x.ok ? esc(x.t) : '<span class="ph">' + esc(x.t) + '</span>')).join('');
+const blocksText = bs => bs.map(b => (b.label ? b.label.toUpperCase() + '\n' : '') + partsText(b.parts) + (b.note ? '\n(' + b.note + ')' : '')).join('\n\n');
+const blocksHTML = bs => bs.map(b => (b.label ? '<span class="lbl">' + esc(b.label) + '</span>' : '') + partsHTML(b.parts) + (b.note ? '\n<span class="note">' + esc(b.note) + '</span>' : '')).join('\n');
+
+function paintOutput(p) { $('#ob-' + p).innerHTML = blocksHTML(build(p)); }
+function generate(p) {
+  const missing = build(p).some(b => b.parts.some(x => typeof x !== 'string' && !x.ok));
+  S.gen[p] = true; save();
+  paintOutput(p);
+  const out = $('#out-' + p);
+  out.classList.remove('show'); void out.offsetWidth; out.classList.add('show');
+  out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  toast(missing ? 'Pronto. Os campos em dourado ainda estão em aberto' : 'Pronto. Está montado');
+}
+
+/* ================= Copiar ================= */
+function copy(text, msg) {
+  const ok = () => toast(msg || 'Copiado');
+  if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text).then(ok, () => fallback());
+  fallback();
+  function fallback() {
+    const t = document.createElement('textarea'); t.value = text; t.style.position = 'fixed'; t.style.opacity = '0';
+    document.body.appendChild(t); t.select();
+    try { document.execCommand('copy'); ok(); } catch (e) { toast('Não foi possível copiar'); }
+    t.remove();
+  }
+}
+function copyPhase(p) { copy(blocksText(build(p)), 'Copiado para a área de transferência'); }
+function fullText() {
+  return 'MEU PITCH EM 3 FASES\nO Pitch que Vende · Samara Soares\n\n' +
+    Object.keys(PHASES).map(p => '• • •\nFASE ' + PHASES[p].n + ' · ' + PHASES[p].name.toUpperCase() + '\n\n' + blocksText(build(p))).join('\n\n') +
+    '\n\n• • •\nWorkshop gratuito O Pitch que Vende · 14 de outubro, 20h de Brasília / 7pm de Nova York\nhttps://www.samaraesoares.com/';
+}
+function copyAll() { copy(fullText(), 'Seu pitch completo foi copiado'); }
+
+/* ================= Resultado ================= */
+function renderResult() {
+  const w = weakest();
+  $('#meter').innerHTML = '<span class="eyebrow" style="margin-bottom:8px;">Suas notas</span>' + Object.keys(PHASES).map(p =>
+    '<div class="mrow' + (p === w ? ' crit' : '') + '"><span>' + PHASES[p].n + ' · ' + PHASES[p].short + '</span><div class="mb"><i data-w="' + S.scores[p] * 10 + '"></i></div><output>' + S.scores[p] + '</output></div>'
+  ).join('');
+  requestAnimationFrame(() => setTimeout(() => $$('#meter i').forEach(i => i.style.width = i.dataset.w + '%'), 80));
+  $('#crit-box').innerHTML = '<span class="eyebrow">Sua fase crítica</span><b>' + PHASES[w].n + ' · ' + PHASES[w].name + '</b><p>' + CRIT_TEXT[w] + '</p>';
+
+  $('#pitch-doc').innerHTML = Object.keys(PHASES).map((p, i) => {
+    const filled = build(p).some(b => b.parts.some(x => typeof x !== 'string' && x.ok));
+    const body = filled
+      ? '<div class="txt">' + blocksHTML(build(p)) + '</div>'
+      : '<div class="empty">Você ainda não montou esta fase. <button onclick="go(' + (i + 2) + ')">Montar agora</button></div>';
+    return '<section><h4><em>' + PHASES[p].n + '</em>' + PHASES[p].name + '</h4>' + body + '</section>';
+  }).join('');
+}
+
+/* ================= Card para o story (1080x1920) ================= */
+async function shareCard() {
+  try { await document.fonts.ready; } catch (e) {}
+  const W = 1080, H = 1920, c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d');
+  const SERIF = '"Cormorant Garamond", "Times New Roman", serif', SANS = 'Inter, system-ui, sans-serif';
+  const gold = '#C8A046', goldSoft = '#E3C98A';
+  x.fillStyle = '#0A1628'; x.fillRect(0, 0, W, H);
+  let g = x.createRadialGradient(W / 2, -100, 50, W / 2, -100, 1100);
+  g.addColorStop(0, 'rgba(200,160,70,0.22)'); g.addColorStop(1, 'rgba(200,160,70,0)');
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  x.strokeStyle = 'rgba(200,160,70,0.35)'; x.lineWidth = 2; x.strokeRect(60, 60, W - 120, H - 120);
+
+  x.textAlign = 'center';
+  x.fillStyle = gold; x.font = '500 30px ' + SANS; spaced(x, 'MEU DIAGNÓSTICO DE PITCH', W / 2, 250, 8);
+  x.fillStyle = '#fff'; x.font = '500 124px ' + SERIF; x.fillText('O Pitch', W / 2, 420);
+  x.fillStyle = gold; x.font = 'italic 500 124px ' + SERIF; x.fillText('que Vende', W / 2, 540);
+
+  const w = weakest(); let y = 740;
+  Object.keys(PHASES).forEach(p => {
+    const crit = p === w;
+    x.textAlign = 'left'; x.fillStyle = crit ? goldSoft : 'rgba(255,255,255,0.85)'; x.font = (crit ? '600 ' : '400 ') + '40px ' + SANS;
+    x.fillText(PHASES[p].n + '  ' + PHASES[p].name, 150, y);
+    x.textAlign = 'right'; x.fillStyle = '#fff'; x.font = '500 64px ' + SERIF; x.fillText(S.scores[p] + '/10', W - 150, y + 6);
+    round(x, 150, y + 34, W - 300, 14, 7, 'rgba(255,255,255,0.08)');
+    if (S.scores[p] > 0) round(x, 150, y + 34, (W - 300) * S.scores[p] / 10, 14, 7, crit ? gold : 'rgba(200,160,70,0.5)');
+    y += 190;
+  });
+
+  x.textAlign = 'center';
+  round(x, 150, 1330, W - 300, 230, 24, 'rgba(200,160,70,0.10)');
+  x.strokeStyle = 'rgba(200,160,70,0.45)'; x.lineWidth = 2; roundPath(x, 150, 1330, W - 300, 230, 24); x.stroke();
+  x.fillStyle = gold; x.font = '500 26px ' + SANS; spaced(x, 'MINHA FASE CRÍTICA', W / 2, 1400, 6);
+  x.fillStyle = '#fff'; x.font = 'italic 500 78px ' + SERIF; x.fillText(PHASES[w].name, W / 2, 1500);
+
+  x.fillStyle = 'rgba(255,255,255,0.75)'; x.font = '300 34px ' + SANS;
+  x.fillText('Workshop gratuito · 14 de outubro', W / 2, 1660);
+  x.fillText('20h de Brasília · 7pm de Nova York', W / 2, 1710);
+  x.fillStyle = gold; x.font = '500 30px ' + SANS; spaced(x, '@SAMARAESOARES', W / 2, 1790, 8);
+
+  c.toBlob(async blob => {
+    const file = new File([blob], 'meu-pitch-que-vende.png', { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try { await navigator.share({ files: [file], text: 'Fiz o diagnóstico do workshop O Pitch que Vende, com @samaraesoares' }); return; } catch (e) { if (e.name === 'AbortError') return; }
+    }
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    toast('Card baixado. Poste no story e marque @samaraesoares');
+  }, 'image/png');
+}
+function spaced(x, t, cx, y, sp) {
+  const chars = [...t]; const w = chars.reduce((a, ch) => a + x.measureText(ch).width + sp, -sp);
+  let px = cx - w / 2; const al = x.textAlign; x.textAlign = 'left';
+  chars.forEach(ch => { x.fillText(ch, px, y); px += x.measureText(ch).width + sp; }); x.textAlign = al;
+}
+function roundPath(x, X, Y, w, h, r) { x.beginPath(); x.moveTo(X + r, Y); x.arcTo(X + w, Y, X + w, Y + h, r); x.arcTo(X + w, Y + h, X, Y + h, r); x.arcTo(X, Y + h, X, Y, r); x.arcTo(X, Y, X + w, Y, r); x.closePath(); }
+function round(x, X, Y, w, h, r, fill) { roundPath(x, X, Y, w, h, Math.min(r, w / 2)); x.fillStyle = fill; x.fill(); }
+
+/* ================= Toast ================= */
+let tt;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('show'), 2400); }
+
+/* ================= Início ================= */
+paintCards(); updateInsight();
+Object.keys(S.gen).forEach(p => { if (S.gen[p]) { paintOutput(p); $('#out-' + p).classList.add('show'); } });
+go(S.step || 0);
+</script>
+</body>
+</html>
