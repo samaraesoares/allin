@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagnóstico Pitch Imparável</title>
+<meta name="description" content="Descubra em 3 minutos qual bloqueio invisível está travando as suas vendas. Diagnóstico gratuito do Método Pitch Imparável®, por Samara Soares.">
+<meta property="og:title" content="Diagnóstico Pitch Imparável® — Samara Soares">
+<meta property="og:description" content="Evento cheio, muitos elogios e poucas vendas? Descubra qual dos 4 bloqueios invisíveis está travando a sua conversão.">
+<meta property="og:image" content="samara-palco.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@1,6..96,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #091422;
+    --navy-mid: #0E1F38;
+    --navy-light: #152A4A;
+    --gold: #C9A47A;
+    --gold-soft: #E2C9A4;
+    --off-white: #FFFCF9;
+    --muted: rgba(255,252,249,0.55);
+    --muted-strong: rgba(255,252,249,0.78);
+    --border: rgba(201,164,122,0.14);
+    --border-strong: rgba(201,164,122,0.40);
+    --display: 'Kepler Std', 'Bodoni Moda', serif;
+    --body: 'SF Pro Display', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--navy); color: var(--off-white); }
+  body {
+    font-family: var(--body);
+    font-weight: 300;
+    line-height: 1.55;
+    min-height: 100vh;
+    background:
+      radial-gradient(ellipse at 50% -10%, rgba(201,164,122,0.07), transparent 60%),
+      var(--navy);
+    -webkit-font-smoothing: antialiased;
+  }
+  .display {
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    line-height: 1.05;
+  }
+  .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--gold);
+    font-weight: 400;
+  }
+  .gold { color: var(--gold); }
+  strong { font-weight: 600; }
+
+  .wrap { max-width: 640px; margin: 0 auto; padding: 32px 20px 64px; }
+  header.top {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px; max-width: 640px; margin: 0 auto;
+  }
+  .signature { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted-strong); }
+
+  .screen { display: none; animation: in .7s var(--ease) both; }
+  .screen.active { display: block; }
+  @keyframes in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+  /* Intro */
+  .hero-photo {
+    width: 100%; aspect-ratio: 4 / 5; max-height: 420px;
+    border-radius: 12px; overflow: hidden; position: relative; margin-bottom: 28px;
+    border: 1px solid var(--border);
+  }
+  .hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 25%; display: block; }
+  .hero-photo::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to top, var(--navy) 0%, rgba(9,20,34,0.25) 45%, transparent 70%);
+  }
+  .hero-photo .tag { position: absolute; left: 20px; bottom: 18px; z-index: 1; }
+  h1.display { font-size: clamp(34px, 8.5vw, 52px); margin: 14px 0 18px; }
+  .lead { font-size: 18px; color: var(--muted-strong); margin-bottom: 26px; }
+  .bullets { list-style: none; margin: 0 0 30px; border-top: 1px solid var(--border); }
+  .bullets li { padding: 14px 0; border-bottom: 1px solid var(--border); display: flex; gap: 14px; font-size: 16px; }
+  .bullets li span:first-child { color: var(--gold); font-weight: 600; min-width: 22px; }
+  .meta { font-size: 13px; color: var(--muted); margin-top: 14px; text-align: center; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; padding: 18px 24px; border-radius: 8px; border: 0;
+    background: var(--gold); color: var(--navy);
+    font-family: var(--body); font-size: 15px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; text-decoration: none;
+    transition: transform .3s var(--ease), background .3s var(--ease);
+  }
+  .btn:hover { background: var(--gold-soft); transform: translateY(-1px); }
+  .btn:disabled { opacity: .35; cursor: not-allowed; transform: none; }
+  .btn.ghost { background: transparent; color: var(--muted-strong); border: 1px solid var(--border-strong); }
+
+  /* Quiz */
+  .progress { display: flex; align-items: center; gap: 14px; margin-bottom: 34px; }
+  .bar { flex: 1; height: 2px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--gold); transition: width .6s var(--ease); }
+  .count { font-size: 12px; letter-spacing: 0.14em; color: var(--muted); min-width: 44px; text-align: right; }
+  .q-block { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+  .q-title { font-size: clamp(22px, 5.2vw, 28px); font-weight: 400; line-height: 1.3; margin-bottom: 28px; }
+  .options { display: grid; gap: 12px; }
+  .opt {
+    text-align: left; width: 100%; padding: 18px 20px;
+    background: var(--navy-mid); color: var(--off-white);
+    border: 1px solid var(--border); border-radius: 12px;
+    font-family: var(--body); font-size: 16px; font-weight: 300; line-height: 1.45;
+    cursor: pointer; display: flex; gap: 14px; align-items: flex-start;
+    transition: border-color .3s var(--ease), background .3s var(--ease), transform .3s var(--ease);
+  }
+  .opt:hover { border-color: var(--border-strong); background: var(--navy-light); }
+  .opt.sel { border-color: var(--gold); background: var(--navy-light); }
+  .opt .k {
+    flex: none; width: 26px; height: 26px; border-radius: 50%;
+    border: 1px solid var(--border-strong); color: var(--gold);
+    display: grid; place-items: center; font-size: 12px; font-weight: 600;
+  }
+  .opt.sel .k { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+  .back {
+    margin-top: 26px; background: none; border: 0; color: var(--muted);
+    font-family: var(--body); font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer;
+  }
+  .back:hover { color: var(--off-white); }
+
+  /* Form */
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted-strong); margin-bottom: 8px; }
+  .field input, .field select {
+    width: 100%; padding: 16px; border-radius: 8px;
+    background: var(--navy-mid); color: var(--off-white);
+    border: 1px solid var(--border); font-family: var(--body); font-size: 16px; font-weight: 300;
+    outline: none; transition: border-color .3s var(--ease); appearance: none;
+  }
+  .field select { background-image: linear-gradient(45deg, transparent 50%, var(--gold) 50%), linear-gradient(135deg, var(--gold) 50%, transparent 50%);
+    background-position: calc(100% - 22px) 50%, calc(100% - 16px) 50%; background-size: 6px 6px; background-repeat: no-repeat; }
+  .field input:focus, .field select:focus { border-color: var(--gold); }
+  .field input::placeholder { color: rgba(255,252,249,0.3); }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 480px) { .row { grid-template-columns: 1fr; } }
+  .consent { display: flex; gap: 10px; font-size: 13px; color: var(--muted); margin: 6px 0 22px; align-items: flex-start; }
+  .consent input { margin-top: 3px; accent-color: var(--gold); }
+  .err { color: var(--gold-soft); font-size: 13px; margin-bottom: 14px; min-height: 18px; }
+
+  /* Loading */
+  .loading { text-align: center; padding: 90px 0; }
+  .spinner { width: 46px; height: 46px; margin: 0 auto 26px; border-radius: 50%; border: 1px solid var(--border); border-top-color: var(--gold); animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Result */
+  .score-card {
+    background: var(--navy-mid); border: 1px solid var(--border); border-radius: 12px;
+    padding: 30px 24px; text-align: center; margin: 22px 0 18px;
+  }
+  .score-num { font-family: var(--display); font-style: italic; font-weight: 700; font-size: 84px; line-height: 1; color: var(--gold); }
+  .score-num small { font-size: 28px; color: var(--muted); }
+  .level { margin-top: 12px; font-size: 22px; }
+  .level-text { color: var(--muted-strong); font-size: 16px; margin-top: 10px; }
+  .blocks { background: var(--navy-mid); border: 1px solid var(--border); border-radius: 12px; padding: 22px 22px 8px; margin-bottom: 26px; }
+  .blk { margin-bottom: 18px; }
+  .blk-head { display: flex; justify-content: space-between; font-size: 15px; margin-bottom: 8px; gap: 10px; }
+  .blk-head .pct { color: var(--muted-strong); font-weight: 600; }
+  .blk.main .blk-head span:first-child { color: var(--gold); font-weight: 600; }
+  .blk-bar { height: 6px; background: rgba(255,252,249,0.07); border-radius: 6px; overflow: hidden; }
+  .blk-bar i { display: block; height: 100%; width: 0; background: rgba(201,164,122,0.45); border-radius: 6px; transition: width 1.2s var(--ease); }
+  .blk.main .blk-bar i { background: var(--gold); }
+  .section { margin: 34px 0 0; }
+  .section h2 { font-size: clamp(26px, 6vw, 34px); margin: 10px 0 16px; }
+  .section p { font-size: 17px; color: var(--muted-strong); margin-bottom: 14px; }
+  .symptoms { list-style: none; margin: 8px 0 18px; }
+  .symptoms li { padding: 10px 0 10px 22px; position: relative; font-size: 16px; border-bottom: 1px solid var(--border); }
+  .symptoms li::before { content: ''; position: absolute; left: 0; top: 19px; width: 8px; height: 1px; background: var(--gold); }
+  .pilar { border-left: 2px solid var(--gold); padding: 6px 0 6px 18px; margin: 18px 0; }
+  .pilar .display { font-size: 22px; color: var(--gold-soft); margin: 6px 0 8px; }
+  .pilar p { margin: 0; }
+  .cta-box {
+    margin-top: 38px; padding: 30px 24px; border-radius: 12px; text-align: center;
+    border: 1px solid var(--border-strong);
+    background: radial-gradient(ellipse at 50% 0%, rgba(201,164,122,0.10), transparent 70%), var(--navy-mid);
+  }
+  .cta-box h3 { font-size: clamp(26px, 6vw, 32px); margin: 12px 0 14px; }
+  .cta-box p { color: var(--muted-strong); margin-bottom: 22px; }
+  .quote { font-family: var(--display); font-style: italic; font-weight: 700; text-transform: uppercase; color: var(--gold); text-align: center; margin: 40px 0 6px; font-size: 18px; letter-spacing: 0.04em; }
+  footer { text-align: center; padding: 24px 20px 40px; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="signature">Samara Soares</span>
+  <span class="signature gold">Pitch Imparável®</span>
+</header>
+
+<main class="wrap">
+
+  <!-- 1. INTRO -->
+  <section class="screen active" id="s-intro">
+    <div class="hero-photo">
+      <img src="samara-palco.jpg" alt="Samara Soares no palco, caminhando com o microfone diante da plateia">
+      <span class="tag label">Diagnóstico gratuito · 3 minutos</span>
+    </div>
+    <span class="label">Método Pitch Imparável®</span>
+    <h1 class="display">Evento cheio, muitos elogios <span class="gold">e poucas vendas?</span></h1>
+    <p class="lead">O problema quase nunca é falta de público. É um <strong>bloqueio invisível</strong> entre a sua autoridade e a decisão de compra do seu cliente. Responda 12 perguntas e descubra qual deles está travando as suas vendas.</p>
+    <ul class="bullets">
+      <li><span>01</span><span>Seu <strong>Índice de Conversão</strong>, de 0 a 100</li>
+      <li><span>02</span><span>Qual dos <strong>4 bloqueios invisíveis</strong> mais pesa no seu negócio hoje</li>
+      <li><span>03</span><span>Por onde começar a destravar, segundo o método</li>
+    </ul>
+    <button class="btn" onclick="start()">Começar meu diagnóstico</button>
+    <p class="meta">Para mentores, palestrantes, especialistas e empresários que vendem conhecimento.</p>
+  </section>
+
+  <!-- 2. QUIZ -->
+  <section class="screen" id="s-quiz">
+    <div class="progress"><div class="bar"><i id="bar"></i></div><span class="count" id="count">1/12</span></div>
+    <div class="q-block" id="q-block"></div>
+    <h2 class="q-title" id="q-title"></h2>
+    <div class="options" id="options"></div>
+    <button class="back" id="back" onclick="prev()">← Voltar</button>
+  </section>
+
+  <!-- 3. CAPTURA -->
+  <section class="screen" id="s-form">
+    <span class="label">Último passo</span>
+    <h2 class="display" style="font-size:clamp(30px,7vw,42px);margin:12px 0 14px;">Seu diagnóstico <span class="gold">está pronto</span></h2>
+    <p class="lead" style="font-size:17px;">Conte um pouco do seu negócio pra eu te mostrar o resultado com a leitura certa pro seu momento.</p>
+    <form id="lead-form" novalidate>
+      <div class="field"><label for="nome">Seu nome</label><input id="nome" name="nome" autocomplete="name" placeholder="Como posso te chamar?"></div>
+      <div class="row">
+        <div class="field"><label for="whatsapp">WhatsApp</label><input id="whatsapp" name="whatsapp" type="tel" autocomplete="tel" placeholder="+55 11 99999-9999"></div>
+        <div class="field"><label for="email">E-mail</label><input id="email" name="email" type="email" autocomplete="email" placeholder="voce@email.com"></div>
+      </div>
+      <div class="field"><label for="instagram">Instagram</label><input id="instagram" name="instagram" placeholder="@seuperfil"></div>
+      <div class="field"><label for="atuacao">Você é</label>
+        <select id="atuacao" name="atuacao">
+          <option value="">Selecione</option>
+          <option>Mentor(a) ou coach</option>
+          <option>Palestrante</option>
+          <option>Especialista / prestador(a) de serviço</option>
+          <option>Infoprodutor(a)</option>
+          <option>Empresário(a) com equipe comercial</option>
+        </select>
+      </div>
+      <div class="row">
+        <div class="field"><label for="faturamento">Faturamento mensal</label>
+          <select id="faturamento" name="faturamento">
+            <option value="">Selecione</option>
+            <option value="0-10k">Até R$ 10 mil</option>
+            <option value="10-30k">R$ 10 a 30 mil</option>
+            <option value="30-50k">R$ 30 a 50 mil</option>
+            <option value="50-100k">R$ 50 a 100 mil</option>
+            <option value="100k+">Acima de R$ 100 mil</option>
+          </select>
+        </div>
+        <div class="field"><label for="equipe">Equipe comercial</label>
+          <select id="equipe" name="equipe">
+            <option value="">Selecione</option>
+            <option value="nao">Vendo sozinho(a)</option>
+            <option value="1-2">1 a 2 pessoas</option>
+            <option value="3+">3 ou mais</option>
+          </select>
+        </div>
+      </div>
+      <label class="consent"><input type="checkbox" id="consent" checked> Aceito receber o resultado e conteúdos da Samara Soares pelo WhatsApp e e-mail.</label>
+      <div class="err" id="err"></div>
+      <button class="btn" type="submit">Ver meu resultado</button>
+    </form>
+  </section>
+
+  <!-- 4. LOADING -->
+  <section class="screen" id="s-loading">
+    <div class="loading">
+      <div class="spinner"></div>
+      <span class="label">Analisando suas respostas</span>
+      <p class="lead" style="margin-top:14px;" id="loading-text">Cruzando com os 4 pilares do método…</p>
+    </div>
+  </section>
+
+  <!-- 5. RESULTADO -->
+  <section class="screen" id="s-result">
+    <span class="label" id="r-hello"></span>
+    <h1 class="display" style="font-size:clamp(30px,7.5vw,44px);margin-top:12px;">Seu Índice de <span class="gold">Conversão</span></h1>
+
+    <div class="score-card">
+      <div class="score-num"><span id="r-score">0</span><small>/100</small></div>
+      <div class="level display" id="r-level"></div>
+      <p class="level-text" id="r-level-text"></p>
+    </div>
+
+    <div class="blocks" id="r-blocks"></div>
+
+    <div class="section">
+      <span class="label">Seu bloqueio principal</span>
+      <h2 class="display" id="r-main-name"></h2>
+      <p id="r-main-text"></p>
+      <p style="margin-bottom:4px;"><strong>Os sinais que costumam aparecer:</strong></p>
+      <ul class="symptoms" id="r-main-symptoms"></ul>
+      <p id="r-main-cost"></p>
+      <div class="pilar">
+        <span class="label">Por onde começar</span>
+        <div class="display" id="r-pilar-name"></div>
+        <p id="r-pilar-text"></p>
+      </div>
+    </div>
+
+    <div class="section">
+      <span class="label">A leitura por trás do número</span>
+      <p>A maioria acredita que vende pouco porque precisa de mais público, mais tráfego ou de um pitch mais persuasivo. Na prática, o que falta é uma <strong>engenharia de conversão</strong>: produto, comunicação, palco e comercial trabalhando juntos pra conduzir a pessoa até o sim.</p>
+      <p>É isso que o <strong>Sistema Pitch Imparável™</strong> constrói. E é por isso que o seu diagnóstico não termina aqui.</p>
+    </div>
+
+    <div class="cta-box">
+      <span class="label">Próximo passo</span>
+      <h3 class="display">Sessão de <span class="gold">Diagnóstico</span></h3>
+      <p>Uma conversa estratégica comigo pra olhar o seu cenário de perto, confirmar onde está o gargalo real e desenhar o caminho pra destravar. As vagas são limitadas e passam por aplicação.</p>
+      <a class="btn" id="cta" href="https://form.respondi.app/x7aEH3jt" target="_blank" rel="noopener">Quero aplicar pra sessão</a>
+    </div>
+
+    <p class="quote">Movimento gera milagres.</p>
+  </section>
+
+</main>
+
+<footer>Samara Soares · @samaraesoares · All In</footer>
+
+<script>
+/* ============================================================
+   CONFIGURAÇÃO — o que muda sem mexer no resto do código
+   ============================================================ */
+const CONFIG = {
+  // URL que recebe cada lead (Google Apps Script, Zapier, Make, n8n…).
+  // Vazio = o diagnóstico funciona, mas o lead não é salvo em lugar nenhum.
+  webhook: '',
+  // Link do botão final (formulário de aplicação da Sessão de Diagnóstico)
+  ctaUrl: 'https://form.respondi.app/x7aEH3jt',
+  // ID do Meta Pixel (opcional). Dispara PageView, Lead e ViewContent.
+  pixelId: ''
+};
+
+/* ============================================================
+   OS 4 BLOQUEIOS — nomes registrados do Método Pitch Imparável®
+   ============================================================ */
+const BLOCKS = {
+  produto: {
+    name: 'Produto sem Desejo™',
+    text: 'A sua oferta foi construída a partir do que você sabe fazer, e não do que o mercado deseja comprar. Por isso ela soa parecida com a de todo mundo, e o preço vira a principal conversa.',
+    symptoms: ['Oferta comum, difícil de diferenciar', 'Promessa fraca ou genérica', 'Baixo valor percebido', 'Dificuldade para cobrar mais'],
+    cost: 'Enquanto a oferta não despertar desejo, cada venda vai exigir mais esforço, mais desconto e mais explicação do que deveria.',
+    pilar: 'Engenharia da Oferta™',
+    pilarText: 'Transformar o seu conhecimento em uma oferta impossível de ser ignorada: promessa, transformação, escada de produtos e preço que o mercado entende e aceita pagar.'
+  },
+  comunicacao: {
+    name: 'Comunicação sem Influência™',
+    text: 'A sua mensagem informa, mas não desperta emoção, confiança e urgência. A autoridade que você tem não chega inteira até quem precisa te escolher.',
+    symptoms: ['Autoridade que o mercado não enxerga', 'Público curioso, mas desqualificado', 'Conteúdo sem conexão com a venda', 'Pitch confuso ou tímido'],
+    cost: 'Sem influência, você atrai admiração, mas não decisão. E quem chega, chega perguntando preço em vez de pedindo pra trabalhar com você.',
+    pilar: 'Extração da Autoridade Comercial™',
+    pilarText: 'Posicionamento, público ideal, diferencial e marca pessoal construídos pra você despertar confiança e desejo antes mesmo de apresentar a oferta.'
+  },
+  evento: {
+    name: 'Evento sem Jornada™',
+    text: 'Palco, live ou apresentação estão sendo tratados como palestra, quando deveriam ser uma experiência que conduz a audiência naturalmente até a compra. É a Síndrome do Evento Bonito™ em ação.',
+    symptoms: ['Plateia engajada, mas sem intenção de compra', 'Pitch desconectado da apresentação', 'Falta de encantamento na hora da oferta', 'Baixa conversão no fechamento'],
+    cost: 'Cada evento sem jornada é uma sala cheia de clientes em potencial indo embora com um aplauso em vez de uma decisão.',
+    pilar: 'Pitch Imparável™',
+    pilarText: 'O coração do método: estrutura da apresentação, storytelling, neurociência da decisão e chamada pra ação desenhados pra audiência chegar na oferta pronta pra dizer sim.'
+  },
+  comercial: {
+    name: 'Comercial sem Continuidade™',
+    text: 'O seu evento, conteúdo ou conversa termina exatamente quando as vendas deveriam começar. Existe interesse, mas não existe processo pra transformar esse interesse em contrato.',
+    symptoms: ['Follow-up inexistente ou improvisado', 'Calls sem estratégia, que viram consultoria grátis', 'Leads perdidos no caminho', 'Números que ninguém acompanha'],
+    cost: 'Sem continuidade, o faturamento depende da sua energia do mês, e não de um sistema. É aqui que a venda previsível se perde.',
+    pilar: 'Conversão Escalável™',
+    pilarText: 'Aplicação, call estratégica, follow-up, CRM e indicadores funcionando como um processo que continua convertendo mesmo depois que o evento termina.'
+  }
+};
+
+/* ============================================================
+   PERGUNTAS — 3 por bloqueio. Cada opção vale de 0 a 3
+   (3 = o bloqueio não aparece). Ordem das opções é embaralhada
+   na tela, a pontuação acompanha a opção.
+   ============================================================ */
+const QUESTIONS = [
+  { b: 'produto', q: 'Quando alguém pergunta "o que você vende?", o que acontece?', o: [
+    ['Explico o que eu faço, e a pessoa não entende o que ganha com isso', 0],
+    ['Explico bem, mas soa parecido com todo mundo do meu mercado', 1],
+    ['Falo do resultado, mas sem prazo e sem prova concreta', 2],
+    ['Em uma frase a pessoa entende o resultado, o prazo e por que eu', 3] ] },
+  { b: 'produto', q: 'Como é a hora de falar o preço?', o: [
+    ['Travo, e muitas vezes ofereço desconto antes de alguém pedir', 0],
+    ['Falo, mas sinto que a pessoa acha caro', 1],
+    ['Sustento o valor, mas perco venda pra quem cobra menos', 2],
+    ['Falo com tranquilidade, porque o valor já foi percebido antes', 3] ] },
+  { b: 'produto', q: 'A sua oferta principal foi construída a partir de…', o: [
+    ['Tudo o que eu sei ensinar', 0],
+    ['O que eu acho que as pessoas precisam', 1],
+    ['Conversas com clientes, mas nunca revisei desde que lancei', 2],
+    ['O que o meu cliente ideal deseja, validado com vendas reais', 3] ] },
+
+  { b: 'comunicacao', q: 'Quem chega até você (direct, evento, indicação) normalmente…', o: [
+    ['Pergunta o preço e some', 0],
+    ['Admira o seu trabalho, mas não tem perfil pra comprar', 1],
+    ['É uma mistura: alguns qualificados, muitos curiosos', 2],
+    ['Já chega sabendo quem você é e querendo trabalhar com você', 3] ] },
+  { b: 'comunicacao', q: 'O seu conteúdo hoje…', o: [
+    ['Quase não existe, ou sai sem regularidade', 0],
+    ['Informa, mas não gera conversa', 1],
+    ['Gera engajamento, mas raramente vira venda', 2],
+    ['Gera pedidos de conversa e aplicações com frequência', 3] ] },
+  { b: 'comunicacao', q: 'E a sua história, resultados e trajetória?', o: [
+    ['Tenho competência, mas o mercado ainda não enxerga isso', 0],
+    ['Tenho história e resultado, mas quase não uso na comunicação', 1],
+    ['Uso, mas soa como currículo', 2],
+    ['Entram de forma natural e fazem as pessoas confiarem em mim', 3] ] },
+
+  { b: 'evento', q: 'Quando você faz uma palestra, live ou evento, no final…', o: [
+    ['Ainda não uso palco, live ou evento pra vender', 0],
+    ['Vêm aplausos e elogios, e quase nenhuma venda', 1],
+    ['Algumas pessoas me procuram depois, sem nada estruturado', 2],
+    ['A audiência chega na oferta pronta pra decidir', 3] ] },
+  { b: 'evento', q: 'O seu pitch, o momento de apresentar a oferta:', o: [
+    ['Não tenho pitch, eu improviso', 0],
+    ['Tenho, mas fico desconfortável e acelero pra acabar logo', 1],
+    ['Tem estrutura, mas a conversão varia muito de uma vez pra outra', 2],
+    ['Tem roteiro, foi ensaiado e converte com previsibilidade', 3] ] },
+  { b: 'evento', q: 'A sua apresentação foi construída pra…', o: [
+    ['Ensinar o máximo possível', 0],
+    ['Inspirar e emocionar', 1],
+    ['Ensinar bastante e, no fim, vender', 2],
+    ['Conduzir cada momento até a decisão de compra', 3] ] },
+
+  { b: 'comercial', q: 'Depois de um evento ou conteúdo, com quem demonstrou interesse, você…', o: [
+    ['Espera a pessoa voltar a chamar', 0],
+    ['Responde quem chama, sem processo definido', 1],
+    ['Faz follow-up, mas sem rotina nem registro', 2],
+    ['Segue um processo: aplicação, call, follow-up e CRM', 3] ] },
+  { b: 'comercial', q: 'As suas calls ou conversas de venda:', o: [
+    ['Não faço call, vendo por mensagem (ou não vendo)', 0],
+    ['Viram uma consultoria gratuita', 1],
+    ['Seguem um roteiro, mas não sei a minha taxa de fechamento', 2],
+    ['Têm roteiro claro, e eu sei quanto fecho a cada 10 conversas', 3] ] },
+  { b: 'comercial', q: 'Sobre os seus números de venda do último mês:', o: [
+    ['Não sei quantos leads, conversas e vendas eu tive', 0],
+    ['Sei o faturamento, e só', 1],
+    ['Acompanho alguns números, de vez em quando', 2],
+    ['Acompanho o funil toda semana e sei onde está o gargalo', 3] ] }
+];
+
+const LEVELS = [
+  { min: 0,  name: 'Venda no improviso', text: 'Você tem conhecimento e autoridade, mas hoje a venda acontece apesar do processo, não por causa dele. A boa notícia: é exatamente o ponto em que pequenos ajustes geram o maior salto.' },
+  { min: 40, name: 'Conversão que depende de você', text: 'Algumas peças já funcionam, mas o resultado ainda oscila com a sua energia do mês. Falta conectar as partes pra venda virar sistema.' },
+  { min: 70, name: 'Pronto pra escalar', text: 'A base está construída. O próximo nível agora é previsibilidade e escala: palco, time e processo trabalhando no mesmo ritmo.' }
+];
+
+/* ============================================================
+   MOTOR
+   ============================================================ */
+const state = { i: 0, answers: [], order: [] };
+const $ = id => document.getElementById(id);
+
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function start() {
+  state.order = QUESTIONS.map(q => shuffle(q.o));
+  state.i = 0; state.answers = [];
+  show('s-quiz'); render();
+}
+
+function render() {
+  const q = QUESTIONS[state.i];
+  $('bar').style.width = (state.i / QUESTIONS.length * 100) + '%';
+  $('count').textContent = (state.i + 1) + '/' + QUESTIONS.length;
+  $('q-block').textContent = 'Pergunta ' + String(state.i + 1).padStart(2, '0');
+  $('q-title').textContent = q.q;
+  $('back').style.visibility = state.i === 0 ? 'hidden' : 'visible';
+  const box = $('options'); box.innerHTML = '';
+  state.order[state.i].forEach((opt, k) => {
+    const b = document.createElement('button');
+    b.className = 'opt' + (state.answers[state.i] === opt[1] && state.picked?.[state.i] === k ? ' sel' : '');
+    b.innerHTML = '<span class="k">' + 'ABCD'[k] + '</span><span></span>';
+    b.lastChild.textContent = opt[0];
+    b.onclick = () => pick(k, opt[1], b);
+    box.appendChild(b);
+  });
+}
+
+function pick(k, val, el) {
+  state.picked = state.picked || [];
+  state.picked[state.i] = k;
+  state.answers[state.i] = val;
+  el.classList.add('sel');
+  setTimeout(() => {
+    if (state.i < QUESTIONS.length - 1) { state.i++; render(); }
+    else { $('bar').style.width = '100%'; show('s-form'); }
+  }, 260);
+}
+
+function prev() { if (state.i > 0) { state.i--; render(); } }
+
+function compute() {
+  const per = {};
+  Object.keys(BLOCKS).forEach(b => per[b] = { got: 0, max: 0 });
+  QUESTIONS.forEach((q, i) => { per[q.b].got += state.answers[i] || 0; per[q.b].max += 3; });
+  const pct = {};
+  let got = 0, max = 0;
+  Object.keys(per).forEach(b => { pct[b] = Math.round(per[b].got / per[b].max * 100); got += per[b].got; max += per[b].max; });
+  const score = Math.round(got / max * 100);
+  // Bloqueio principal = menor % (empate: a ordem da jornada decide)
+  const main = Object.keys(pct).reduce((a, b) => pct[b] < pct[a] ? b : a);
+  const level = LEVELS.filter(l => score >= l.min).pop();
+  return { score, pct, main, level };
+}
+
+/* Indicação interna da escada, só vai pro webhook (não aparece pro lead).
+   É uma sugestão pra Samara, a decisão final sai da Sessão de Diagnóstico. */
+function suggestOffer(lead, r) {
+  const big = lead.faturamento === '50-100k' || lead.faturamento === '100k+';
+  if (big && lead.equipe && lead.equipe !== 'nao') return 'PERFORMANCE';
+  if (r.main === 'produto') return 'SPRINT';
+  return 'NÚCLEO / ESTRATÉGIA';
+}
+
+$('lead-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const f = Object.fromEntries(new FormData(e.target).entries());
+  const phoneDigits = (f.whatsapp || '').replace(/\D/g, '');
+  if (!f.nome.trim()) return err('Me conta o seu nome.');
+  if (phoneDigits.length < 10) return err('Confere o WhatsApp, com DDD.');
+  if (!/^\S+@\S+\.\S+$/.test(f.email)) return err('Confere o e-mail.');
+  if (!f.faturamento || !f.equipe) return err('Seleciona o faturamento e a equipe, é o que calibra a leitura.');
+  err('');
+
+  const r = compute();
+  const payload = {
+    data: new Date().toISOString(),
+    ...f,
+    consentimento: $('consent').checked,
+    indice: r.score,
+    nivel: r.level.name,
+    bloqueio_principal: BLOCKS[r.main].name,
+    produto_sem_desejo: r.pct.produto,
+    comunicacao_sem_influencia: r.pct.comunicacao,
+    evento_sem_jornada: r.pct.evento,
+    comercial_sem_continuidade: r.pct.comercial,
+    indicacao_interna: suggestOffer(f, r),
+    respostas: state.answers.join(','),
+    origem: new URLSearchParams(location.search).get('utm_source') || document.referrer || 'direto'
+  };
+  send(payload);
+  if (window.fbq) fbq('track', 'Lead');
+
+  show('s-loading');
+  const msgs = ['Cruzando com os 4 pilares do método…', 'Identificando o seu bloqueio principal…', 'Montando a sua leitura…'];
+  let m = 0;
+  const t = setInterval(() => { m++; if (m < msgs.length) $('loading-text').textContent = msgs[m]; }, 900);
+  setTimeout(() => { clearInterval(t); showResult(f, r); }, 2800);
+});
+
+function err(msg) { $('err').textContent = msg; }
+
+function send(payload) {
+  if (!CONFIG.webhook) { console.info('[diagnóstico] webhook vazio, lead não enviado:', payload); return; }
+  // text/plain evita preflight de CORS (funciona com Apps Script, Zapier, Make, n8n)
+  fetch(CONFIG.webhook, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
+    .catch(e => console.warn('[diagnóstico] falha ao enviar lead', e));
+}
+
+function showResult(lead, r) {
+  const first = lead.nome.trim().split(/\s+/)[0];
+  $('r-hello').textContent = first + ', este é o seu diagnóstico';
+  $('r-level').textContent = r.level.name;
+  $('r-level-text').textContent = r.level.text;
+
+  const box = $('r-blocks'); box.innerHTML = '';
+  Object.keys(BLOCKS).forEach(b => {
+    const d = document.createElement('div');
+    d.className = 'blk' + (b === r.main ? ' main' : '');
+    d.innerHTML = '<div class="blk-head"><span></span><span class="pct">' + r.pct[b] + '%</span></div><div class="blk-bar"><i></i></div>';
+    d.querySelector('span').textContent = BLOCKS[b].name + (b === r.main ? '  ·  principal' : '');
+    box.appendChild(d);
+    setTimeout(() => d.querySelector('i').style.width = r.pct[b] + '%', 200);
+  });
+
+  const B = BLOCKS[r.main];
+  $('r-main-name').textContent = B.name;
+  $('r-main-text').textContent = B.text;
+  $('r-main-symptoms').innerHTML = B.symptoms.map(s => '<li>' + s + '</li>').join('');
+  $('r-main-cost').textContent = B.cost;
+  $('r-pilar-name').textContent = B.pilar;
+  $('r-pilar-text').textContent = B.pilarText;
+  $('cta').href = CONFIG.ctaUrl;
+
+  show('s-result');
+  if (window.fbq) fbq('track', 'ViewContent', { content_name: B.name });
+
+  // contador do índice
+  let n = 0; const target = r.score;
+  const step = () => { n = Math.min(target, n + Math.max(1, Math.ceil(target / 40))); $('r-score').textContent = n; if (n < target) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
+
+/* Meta Pixel (só carrega se tiver ID) */
+if (CONFIG.pixelId) {
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', CONFIG.pixelId); fbq('track', 'PageView');
+}
+</script>
+</body>
+</html>
