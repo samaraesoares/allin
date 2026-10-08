@@ -74,6 +74,7 @@ O detalhe completo — mecanismos, pilares, clientes, canais, histórico — est
 | `/fechamento-mes` | fecha o mês: faturado, recorrente, entradas e saídas, meta |
 | `/fluxo-caixa` | projeção de caixa de 90 dias e o mês que fica no vermelho |
 | `/garimpo` | baixa o conteúdo de um perfil do Instagram e transforma vídeo em print, transcrição e headline |
+| `/edita-reel` | edita reel falado: transcreve local, propõe cortes pra aprovar, legenda (PT/EN), acelera e exporta 9:16 |
 | `/setup` | configuração inicial (já rodado) |
 
 ## Tom de voz
