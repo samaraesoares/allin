@@ -25,7 +25,7 @@ Identidade visual: verde floresta, verde oliva, branco, preto e detalhes terroso
 | Área | Responsável inicial |
 |---|---|
 | CEO — Direção Executiva | Guilherme |
-| CFO — Financeiro | Larissa |
+| CFO — Financeiro e Administrativo | Larissa |
 | Direção de Projetos | Samara |
 | CMO — Marketing | Tcharles |
 | Liderança Comercial | Douglas (time: Dani Lenzi, Dani Lima e Carol) |
@@ -100,7 +100,7 @@ O dashboard deve possuir filtros por evento, departamento, responsável, cidade,
 
 ## 4. Módulos principais do sistema
 
-### A. Administrativo
+### A. Administrativo — responsável: Larissa
 
 Criar:
 

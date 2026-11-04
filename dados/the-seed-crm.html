@@ -1,9 +1,9 @@
-<title>THE SEED CRM</title>
+<title>THE SEED Central</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Instrument+Sans:wght@400;500;600&display=swap">
 <style>
-/* Layout: barra superior com abas, faixa de números, filtros, e a vista (funil em colunas roláveis, follow-ups em tabela, time por área). */
+/* Layout: cabeçalho com abas principais e sub-abas; cada vista é um painel de números, quadro em colunas ou tabela; fichas abrem em painel lateral. */
 :root{
   --bg:#f6f5ef; --surface:#ffffff; --sunk:#eceade; --line:#d9d6c6;
   --fg:#16190f; --muted:#5d6152;
@@ -29,12 +29,13 @@
   --danger:#ee8b80; --danger-bg:#3a1d19; --warn:#e3b765; --warn-bg:#352a14; --ok:#8fcf98; --ok-bg:#1b3020;
   color-scheme:dark }
 
-*{box-sizing:border-box}
+*{box-sizing:border-box} [hidden]{display:none!important}
 body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:14px;line-height:1.45}
-.wrap{max-width:1400px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+.wrap{max-width:1400px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:16px}
 h1,h2,h3{font-weight:400;margin:0;text-wrap:balance}
 h1{font-family:var(--display);font-size:26px;letter-spacing:.01em;color:var(--forest)}
 h2{font-family:var(--display);font-size:19px}
+h3{font-family:var(--display);font-size:16px;color:var(--forest)}
 .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--olive);font-weight:600}
 .muted{color:var(--muted)}
 .num{font-variant-numeric:tabular-nums}
@@ -44,79 +45,108 @@ header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:spac
 nav.tabs{display:flex;gap:4px;background:var(--sunk);padding:4px;border-radius:999px;flex-wrap:wrap}
 nav.tabs a{padding:7px 14px;border-radius:999px;color:var(--muted);text-decoration:none;font-weight:500}
 nav.tabs a[aria-current="page"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 2px rgb(0 0 0 / .08)}
-nav.tabs a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+nav.sub{display:flex;gap:18px;border-bottom:1px solid var(--line);flex-wrap:wrap;align-items:flex-end}
+nav.sub a{padding:8px 2px;color:var(--muted);text-decoration:none;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px}
+nav.sub a[aria-current="page"]{color:var(--fg);border-color:var(--olive)}
+nav.sub .owner{margin-left:auto;font-size:12px;color:var(--muted);padding:8px 0}
+nav a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
-button,.btn{font:inherit;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:var(--r);padding:8px 14px;cursor:pointer;font-weight:500}
+button{font:inherit;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:var(--r);padding:8px 14px;cursor:pointer;font-weight:500}
 button:hover{border-color:var(--olive)}
-button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 button.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
 button.danger{color:var(--danger);border-color:var(--danger)}
 button.danger.armed{background:var(--danger);color:var(--surface)}
+button.ok{color:var(--ok);border-color:var(--ok)}
 button.ghost{border-color:transparent;background:transparent;padding:4px 8px}
+button.sm{padding:4px 10px;font-size:13px}
 button:disabled{opacity:.5;cursor:not-allowed}
 
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
-.stat{background:var(--surface);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat{background:var(--surface);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0;text-align:left;border:0;border-radius:0;font-weight:400}
+a.stat,button.stat{cursor:pointer;text-decoration:none;color:inherit}
+a.stat:hover,button.stat:hover{background:var(--sunk)}
 .stat b{font-size:22px;font-weight:500;font-variant-numeric:tabular-nums}
 .stat small{color:var(--muted)}
 .stat.alert b{color:var(--danger)}
 
-.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.filters label{display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--muted)}
-input,select,textarea{font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:7px 9px;min-width:0}
-.filters input,.filters select{min-width:150px}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end}
+.toolbar label{display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--muted)}
+.toolbar .sp{flex:1}
+input,select,textarea{font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:7px 9px;min-width:0;max-width:100%}
+.toolbar input,.toolbar select{min-width:150px}
 
 .board-scroll{overflow-x:auto;padding-bottom:6px}
-.board{display:grid;grid-template-columns:repeat(8,minmax(230px,1fr));gap:10px;min-width:min-content}
-.col{background:var(--sunk);border-radius:var(--r);padding:10px;display:flex;flex-direction:column;gap:8px;min-height:160px}
+.board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(230px,1fr);gap:10px;min-width:min-content}
+.col{background:var(--sunk);border-radius:var(--r);padding:10px;display:flex;flex-direction:column;gap:8px;min-height:140px}
 .col header{display:flex;justify-content:space-between;align-items:baseline;gap:6px}
 .col header span{font-weight:600;font-size:13px}
 .col header small{color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
-.col.won{background:var(--ok-bg)} .col.lost{opacity:.85}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px;display:flex;flex-direction:column;gap:6px;cursor:pointer;text-align:left;width:100%}
+.col.won{background:var(--ok-bg)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px;display:flex;flex-direction:column;gap:6px;cursor:pointer;text-align:left;width:100%;min-width:0}
 .card:hover{border-color:var(--olive)}
 .card .t{font-weight:600;overflow-wrap:anywhere}
 .card .meta{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
 .card .row{display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap}
-.card .moves{display:flex;gap:2px}
 .empty-col{font-size:12px;color:var(--muted);padding:6px 2px}
 
-.chip{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--sunk);color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
-.chip.late{background:var(--danger-bg);color:var(--danger);font-weight:600}
-.chip.today{background:var(--warn-bg);color:var(--warn);font-weight:600}
-.chip.paid{background:var(--ok-bg);color:var(--ok)}
-.chip.pend{background:var(--warn-bg);color:var(--warn)}
-.chip.cancel{background:var(--danger-bg);color:var(--danger)}
+.chip{align-self:flex-start;display:inline-flex;align-items:center;gap:4px;font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--sunk);color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.chip.late,.chip.bad{background:var(--danger-bg);color:var(--danger);font-weight:600}
+.chip.today,.chip.pend{background:var(--warn-bg);color:var(--warn)}
+.chip.today{font-weight:600}
+.chip.good{background:var(--ok-bg);color:var(--ok)}
+.chip.crit{background:transparent;border:1px solid var(--danger);color:var(--danger)}
 
 .table-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
 table{border-collapse:collapse;width:100%;min-width:720px}
 th,td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
-th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;background:var(--sunk)}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;background:var(--sunk);white-space:nowrap}
+td.r,th.r{text-align:right}
 tr:last-child td{border-bottom:0}
 tr.click{cursor:pointer} tr.click:hover td{background:var(--sunk)}
+tfoot td{font-weight:600;background:var(--sunk)}
 
-.areas{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
-.area{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
-.area h3{font-family:var(--display);font-size:16px;color:var(--forest)}
-.person{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;padding:6px 0;border-top:1px solid var(--line)}
-.person:first-of-type{border-top:0}
-.person div{min-width:0}
-.person .n{font-weight:600}
-.person .c{font-size:12px;color:var(--muted)}
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.panel.click{cursor:pointer;text-align:left;font-weight:400}
+.panel.click:hover{border-color:var(--olive)}
+.two{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:14px}
+@media (max-width:900px){.two{grid-template-columns:1fr}}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:13px}
+.kv dt{color:var(--muted)} .kv dd{margin:0;overflow-wrap:anywhere}
+.bar{height:6px;background:var(--sunk);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--olive)}
+.countdown{font-family:var(--display);font-size:40px;line-height:1;color:var(--forest)}
+.list{display:flex;flex-direction:column}
+.li{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--line);align-items:flex-start}
+.li:first-child{border-top:0}
+.li>div{min-width:0}
+.li .n{font-weight:600;overflow-wrap:anywhere}
+.li .c{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.li.click{cursor:pointer}
+.li.click:hover .n{color:var(--forest);text-decoration:underline}
+.etapa{display:flex;flex-direction:column;gap:6px}
+.etapa h4{margin:0;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);display:flex;justify-content:space-between}
+.task{display:flex;gap:8px;align-items:flex-start;padding:6px 8px;border-radius:6px;background:var(--sunk)}
+.task input[type=checkbox]{margin-top:3px;width:16px;height:16px;accent-color:var(--forest)}
+.task .body{flex:1;min-width:0;cursor:pointer}
+.task.done .n{text-decoration:line-through;color:var(--muted)}
 
 .state{border:1px dashed var(--line);border-radius:var(--r);padding:28px;text-align:center;color:var(--muted);display:flex;flex-direction:column;gap:10px;align-items:center}
 .state h2{color:var(--fg)}
 
 .overlay{position:fixed;inset:0;background:rgb(10 14 8 / .45);display:flex;justify-content:flex-end;z-index:20}
-.sheet{background:var(--bg);width:min(560px,100%);height:100%;overflow-y:auto;padding:20px max(18px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) 18px;padding-top:calc(20px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;gap:14px;border-left:1px solid var(--line)}
+.sheet{background:var(--bg);width:min(600px,100%);height:100%;overflow-y:auto;padding:calc(20px + env(safe-area-inset-top,0px)) max(18px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) 18px;display:flex;flex-direction:column;gap:14px;border-left:1px solid var(--line)}
 .sheet header{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media (max-width:520px){.grid2{grid-template-columns:1fr}}
 .field{display:flex;flex-direction:column;gap:4px;min-width:0}
-.field label{font-size:12px;font-weight:600;color:var(--muted)}
+.field>label{font-size:12px;font-weight:600;color:var(--muted)}
 .field.full{grid-column:1/-1}
-.field .err{color:var(--danger);font-size:12px;min-height:0}
-.field.bad input,.field.bad select{border-color:var(--danger)}
+.field .err{color:var(--danger);font-size:12px}
+.field.bad input,.field.bad select,.field.bad textarea{border-color:var(--danger)}
+.field.check{flex-direction:row;align-items:center;gap:8px}
+.field .hint{font-size:12px;color:var(--muted)}
 .note{font-size:12px;padding:8px 10px;border-radius:6px;background:var(--warn-bg);color:var(--warn)}
 .actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:14px}
 .actions .r{display:flex;gap:8px;flex-wrap:wrap}
@@ -130,34 +160,15 @@ tr.click{cursor:pointer} tr.click:hover td{background:var(--sunk)}
   <header class="top">
     <div class="brand">
       <span class="eyebrow">Propósito · Conexão · Expansão</span>
-      <h1>THE SEED · CRM</h1>
-      <span class="muted" id="sub">Funil comercial e time · liderança comercial: Douglas</span>
+      <h1>THE SEED · Central de Gestão</h1>
+      <span class="muted">Projetos, comercial, administrativo e time em um só lugar</span>
     </div>
-    <nav class="tabs" aria-label="Seções">
-      <a href="#funil" data-view="funil">Funil</a>
-      <a href="#followups" data-view="followups">Follow-ups</a>
-      <a href="#time" data-view="time">Time</a>
-    </nav>
+    <nav class="tabs" id="nav-main" aria-label="Áreas"></nav>
   </header>
+  <nav class="sub" id="nav-sub" aria-label="Seções"></nav>
 
-  <div id="status" class="state"><h2>Conectando ao CRM…</h2><span>Carregando oportunidades e time.</span></div>
-
-  <main id="app" hidden>
-    <section class="stats" id="stats" aria-label="Resumo"></section>
-
-    <div class="filters" id="filters">
-      <label>Buscar<input id="f-q" type="search" placeholder="Cliente, telefone, e-mail"></label>
-      <label>Responsável<select id="f-resp"></select></label>
-      <label>Evento<select id="f-ev"></select></label>
-      <span style="flex:1"></span>
-      <button class="primary" id="btn-new-opp">Nova oportunidade</button>
-      <button id="btn-new-person" hidden>Adicionar pessoa</button>
-    </div>
-
-    <section id="v-funil"></section>
-    <section id="v-followups" hidden></section>
-    <section id="v-time" hidden></section>
-  </main>
+  <div id="status" class="state"><h2>Conectando à Central…</h2><span>Carregando projetos, funil, financeiro e time.</span></div>
+  <main id="app" hidden></main>
 </div>
 
 <div id="overlay" class="overlay" hidden></div>
@@ -165,321 +176,676 @@ tr.click{cursor:pointer} tr.click:hover td{background:var(--sunk)}
 
 <script>
 (() => {
-const STAGES = [
-  {k:"novo", n:"1. Novo contato"},
-  {k:"iniciado", n:"2. Contato iniciado"},
-  {k:"interesse", n:"3. Interesse identificado"},
-  {k:"oferta", n:"4. Apresentação da oferta"},
-  {k:"negociacao", n:"5. Negociação"},
-  {k:"aguardando", n:"6. Aguardando pagamento"},
-  {k:"concluida", n:"7. Venda concluída"},
-  {k:"perdido", n:"8. Perdido ou cancelado"},
+/* ================= Configuração ================= */
+const NAV = [
+  {k:"painel", n:"Painel", subs:[{k:"painel",n:"Visão geral"}]},
+  {k:"projetos", n:"Projetos", owner:"Direção de Projetos · Samara", subs:[{k:"projetos",n:"Projetos"},{k:"tarefas",n:"Tarefas"},{k:"agenda",n:"Agenda 90 dias"}]},
+  {k:"comercial", n:"Comercial", owner:"Liderança comercial · Douglas", subs:[{k:"funil",n:"Funil"},{k:"followups",n:"Follow-ups"}]},
+  {k:"adm", n:"Administrativo", owner:"Administrativo e financeiro · Larissa", subs:[{k:"financeiro",n:"Financeiro"},{k:"aprovacoes",n:"Aprovações"},{k:"fornecedores",n:"Fornecedores e parceiros"},{k:"documentos",n:"Documentos"},{k:"reunioes",n:"Reuniões e decisões"}]},
+  {k:"time", n:"Time", subs:[{k:"time",n:"Pessoas por área"}]},
 ];
+const VIEWS = NAV.flatMap(g=>g.subs.map(s=>s.k));
+const groupOf = v => NAV.find(g=>g.subs.some(s=>s.k===v));
+
+const STAGES = [
+  {k:"novo",n:"1. Novo contato"},{k:"iniciado",n:"2. Contato iniciado"},{k:"interesse",n:"3. Interesse identificado"},
+  {k:"oferta",n:"4. Apresentação da oferta"},{k:"negociacao",n:"5. Negociação"},{k:"aguardando",n:"6. Aguardando pagamento"},
+  {k:"concluida",n:"7. Venda concluída"},{k:"perdido",n:"8. Perdido ou cancelado"}];
 const OPEN = new Set(["novo","iniciado","interesse","oferta","negociacao","aguardando"]);
-const EVENTOS = ["THE SEED — Newark (19/12/2026)","THE SEED Experience — Boston (30/01/2027)","THE SEED RUN","THE SEED Care","THE SEED Life","Outro"];
+const EVENTOS_FIXOS = ["THE SEED RUN","THE SEED Care","THE SEED Life","Outro"];
 const PRODUTOS = [
   {n:"Ingresso individual (US$77)", v:77},
   {n:"Condição US$107 (formato a confirmar)", v:107, warn:"A condição de US$107 ainda não foi confirmada (combo de 2 ingressos ou outro formato). Não ofereça antes da confirmação."},
-  {n:"Ingresso VIP"},{n:"Combo"},{n:"Cortesia", v:0},{n:"Patrocínio"},{n:"Expositor"},{n:"Programa / mentoria"},{n:"Outro"}
-];
+  {n:"Ingresso VIP"},{n:"Combo"},{n:"Cortesia",v:0},{n:"Patrocínio"},{n:"Expositor"},{n:"Programa / mentoria"},{n:"Outro"}];
 const ORIGENS = ["Instagram","WhatsApp","Indicação","Evento anterior","Link de inscrição","Parceiro / patrocinador","Outro"];
-const PAGTOS = [{k:"pendente",n:"Pendente"},{k:"pago",n:"Pago"},{k:"cancelado",n:"Cancelado"},{k:"reembolsado",n:"Reembolsado"}];
-const AREAS = ["Direção Executiva","Financeiro","Direção de Projetos","Marketing","Comercial","RUN","Eventos e Produção","Staff","Caridade","Lazer"];
-const STATUS_P = ["Ativo","Em avaliação","Inativo"];
+const PAGTOS = ["Pendente","Pago","Cancelado","Reembolsado"];
+const AREAS = ["Direção Executiva","Financeiro","Administrativo","Direção de Projetos","Marketing","Comercial","RUN","Eventos e Produção","Staff","Caridade","Lazer"];
+const ETAPAS = ["Estratégia","Preparação","Programação","Comercial","Produção","Pré-evento","Dia do evento","Pós-evento"];
+const P_STATUS = ["Ideia","Planejamento","Em execução","Pronto","Concluído","Arquivado"];
+const P_TIPOS = ["Evento","Corrida / RUN","Caridade / Care","Lazer / Life","Interno"];
+const T_STATUS = ["A fazer","Em andamento","Bloqueada","Concluída"];
+const PRIOR = ["Alta","Média","Baixa"];
+const REC_CAT = ["Ingressos","Patrocínios","Expositores","Alimentação","Produtos","Programas e mentorias","Doações","Outras receitas"];
+const DESP_CAT = ["Aluguel do espaço","Equipamentos","Som, iluminação e vídeo","Alimentação","Decoração","Impressos e materiais","Marketing","Palestrantes","Transporte","Hospedagem","Equipe e prestadores","Taxas e seguros","Contingências"];
+const L_STATUS = ["Previsto","Contratado","Pendente","Pago","Cancelado","Reembolsado"];
+const CHECKLIST = {
+  "Estratégia":[["Definir conceito e propósito da edição",1],["Definir público-alvo",0],["Definir metas de participantes e faturamento",1],["Aprovar orçamento com o Financeiro",1]],
+  "Preparação":[["Fechar local e assinar contrato",1],["Contratar fornecedores",0],["Montar a equipe necessária",0],["Plano de riscos e contingência",0]],
+  "Programação":[["Curadoria de palestrantes e convidados",1],["Definir dinâmicas da edição",0],["Montar roteiro de palco",1]],
+  "Comercial":[["Configurar ingressos, lotes e cupons",1],["Prospectar patrocínios",0],["Definir metas comerciais e campanhas",0]],
+  "Produção":[["Materiais, kits e crachás",0],["Logística e transporte",0],["Alimentação",0],["Técnica: som, luz, vídeo e internet",1],["Montagem e sinalização",0]],
+  "Pré-evento":[["Confirmar participantes e palestrantes",0],["Briefing do staff",1],["Testes técnicos e ensaio",1]],
+  "Dia do evento":[["Check-in e credenciamento",1],["Gestão de palco e equipe",0],["Registro de vendas e incidentes",0]],
+  "Pós-evento":[["Fechamento financeiro",1],["Pesquisa de feedback",0],["Relatório pós-evento e lições aprendidas",0],["Relacionamento pós-evento",0]],
+};
 
-let db=null, canWrite=true, opps=[], people=[], view="funil";
+/* ================= Estado ================= */
+let db=null, user=null, me=null, isAdmin=false, canWrite=true, view="painel", openProject=null;
+const S = {opps:[],people:[],projetos:[],tarefas:[],forn:[],docs:[],lanc:[],reun:[]};
+const COL = {opps:"oportunidades",people:"pessoas",projetos:"projetos",tarefas:"tarefas",forn:"fornecedores",docs:"documentos",lanc:"adm/restrito/lancamentos",reun:"adm/restrito/reunioes"};
+const RESTRICTED = new Set(["lanc","reun"]);
+const flt = {};
+const names = {}; let namesPending=false;
+
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const usd = n => "US$" + Number(n||0).toLocaleString("pt-BR",{minimumFractionDigits:0,maximumFractionDigits:2});
-const today = () => { const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); };
+const usd = n => (n<0?"−":"")+"US$" + Math.abs(Number(n||0)).toLocaleString("pt-BR",{minimumFractionDigits:0,maximumFractionDigits:2});
+const ymd = d => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const today = () => ymd(new Date());
+const addDays = n => { const d=new Date(); d.setDate(d.getDate()+n); return ymd(d); };
 const fmtDate = s => s ? s.split("-").reverse().join("/") : "";
-const stageName = k => (STAGES.find(s=>s.k===k)||{}).n || k;
+const daysTo = s => Math.round((new Date(s+"T12:00:00") - new Date(today()+"T12:00:00"))/864e5);
+const now = () => new Date().toISOString();
+const projName = id => (S.projetos.find(p=>p.id===id)||{}).nome || (id==="central"?"Central (sem evento)":"—");
+const eventOptions = () => [...S.projetos.filter(p=>p.status!=="Arquivado").map(p=>p.nome), ...EVENTOS_FIXOS.filter(e=>!S.projetos.some(p=>p.nome===e))];
+const peopleNames = area => S.people.filter(p=>!area||(p.areas||[]).includes(area)).map(p=>p.nome).sort((a,b)=>a.localeCompare(b));
 
 function toast(msg, err){ const t=$("#toast"); t.textContent=msg; t.className="toast"+(err?" err":""); t.hidden=false; clearTimeout(toast._t); toast._t=setTimeout(()=>t.hidden=true, err?5000:2600); }
 function dbErr(e){
   const c=e&&e.code;
-  if(c==="invalid_argument") { canWrite=false; render(); return "Você não tem permissão para editar este CRM. Peça acesso de Contribuidor à dona do link."; }
-  if(c==="quota_exceeded") return "O CRM atingiu o limite de registros. Arquive ou exclua oportunidades antigas.";
-  if(c==="revoked") return "Seu acesso a este CRM foi encerrado.";
+  if(c==="invalid_argument") return "Você não tem permissão para esta alteração. Peça à dona da Central o nível de acesso necessário.";
+  if(c==="quota_exceeded") return "A Central atingiu o limite de registros. Exclua registros antigos para liberar espaço.";
+  if(c==="revoked") return "Seu acesso à Central foi encerrado.";
   return "Não foi possível salvar agora. Tente de novo em alguns segundos.";
 }
-
-function followChip(o){
-  if(!o.followup || !OPEN.has(o.etapa)) return "";
-  const t=today();
-  const cls = o.followup<t ? "late" : o.followup===t ? "today" : "";
-  const lbl = o.followup<t ? "Atrasado · " : o.followup===t ? "Hoje · " : "Follow-up ";
-  return `<span class="chip ${cls}">${lbl}${fmtDate(o.followup)}</span>`;
-}
-function payChip(o){
-  const p=o.pagamento||"pendente";
-  const cls={pago:"paid",pendente:"pend",cancelado:"cancel",reembolsado:"cancel"}[p];
-  return `<span class="chip ${cls}">${esc((PAGTOS.find(x=>x.k===p)||{}).n||p)}</span>`;
+function nameOf(id){
+  if(!id) return "";
+  if(names[id]!==undefined) return names[id] || "Alguém";
+  if(user && !namesPending){ namesPending=true; queueMicrotask(async()=>{
+    const ids=[...new Set([...S.lanc.flatMap(l=>[l.solicitanteId,l.aprovadoPorId]),...S.reun.map(r=>r.criadoPorId)].filter(x=>x&&names[x]===undefined))];
+    try{ const ps=ids.length? await user.profiles(ids):{}; ids.forEach(i=>names[i]=(ps[i]&&ps[i].name)||""); }catch{ ids.forEach(i=>names[i]=""); }
+    namesPending=false; render();
+  });}
+  return "…";
 }
 
-function filtered(){
-  const q=$("#f-q").value.trim().toLowerCase(), r=$("#f-resp").value, ev=$("#f-ev").value;
-  return opps.filter(o=>{
-    if(r && o.responsavel!==r) return false;
-    if(ev && o.evento!==ev) return false;
-    if(q && ![o.cliente,o.telefone,o.email,o.obs].join(" ").toLowerCase().includes(q)) return false;
-    return true;
-  });
-}
+/* ================= Entidades e formulários ================= */
+const ENT = {
+  opps:{title:"Oportunidade", newTitle:"Nova oportunidade", label:o=>o.cliente, fields:()=>[
+    {k:"cliente",n:"Cliente",req:1,full:1,max:120},
+    {k:"telefone",n:"Telefone",t:"tel",max:40},{k:"email",n:"E-mail",t:"email",max:120},
+    {k:"evento",n:"Evento",t:"select",req:1,opts:eventOptions()},
+    {k:"produto",n:"Produto",t:"select",opts:PRODUTOS.map(p=>p.n),warn:v=>(PRODUTOS.find(p=>p.n===v)||{}).warn,fill:v=>{const p=PRODUTOS.find(x=>x.n===v);return p&&p.v!=null?{valor:p.v}:null}},
+    {k:"origem",n:"Origem",t:"select",opts:ORIGENS},
+    {k:"responsavel",n:"Responsável",t:"select",req:1,opts:peopleNames("Comercial")},
+    {k:"valor",n:"Valor (US$)",t:"num"},{k:"probabilidade",n:"Probabilidade (%)",t:"num",max100:1},
+    {k:"etapa",n:"Etapa",t:"select",req:1,opts:STAGES.map(s=>[s.k,s.n]),def:"novo"},
+    {k:"pagamento",n:"Pagamento",t:"select",opts:PAGTOS,def:"Pendente"},
+    {k:"proximaAcao",n:"Próxima ação",max:160},{k:"followup",n:"Data do follow-up",t:"date"},
+    {k:"obs",n:"Observações",t:"area",full:1}],
+    note:"Venda concluída não é dinheiro recebido: marque “Pago” só com o pagamento confirmado. Nenhum desconto, exclusividade ou benefício fora do autorizado.",
+    validate:d=>({pagamento: d.pagamento==="Pago"&&!["concluida","aguardando"].includes(d.etapa)?"Só marque como pago uma venda concluída ou aguardando pagamento.":""})},
 
-function renderStats(list){
-  const open=list.filter(o=>OPEN.has(o.etapa));
-  const pipe=open.reduce((a,o)=>a+(+o.valor||0),0);
-  const pond=open.reduce((a,o)=>a+(+o.valor||0)*((+o.probabilidade||0)/100),0);
-  const won=list.filter(o=>o.etapa==="concluida");
-  const wonV=won.reduce((a,o)=>a+(+o.valor||0),0);
-  const paid=list.filter(o=>o.pagamento==="pago").reduce((a,o)=>a+(+o.valor||0),0);
-  const toRecv=list.filter(o=>(o.etapa==="concluida"||o.etapa==="aguardando")&&(o.pagamento||"pendente")==="pendente").reduce((a,o)=>a+(+o.valor||0),0);
-  const late=open.filter(o=>o.followup && o.followup<today()).length;
-  $("#stats").innerHTML = `
-    <div class="stat"><span class="eyebrow">Em aberto</span><b>${usd(pipe)}</b><small>${open.length} oportunidade${open.length===1?"":"s"} · ponderado ${usd(Math.round(pond))}</small></div>
-    <div class="stat"><span class="eyebrow">Vendas concluídas</span><b>${usd(wonV)}</b><small>${won.length} venda${won.length===1?"":"s"} registrada${won.length===1?"":"s"}</small></div>
-    <div class="stat"><span class="eyebrow">Recebido</span><b>${usd(paid)}</b><small>Só pagamentos marcados como pagos</small></div>
-    <div class="stat"><span class="eyebrow">A receber</span><b>${usd(toRecv)}</b><small>Vendido ou aguardando, ainda pendente</small></div>
-    <div class="stat ${late?"alert":""}"><span class="eyebrow">Follow-ups atrasados</span><b>${late}</b><small>${late?"Veja a aba Follow-ups":"Nada atrasado"}</small></div>`;
-}
+  projetos:{title:"Projeto", newTitle:"Novo projeto", label:p=>p.nome, fields:()=>[
+    {k:"nome",n:"Nome",req:1,full:1,max:120},
+    {k:"tipo",n:"Tipo",t:"select",req:1,opts:P_TIPOS,def:"Evento"},
+    {k:"status",n:"Status",t:"select",req:1,opts:P_STATUS,def:"Planejamento"},
+    {k:"data",n:"Data",t:"date"},{k:"fuso",n:"Fuso horário",max:60,def:"America/New_York"},
+    {k:"cidade",n:"Cidade / estado",max:80},{k:"local",n:"Local / endereço",max:160},
+    {k:"modalidade",n:"Modalidade",t:"select",opts:["Presencial","Online","Híbrida"]},
+    {k:"responsavel",n:"Responsável principal",t:"select",opts:peopleNames()},
+    {k:"capacidade",n:"Capacidade",t:"num"},{k:"metaParticipantes",n:"Meta de participantes",t:"num"},
+    {k:"metaFaturamento",n:"Meta de faturamento (US$)",t:"num"},{k:"orcamento",n:"Orçamento previsto (US$)",t:"num"},
+    {k:"departamentos",n:"Departamentos envolvidos",full:1,max:200},
+    {k:"objetivo",n:"Objetivo e propósito",t:"area",full:1},
+    {k:"riscos",n:"Riscos e plano de contingência",t:"area",full:1},
+    {k:"excecao",n:"Exceção autorizada para marcar como pronto",t:"area",full:1,hint:"Preencha só se o projeto for marcado como pronto com tarefas críticas abertas: quem autorizou e por quê."}],
+    validate:(d,id)=>{ if(d.status!=="Pronto"||!id) return {}; const n=S.tarefas.filter(t=>t.projeto===id&&t.critica&&t.status!=="Concluída").length;
+      return {status: n&&!d.excecao.trim()?`Há ${n} tarefa${n>1?"s":""} crítica${n>1?"s":""} aberta${n>1?"s":""}. Conclua ou registre a exceção autorizada abaixo.`:""}; }},
 
-function renderFunil(list){
-  const el=$("#v-funil");
-  if(!opps.length){
-    el.innerHTML=`<div class="state"><h2>Nenhuma oportunidade ainda</h2><span>Cada contato vira um card no funil, do novo contato até a venda concluída.</span>${canWrite?'<button class="primary" data-act="new">Cadastrar a primeira oportunidade</button>':""}</div>`;
-    return;
-  }
-  el.innerHTML=`<div class="board-scroll"><div class="board">${STAGES.map((s,i)=>{
-    const cards=list.filter(o=>o.etapa===s.k).sort((a,b)=>(a.followup||"9")<(b.followup||"9")?-1:1);
-    const tot=cards.reduce((a,o)=>a+(+o.valor||0),0);
-    return `<div class="col ${s.k==="concluida"?"won":s.k==="perdido"?"lost":""}">
-      <header><span>${esc(s.n)}</span><small>${cards.length} · ${usd(tot)}</small></header>
-      ${cards.length?cards.map(o=>`
-        <div class="card" role="button" tabindex="0" data-open="${esc(o.id)}">
-          <div class="t">${esc(o.cliente)}</div>
-          <div class="meta">${esc(o.produto||"Sem produto")}${o.evento?" · "+esc(o.evento):""}</div>
-          <div class="row"><span class="num">${o.valor!==""&&o.valor!=null?usd(o.valor):"<span class='muted'>Sem valor</span>"}${o.probabilidade!==""&&o.probabilidade!=null&&OPEN.has(o.etapa)?` <span class="muted">· ${o.probabilidade}%</span>`:""}</span>${s.k==="concluida"||s.k==="aguardando"?payChip(o):""}</div>
-          <div class="row"><span class="meta">${esc(o.responsavel||"Sem responsável")}</span>${followChip(o)}</div>
-          ${canWrite?`<div class="row"><span class="meta">${o.proximaAcao?esc(o.proximaAcao):""}</span><span class="moves">
-            <button class="ghost" data-move="${esc(o.id)}" data-dir="-1" ${i===0?"disabled":""} aria-label="Voltar etapa">◀</button>
-            <button class="ghost" data-move="${esc(o.id)}" data-dir="1" ${i===STAGES.length-1?"disabled":""} aria-label="Avançar etapa">▶</button></span></div>`:""}
-        </div>`).join(""):`<div class="empty-col">Nenhuma aqui${list.length!==opps.length?" com esses filtros":""}.</div>`}
-    </div>`;}).join("")}</div></div>`;
-}
+  tarefas:{title:"Tarefa", newTitle:"Nova tarefa", label:t=>t.titulo, fields:()=>[
+    {k:"titulo",n:"Tarefa",req:1,full:1,max:160},
+    {k:"projeto",n:"Projeto",t:"select",req:1,opts:S.projetos.map(p=>[p.id,p.nome])},
+    {k:"etapa",n:"Etapa",t:"select",req:1,opts:ETAPAS},
+    {k:"responsavel",n:"Responsável",t:"select",opts:peopleNames()},
+    {k:"prioridade",n:"Prioridade",t:"select",opts:PRIOR,def:"Média"},
+    {k:"prazo",n:"Prazo",t:"date"},{k:"status",n:"Status",t:"select",req:1,opts:T_STATUS,def:"A fazer"},
+    {k:"critica",n:"Pendência crítica (impede marcar o projeto como pronto)",t:"bool",full:1},
+    {k:"checklist",n:"Checklist (um item por linha)",t:"area",full:1},
+    {k:"anexos",n:"Links de anexos",t:"area",full:1,hint:"Cole links do Drive ou de outro armazenamento, um por linha."},
+    {k:"obs",n:"Comentários",t:"area",full:1}]},
 
-function renderFollow(list){
-  const el=$("#v-followups");
-  const rows=list.filter(o=>OPEN.has(o.etapa)).sort((a,b)=>(a.followup||"9999")<(b.followup||"9999")?-1:1);
-  if(!rows.length){ el.innerHTML=`<div class="state"><h2>Nenhum follow-up em aberto</h2><span>Oportunidades abertas com data de follow-up aparecem aqui, as atrasadas primeiro.</span></div>`; return; }
-  el.innerHTML=`<div class="table-scroll"><table><thead><tr><th>Follow-up</th><th>Cliente</th><th>Próxima ação</th><th>Etapa</th><th>Responsável</th><th>Contato</th><th>Valor</th></tr></thead><tbody>${rows.map(o=>`
-    <tr class="click" data-open="${esc(o.id)}" tabindex="0"><td>${followChip(o)||'<span class="chip">Sem data</span>'}</td><td><b>${esc(o.cliente)}</b></td><td>${esc(o.proximaAcao||"—")}</td><td>${esc(stageName(o.etapa))}</td><td>${esc(o.responsavel||"—")}</td><td class="num">${esc(o.telefone||"")}${o.telefone&&o.email?"<br>":""}${esc(o.email||"")}</td><td class="num">${o.valor!==""&&o.valor!=null?usd(o.valor):"—"}</td></tr>`).join("")}</tbody></table></div>`;
-}
+  forn:{title:"Fornecedor ou parceiro", newTitle:"Novo fornecedor ou parceiro", label:f=>f.nome, fields:()=>[
+    {k:"nome",n:"Nome",req:1,full:1,max:120},
+    {k:"tipo",n:"Tipo",t:"select",req:1,opts:["Fornecedor","Parceiro","Patrocinador","Local / espaço","Prestador de serviço"]},
+    {k:"categoria",n:"Categoria",t:"select",opts:DESP_CAT.concat(["Outra"])},
+    {k:"contato",n:"Pessoa de contato",max:80},{k:"telefone",n:"Telefone",t:"tel",max:40},{k:"email",n:"E-mail",t:"email",max:120},
+    {k:"eventos",n:"Eventos atendidos",full:1,max:200},
+    {k:"avaliacao",n:"Avaliação",t:"select",opts:["5 — Excelente","4 — Bom","3 — Regular","2 — Fraco","1 — Não recomendo"]},
+    {k:"status",n:"Status",t:"select",opts:["Ativo","Em avaliação","Inativo"],def:"Ativo"},
+    {k:"obs",n:"Observações",t:"area",full:1}]},
 
-function renderTime(){
-  const el=$("#v-time");
-  if(!people.length){ el.innerHTML=`<div class="state"><h2>Nenhuma pessoa cadastrada</h2><span>Cadastre o time por área para usar como responsáveis no funil.</span>${canWrite?'<button class="primary" data-act="newp">Adicionar pessoa</button>':""}</div>`; return; }
-  const by={};
-  AREAS.forEach(a=>by[a]=[]);
-  people.forEach(p=>(p.areas||[]).forEach(a=>{(by[a]=by[a]||[]).push(p);}));
-  el.innerHTML=`<div class="areas">${Object.keys(by).map(a=>{
-    const lead=p=>/l[íi]der|ceo|cfo|cmo|dire/i.test((p.cargos&&p.cargos[a])||"")?0:1;
-    const ps=by[a].slice().sort((x,y)=>lead(x)-lead(y)||x.nome.localeCompare(y.nome));
-    return `<div class="area"><h3>${esc(a)}</h3>${ps.length?ps.map(p=>{
-      const openN=a==="Comercial"?opps.filter(o=>OPEN.has(o.etapa)&&o.responsavel===p.nome).length:0;
-      return `<div class="person"><div><div class="n">${esc(p.nome)}</div><div class="c">${esc((p.cargos&&p.cargos[a])||"")}${p.supervisor&&a==="Comercial"&&p.supervisor!==p.nome?" · supervisão: "+esc(p.supervisor):""}${p.obs?"<br>"+esc(p.obs):""}</div></div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${p.status&&p.status!=="Ativo"?`<span class="chip pend">${esc(p.status)}</span>`:""}${a==="Comercial"?`<span class="chip">${openN} em aberto</span>`:""}${canWrite?`<button class="ghost" data-editp="${esc(p.id)}">Editar</button>`:""}</div></div>`;}).join(""):`<div class="muted">A definir</div>`}</div>`;}).join("")}</div>`;
-}
+  docs:{title:"Documento", newTitle:"Novo documento", label:d=>d.titulo, fields:()=>[
+    {k:"titulo",n:"Título",req:1,full:1,max:160},
+    {k:"categoria",n:"Categoria",t:"select",req:1,opts:["Contrato","Documento institucional","Procedimento","Planilha","Orçamento","Relatório","Material de marca","Outro"]},
+    {k:"projeto",n:"Evento / projeto",t:"select",opts:[["central","Central (sem evento)"]].concat(S.projetos.map(p=>[p.id,p.nome]))},
+    {k:"responsavel",n:"Responsável",t:"select",opts:peopleNames()},
+    {k:"versao",n:"Versão",max:20,def:"1"},{k:"data",n:"Data",t:"date"},
+    {k:"link",n:"Link do arquivo",t:"url",full:1,hint:"Link do Drive, Dropbox ou similar."},
+    {k:"obs",n:"Observações",t:"area",full:1}],
+    note:"Documentos confidenciais (decisões sobre pessoas, conselho) vão em Reuniões e decisões, que só a diretoria vê."},
 
-function fillFilters(){
-  const r=$("#f-resp"), cur=r.value;
-  const resp=[...new Set([...people.filter(p=>(p.areas||[]).includes("Comercial")).map(p=>p.nome), ...opps.map(o=>o.responsavel).filter(Boolean)])].sort();
-  r.innerHTML=`<option value="">Todos</option>`+resp.map(n=>`<option ${n===cur?"selected":""}>${esc(n)}</option>`).join("");
-  const e=$("#f-ev"), ce=e.value;
-  e.innerHTML=`<option value="">Todos</option>`+EVENTOS.map(n=>`<option ${n===ce?"selected":""}>${esc(n)}</option>`).join("");
-}
+  lanc:{title:"Lançamento financeiro", newTitle:"Novo lançamento", label:l=>l.descricao, fields:d=>[
+    {k:"tipo",n:"Tipo",t:"select",req:1,opts:["Receita","Despesa"],def:"Despesa",rerender:1},
+    {k:"descricao",n:"Descrição",req:1,full:1,max:160},
+    {k:"projeto",n:"Evento / projeto",t:"select",req:1,opts:[["central","Central (sem evento)"]].concat(S.projetos.map(p=>[p.id,p.nome]))},
+    {k:"categoria",n:"Categoria",t:"select",req:1,opts:(d&&d.tipo)==="Receita"?REC_CAT:DESP_CAT},
+    {k:"valorPrevisto",n:"Valor previsto (US$)",t:"num"},{k:"valorRealizado",n:"Valor realizado (US$)",t:"num"},
+    {k:"status",n:"Status",t:"select",req:1,opts:L_STATUS,def:"Previsto"},{k:"vencimento",n:"Vencimento",t:"date"},
+    {k:"fornecedor",n:"Fornecedor / pagador",t:"select",opts:S.forn.map(f=>f.nome)},
+    {k:"solicitante",n:"Solicitante",t:"select",opts:peopleNames()},
+    {k:"formaPagamento",n:"Forma de pagamento",max:60},
+    {k:"comprovante",n:"Link do comprovante",t:"url",max:400},
+    {k:"restrito",n:"Doação restrita a campanha beneficente (fica fora do resultado comercial)",t:"bool",full:1},
+    {k:"justificativa",n:"Justificativa / observações",t:"area",full:1}],
+    note:"Despesa nova entra como “Aguardando aprovação”. Quem solicitou não aprova o próprio gasto, e uma despesa só pode ser marcada como paga depois de aprovada.",
+    validate:(d,id,o)=>{
+      const r={};
+      if(!d.valorPrevisto&&!d.valorRealizado) r.valorPrevisto="Informe o valor previsto ou o realizado.";
+      if(d.tipo==="Despesa"&&d.status==="Pago"&&(o.aprovacao||"Aguardando")!=="Aprovada") r.status="Esta despesa ainda não foi aprovada. Aprove em Aprovações antes de marcar como paga.";
+      if(["Pago","Reembolsado"].includes(d.status)&&d.valorRealizado==="") r.valorRealizado="Informe o valor efetivamente pago ou recebido.";
+      return r;},
+    before:(b,id,o)=>{ if(!id){ b.aprovacao=b.tipo==="Despesa"?"Aguardando":"Não exige"; b.solicitanteId=me||null; }
+      else if(o.tipo!==b.tipo){ b.aprovacao=b.tipo==="Despesa"?"Aguardando":"Não exige"; } }},
 
-function render(){
-  document.querySelectorAll("nav.tabs a").forEach(a=>a.setAttribute("aria-current", a.dataset.view===view?"page":"false"));
-  ["funil","followups","time"].forEach(v=>$("#v-"+v).hidden = v!==view);
-  $("#btn-new-opp").hidden = !canWrite || view==="time";
-  $("#btn-new-person").hidden = !canWrite || view!=="time";
-  $("#f-q").parentElement.hidden = $("#f-resp").parentElement.hidden = $("#f-ev").parentElement.hidden = view==="time";
-  const list=filtered();
-  renderStats(list);
-  if(view==="funil") renderFunil(list);
-  if(view==="followups") renderFollow(list);
-  if(view==="time") renderTime();
-}
+  reun:{title:"Reunião ou decisão", newTitle:"Nova reunião ou decisão", label:r=>r.titulo, fields:()=>[
+    {k:"titulo",n:"Título",req:1,full:1,max:160},
+    {k:"data",n:"Data",t:"date",req:1,def:today()},
+    {k:"tipo",n:"Tipo",t:"select",req:1,opts:["Diretoria","Conselho","Líderes","Comercial","Projeto","Outra"]},
+    {k:"projeto",n:"Evento / projeto",t:"select",opts:[["central","Central (sem evento)"]].concat(S.projetos.map(p=>[p.id,p.nome]))},
+    {k:"participantes",n:"Participantes",full:1,max:300},
+    {k:"pauta",n:"Pauta",t:"area",full:1},
+    {k:"decisoes",n:"Decisões tomadas",t:"area",full:1},
+    {k:"responsaveis",n:"Responsáveis pelas deliberações",full:1,max:300},
+    {k:"justificativa",n:"Justificativa",t:"area",full:1},
+    {k:"proximosPassos",n:"Próximos passos e prazos",t:"area",full:1},
+    {k:"link",n:"Link da ata completa",t:"url",full:1}],
+    before:(b,id)=>{ if(!id) b.criadoPorId=me||null; }},
+};
 
-/* ---------- Formulários ---------- */
-function opt(list, val, key){ return list.map(x=>{const v=key?x[key]:x, n=key?x.n:x; return `<option value="${esc(v)}" ${v===val?"selected":""}>${esc(n)}</option>`;}).join(""); }
+function optHtml(opts,val){ return (opts||[]).map(o=>{const [v,n]=Array.isArray(o)?o:[o,o]; return `<option value="${esc(v)}" ${String(v)===String(val??"")?"selected":""}>${esc(n)}</option>`;}).join(""); }
+function fieldHtml(f,v){
+  const id="f-"+f.k, cls="field"+(f.full?" full":"")+(f.t==="bool"?" check":"");
+  let input;
+  if(f.t==="select"){ let opts=f.opts||[]; if(v&&!opts.some(o=>(Array.isArray(o)?o[0]:o)===v)) opts=opts.concat([v]); input=`<select id="${id}" name="${f.k}">${f.req&&f.def?"":'<option value="">Escolha…</option>'}${optHtml(opts,v)}</select>`; }
+  else if(f.t==="area") input=`<textarea id="${id}" name="${f.k}" rows="3" maxlength="4000">${esc(v)}</textarea>`;
+  else if(f.t==="bool") return `<div class="${cls}"><input type="checkbox" id="${id}" name="${f.k}" ${v?"checked":""}><label for="${id}" style="font-weight:500;color:var(--fg)">${esc(f.n)}</label></div>`;
+  else { const t={num:"number",date:"date",email:"email",tel:"tel",url:"url"}[f.t]||"text";
+    input=`<input id="${id}" name="${f.k}" type="${t}" ${f.t==="num"?`min="0" step="${f.max100?1:0.01}" inputmode="decimal"`:""} ${f.max?`maxlength="${f.max}"`:""} value="${esc(v)}">`; }
+  return `<div class="${cls}"><label for="${id}">${esc(f.n)}${f.req?" *":""}</label>${input}${f.warn?`<div class="note" data-warn="${f.k}" hidden></div>`:""}${f.hint?`<span class="hint">${esc(f.hint)}</span>`:""}<span class="err"></span></div>`;
+}
 function closeSheet(){ const o=$("#overlay"); o.hidden=true; o.innerHTML=""; }
 
-function openOpp(id){
-  if(!canWrite && !id) return;
-  const o = id ? opps.find(x=>x.id===id) : {etapa:"novo", pagamento:"pendente", responsavel:""};
+function openForm(ent, id, preset){
+  const E=ENT[ent]; const ro=!canWrite || (RESTRICTED.has(ent)&&!isAdmin);
+  if(!id&&ro) return;
+  const o = id ? S[ent].find(x=>x.id===id) : {...preset};
   if(!o) return;
-  const ro = !canWrite;
-  const comercial=people.filter(p=>(p.areas||[]).includes("Comercial")).map(p=>p.nome);
-  if(o.responsavel && !comercial.includes(o.responsavel)) comercial.push(o.responsavel);
-  const prodNames=PRODUTOS.map(p=>p.n); if(o.produto && !prodNames.includes(o.produto)) prodNames.push(o.produto);
+  let cur={...o};
+  const fields=E.fields(cur); fields.forEach(f=>{ if(!id&&cur[f.k]==null&&f.def!=null) cur[f.k]=f.def; });
   const ov=$("#overlay");
-  ov.innerHTML=`<form class="sheet" id="opp-form" novalidate aria-labelledby="opp-h">
-    <header><div><span class="eyebrow">${id?"Oportunidade":"Nova oportunidade"}</span><h2 id="opp-h">${id?esc(o.cliente):"Cadastrar contato"}</h2></div><button type="button" class="ghost" data-close aria-label="Fechar">✕</button></header>
-    <fieldset ${ro?"disabled":""} style="border:0;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;min-width:0">
-    <div class="grid2">
-      <div class="field full"><label for="o-cliente">Cliente *</label><input id="o-cliente" name="cliente" value="${esc(o.cliente)}" maxlength="120" required><span class="err"></span></div>
-      <div class="field"><label for="o-tel">Telefone</label><input id="o-tel" name="telefone" type="tel" value="${esc(o.telefone)}" maxlength="40"><span class="err"></span></div>
-      <div class="field"><label for="o-email">E-mail</label><input id="o-email" name="email" type="email" value="${esc(o.email)}" maxlength="120"><span class="err"></span></div>
-      <div class="field"><label for="o-evento">Evento *</label><select id="o-evento" name="evento" required><option value="">Escolha…</option>${opt(EVENTOS,o.evento)}</select><span class="err"></span></div>
-      <div class="field"><label for="o-produto">Produto</label><select id="o-produto" name="produto"><option value="">Escolha…</option>${opt(prodNames,o.produto)}</select><span class="err"></span></div>
-      <div class="field full" id="prod-warn" hidden><div class="note"></div></div>
-      <div class="field"><label for="o-origem">Origem</label><select id="o-origem" name="origem"><option value="">Escolha…</option>${opt(ORIGENS,o.origem)}</select><span class="err"></span></div>
-      <div class="field"><label for="o-resp">Responsável *</label><select id="o-resp" name="responsavel" required><option value="">Escolha…</option>${opt(comercial,o.responsavel)}</select><span class="err"></span></div>
-      <div class="field"><label for="o-valor">Valor (US$)</label><input id="o-valor" name="valor" type="number" min="0" step="0.01" inputmode="decimal" value="${o.valor??""}"><span class="err"></span></div>
-      <div class="field"><label for="o-prob">Probabilidade (%)</label><input id="o-prob" name="probabilidade" type="number" min="0" max="100" step="5" inputmode="numeric" value="${o.probabilidade??""}"><span class="err"></span></div>
-      <div class="field"><label for="o-etapa">Etapa *</label><select id="o-etapa" name="etapa">${opt(STAGES,o.etapa,"k")}</select><span class="err"></span></div>
-      <div class="field"><label for="o-pag">Pagamento</label><select id="o-pag" name="pagamento">${opt(PAGTOS,o.pagamento||"pendente","k")}</select><span class="err"></span></div>
-      <div class="field"><label for="o-acao">Próxima ação</label><input id="o-acao" name="proximaAcao" value="${esc(o.proximaAcao)}" maxlength="160" placeholder="Ex.: enviar link de pagamento"><span class="err"></span></div>
-      <div class="field"><label for="o-fu">Data do follow-up</label><input id="o-fu" name="followup" type="date" value="${esc(o.followup)}"><span class="err"></span></div>
-      <div class="field full"><label for="o-obs">Observações</label><textarea id="o-obs" name="obs" rows="3" maxlength="2000">${esc(o.obs)}</textarea></div>
-    </div></fieldset>
-    <p class="muted" style="margin:0;font-size:12px">Venda concluída não é dinheiro recebido: marque “Pago” só quando o pagamento for confirmado. Nenhum desconto, exclusividade ou benefício fora do autorizado.</p>
-    <div class="actions">
-      <div>${id&&canWrite?'<button type="button" class="danger" id="o-del">Excluir</button>':""}</div>
-      <div class="r"><button type="button" data-close>${ro?"Fechar":"Cancelar"}</button>${ro?"":`<button class="primary" type="submit">${id?"Salvar alterações":"Cadastrar"}</button>`}</div>
-    </div>
+  const extra = ent==="lanc"&&id ? `<dl class="kv"><dt>Aprovação</dt><dd>${apprChip(o)}${o.aprovadoPorId?` por ${esc(nameOf(o.aprovadoPorId))} em ${fmtDate((o.aprovadoEm||"").slice(0,10))}`:""}</dd>${o.solicitanteId?`<dt>Registrado por</dt><dd>${esc(nameOf(o.solicitanteId))}</dd>`:""}</dl>` : "";
+  const apprBtns = ent==="lanc"&&id&&o.tipo==="Despesa"&&o.aprovacao==="Aguardando"&&isAdmin ? approveButtons(o) : "";
+  ov.innerHTML=`<form class="sheet" id="ent-form" novalidate aria-labelledby="ent-h">
+    <header><div><span class="eyebrow">${id?esc(E.title):esc(E.newTitle)}</span><h2 id="ent-h">${id?esc(E.label(o)||E.title):"Cadastrar"}</h2></div><button type="button" class="ghost" data-close aria-label="Fechar">✕</button></header>
+    ${extra}
+    <fieldset ${ro?"disabled":""} style="border:0;padding:0;margin:0;min-width:0"><div class="grid2" id="ent-fields">${fields.map(f=>fieldHtml(f,cur[f.k])).join("")}</div></fieldset>
+    ${E.note?`<p class="muted" style="margin:0;font-size:12px">${esc(E.note)}</p>`:""}
+    ${apprBtns?`<div class="toolbar">${apprBtns}</div>`:""}
+    <div class="actions"><div>${id&&!ro?'<button type="button" class="danger" id="ent-del">Excluir</button>':""}</div>
+      <div class="r"><button type="button" data-close>${ro?"Fechar":"Cancelar"}</button>${ro?"":`<button class="primary" type="submit">${id?"Salvar alterações":"Cadastrar"}</button>`}</div></div>
   </form>`;
   ov.hidden=false;
-  const f=$("#opp-form");
-  const warn=()=>{ const p=PRODUTOS.find(x=>x.n===f.produto.value); const w=$("#prod-warn"); w.hidden=!(p&&p.warn); if(p&&p.warn) w.querySelector(".note").textContent=p.warn; };
-  warn();
-  f.produto.addEventListener("change",()=>{ const p=PRODUTOS.find(x=>x.n===f.produto.value); if(p&&p.v!=null&&f.valor.value==="") f.valor.value=p.v; warn(); });
-  if(!ro) f.cliente.focus();
+  const f=$("#ent-form");
+  const read=()=>{ const d={}; E.fields(cur).forEach(x=>{ const el=f.elements[x.k]; if(!el) return; d[x.k]= x.t==="bool"?el.checked:el.value; }); return d; };
+  const warns=()=>E.fields(cur).forEach(x=>{ if(!x.warn) return; const w=f.querySelector(`[data-warn="${x.k}"]`); const m=x.warn(f.elements[x.k].value); w.hidden=!m; if(m) w.textContent=m; });
+  warns();
+  f.addEventListener("change",e=>{
+    const x=E.fields(cur).find(y=>y.k===e.target.name); if(!x) return;
+    if(x.fill){ const p=x.fill(e.target.value); if(p) Object.entries(p).forEach(([k,v])=>{ if(f.elements[k]&&f.elements[k].value==="") f.elements[k].value=v; }); }
+    if(x.rerender){ cur={...cur,...read()}; const cat=f.elements.categoria; const opts=E.fields(cur).find(y=>y.k==="categoria").opts; cat.innerHTML='<option value="">Escolha…</option>'+optHtml(opts,""); }
+    warns();
+  });
+  if(!ro) f.querySelector("input,select,textarea")?.focus();
   f.addEventListener("submit", async ev=>{
     ev.preventDefault();
-    const d=Object.fromEntries(new FormData(f).entries());
-    let ok=true;
-    const setErr=(name,msg)=>{const fld=f[name].closest(".field"); fld.classList.toggle("bad",!!msg); fld.querySelector(".err").textContent=msg||""; if(msg) ok=false;};
-    setErr("cliente", d.cliente.trim()?"":"Informe o nome do cliente.");
-    setErr("evento", d.evento?"":"Escolha o evento.");
-    setErr("responsavel", d.responsavel?"":"Escolha quem acompanha esta oportunidade.");
-    setErr("email", !d.email||/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)?"":"E-mail inválido. Confira o endereço.");
-    setErr("valor", d.valor===""||(+d.valor>=0)?"":"O valor não pode ser negativo.");
-    setErr("probabilidade", d.probabilidade===""||(+d.probabilidade>=0&&+d.probabilidade<=100)?"":"Use um número de 0 a 100.");
-    setErr("pagamento", d.pagamento==="pago"&&!["concluida","aguardando"].includes(d.etapa)?"Só marque como pago uma venda concluída ou aguardando pagamento.":"");
-    if(!ok){ f.querySelector(".bad input, .bad select")?.focus(); return; }
-    const body={cliente:d.cliente.trim(),telefone:d.telefone.trim(),email:d.email.trim(),evento:d.evento,produto:d.produto,origem:d.origem,responsavel:d.responsavel,
-      valor:d.valor===""?null:+d.valor, probabilidade:d.probabilidade===""?null:+d.probabilidade, etapa:d.etapa, pagamento:d.pagamento,
-      proximaAcao:d.proximaAcao.trim(), followup:d.followup, obs:d.obs.trim(), atualizadoEm:new Date().toISOString()};
+    const d=read(); const fl=E.fields(d);
+    const errs={};
+    fl.forEach(x=>{
+      const v=d[x.k];
+      if(x.req&&(v===""||v==null)) errs[x.k]="Campo obrigatório.";
+      else if(x.t==="email"&&v&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) errs[x.k]="E-mail inválido. Confira o endereço.";
+      else if(x.t==="url"&&v&&!/^https?:\/\/\S+$/i.test(v)) errs[x.k]="Use um link completo, começando com https://";
+      else if(x.t==="num"&&v!==""&&(isNaN(+v)||+v<0)) errs[x.k]="Use um número igual ou maior que zero.";
+      else if(x.max100&&v!==""&&+v>100) errs[x.k]="Use um número de 0 a 100.";
+    });
+    Object.entries(E.validate?E.validate(d,id,o):{}).forEach(([k,m])=>{ if(m&&!errs[k]) errs[k]=m; });
+    f.querySelectorAll(".field").forEach(el=>{el.classList.remove("bad"); const e=el.querySelector(".err"); if(e) e.textContent="";});
+    Object.entries(errs).forEach(([k,m])=>{ const el=f.elements[k]?.closest(".field"); if(el){ el.classList.add("bad"); el.querySelector(".err").textContent=m; } });
+    if(Object.keys(errs).length){ f.querySelector(".bad input,.bad select,.bad textarea")?.focus(); return; }
+    const body={}; fl.forEach(x=>{ const v=d[x.k]; body[x.k]= x.t==="num"?(v===""?null:+v) : x.t==="bool"?!!v : String(v).trim(); });
+    body.atualizadoEm=now();
+    if(E.before) E.before(body,id,o);
     const btn=f.querySelector("button[type=submit]"); btn.disabled=true;
     try{
-      if(id) await db.collection("oportunidades").doc(id).update(body);
-      else await db.collection("oportunidades").add({...body, criadoEm:new Date().toISOString()});
-      closeSheet(); toast(id?"Alterações salvas":"Oportunidade cadastrada");
+      if(id) await db.collection(COL[ent]).doc(id).update(body);
+      else await db.collection(COL[ent]).add({...body, criadoEm:now()});
+      closeSheet(); toast(id?"Alterações salvas":E.title+" cadastrado");
     }catch(e){ btn.disabled=false; toast(dbErr(e),true); }
   });
-  const del=$("#o-del");
+  const del=$("#ent-del");
   if(del) del.addEventListener("click", async ()=>{
     if(!del.classList.contains("armed")){ del.classList.add("armed"); del.textContent="Confirmar exclusão"; setTimeout(()=>{del.classList.remove("armed");del.textContent="Excluir";},4000); return; }
     del.disabled=true;
-    try{ await db.collection("oportunidades").doc(id).delete(); closeSheet(); toast("Oportunidade excluída"); }
+    try{ await db.collection(COL[ent]).doc(id).delete(); if(ent==="projetos"&&openProject===id) openProject=null; closeSheet(); toast("Excluído"); }
     catch(e){ del.disabled=false; toast(dbErr(e),true); }
   });
 }
 
+/* ---------- Pessoa (áreas com cargo em cada uma) ---------- */
 function openPerson(id){
   if(!canWrite) return;
-  const p = id ? people.find(x=>x.id===id) : {areas:[], cargos:{}, status:"Ativo"};
+  const p = id ? S.people.find(x=>x.id===id) : {areas:[],cargos:{},status:"Ativo"};
   if(!p) return;
-  const ov=$("#overlay");
-  const cargos=p.cargos||{};
-  ov.innerHTML=`<form class="sheet" id="p-form" novalidate aria-labelledby="p-h">
+  const cg=p.cargos||{};
+  $("#overlay").innerHTML=`<form class="sheet" id="p-form" novalidate aria-labelledby="p-h">
     <header><div><span class="eyebrow">${id?"Pessoa":"Nova pessoa"}</span><h2 id="p-h">${id?esc(p.nome):"Adicionar ao time"}</h2></div><button type="button" class="ghost" data-close aria-label="Fechar">✕</button></header>
     <div class="grid2">
       <div class="field full"><label for="p-nome">Nome *</label><input id="p-nome" name="nome" value="${esc(p.nome)}" maxlength="80"><span class="err"></span></div>
-      <div class="field"><label for="p-status">Status</label><select id="p-status" name="status">${opt(STATUS_P,p.status)}</select></div>
+      <div class="field"><label for="p-status">Status</label><select id="p-status" name="status">${optHtml(["Ativo","Em avaliação","Inativo"],p.status)}</select></div>
       <div class="field"><label for="p-sup">Supervisor no comercial</label><input id="p-sup" name="supervisor" value="${esc(p.supervisor)}" maxlength="80" placeholder="Ex.: Douglas"></div>
       <div class="field full"><label>Áreas e cargo em cada uma *</label>
-        <div style="display:flex;flex-direction:column;gap:6px" id="p-areas">${AREAS.map((a,i)=>`
-          <div style="display:grid;grid-template-columns:minmax(0,170px) 1fr;gap:8px;align-items:center">
-            <label style="display:flex;gap:6px;align-items:center;font-weight:500;color:var(--fg)"><input type="checkbox" id="pa-${i}" value="${esc(a)}" ${(p.areas||[]).includes(a)?"checked":""}> ${esc(a)}</label>
-            <input id="pc-${i}" aria-label="Cargo em ${esc(a)}" placeholder="Cargo (ex.: Líder)" value="${esc(cargos[a])}" maxlength="80">
+        <div style="display:flex;flex-direction:column;gap:6px">${AREAS.map((a,i)=>`
+          <div style="display:grid;grid-template-columns:minmax(0,180px) 1fr;gap:8px;align-items:center">
+            <label style="display:flex;gap:6px;align-items:center;font-weight:500"><input type="checkbox" id="pa-${i}" ${(p.areas||[]).includes(a)?"checked":""}> ${esc(a)}</label>
+            <input id="pc-${i}" aria-label="Cargo em ${esc(a)}" placeholder="Cargo (ex.: Líder)" value="${esc(cg[a])}" maxlength="80">
           </div>`).join("")}</div><span class="err" id="p-areas-err"></span></div>
       <div class="field full"><label for="p-obs">Observações</label><textarea id="p-obs" name="obs" rows="2" maxlength="500">${esc(p.obs)}</textarea></div>
     </div>
-    <p class="muted" style="margin:0;font-size:12px">Não registre aqui assuntos reservados da diretoria ou dados pessoais sensíveis: todos com acesso ao CRM veem esta ficha.</p>
+    <p class="muted" style="margin:0;font-size:12px">Todos com acesso à Central veem esta ficha. Assuntos reservados da diretoria ficam em Reuniões e decisões.</p>
     <div class="actions"><div>${id?'<button type="button" class="danger" id="p-del">Remover</button>':""}</div>
       <div class="r"><button type="button" data-close>Cancelar</button><button class="primary" type="submit">${id?"Salvar":"Adicionar"}</button></div></div>
   </form>`;
-  ov.hidden=false;
+  $("#overlay").hidden=false;
   const f=$("#p-form"); f.nome.focus();
   f.addEventListener("submit", async ev=>{
     ev.preventDefault();
-    const nome=f.nome.value.trim();
-    const areas=[], cg={};
-    AREAS.forEach((a,i)=>{ if($("#pa-"+i).checked){ areas.push(a); const c=$("#pc-"+i).value.trim(); if(c) cg[a]=c; } });
+    const nome=f.nome.value.trim(), areas=[], cargos={};
+    AREAS.forEach((a,i)=>{ if($("#pa-"+i).checked){ areas.push(a); const c=$("#pc-"+i).value.trim(); if(c) cargos[a]=c; } });
     const nf=f.nome.closest(".field"); nf.classList.toggle("bad",!nome); nf.querySelector(".err").textContent=nome?"":"Informe o nome.";
     $("#p-areas-err").textContent=areas.length?"":"Marque pelo menos uma área.";
     if(!nome||!areas.length) return;
-    const body={nome, areas, cargos:cg, status:f.status.value, supervisor:f.supervisor.value.trim(), obs:f.obs.value.trim(), atualizadoEm:new Date().toISOString()};
+    const body={nome,areas,cargos,status:f.status.value,supervisor:f.supervisor.value.trim(),obs:f.obs.value.trim(),atualizadoEm:now()};
     const btn=f.querySelector("button[type=submit]"); btn.disabled=true;
-    try{
-      if(id) await db.collection("pessoas").doc(id).set(body); else await db.collection("pessoas").add(body);
-      closeSheet(); toast(id?"Ficha atualizada":"Pessoa adicionada");
-    }catch(e){ btn.disabled=false; toast(dbErr(e),true); }
+    try{ if(id) await db.collection("pessoas").doc(id).set(body); else await db.collection("pessoas").add(body); closeSheet(); toast(id?"Ficha atualizada":"Pessoa adicionada"); }
+    catch(e){ btn.disabled=false; toast(dbErr(e),true); }
   });
   const del=$("#p-del");
   if(del) del.addEventListener("click", async ()=>{
     if(!del.classList.contains("armed")){ del.classList.add("armed"); del.textContent="Confirmar remoção"; setTimeout(()=>{del.classList.remove("armed");del.textContent="Remover";},4000); return; }
     del.disabled=true;
-    try{ await db.collection("pessoas").doc(id).delete(); closeSheet(); toast("Pessoa removida do time"); }
-    catch(e){ del.disabled=false; toast(dbErr(e),true); }
+    try{ await db.collection("pessoas").doc(id).delete(); closeSheet(); toast("Pessoa removida"); }catch(e){ del.disabled=false; toast(dbErr(e),true); }
   });
 }
 
-async function move(id, dir){
-  const o=opps.find(x=>x.id===id); if(!o) return;
-  const i=STAGES.findIndex(s=>s.k===o.etapa)+dir; if(i<0||i>=STAGES.length) return;
-  try{ await db.collection("oportunidades").doc(id).update({etapa:STAGES[i].k, atualizadoEm:new Date().toISOString()}); toast("Movida para "+STAGES[i].n); }
-  catch(e){ toast(dbErr(e),true); }
+/* ================= Helpers de exibição ================= */
+function dateChip(d, openish=true){
+  if(!d) return "";
+  if(!openish) return `<span class="chip">${fmtDate(d)}</span>`;
+  const t=today(); const cls=d<t?"late":d===t?"today":"";
+  return `<span class="chip ${cls}">${d<t?"Atrasado · ":d===t?"Hoje · ":""}${fmtDate(d)}</span>`;
+}
+const statusChip = s => `<span class="chip ${({"Concluída":"good","Concluído":"good","Pronto":"good","Pago":"good","Aprovada":"good","Bloqueada":"bad","Cancelado":"bad","Recusada":"bad","Reembolsado":"bad","Em andamento":"pend","Pendente":"pend","Aguardando":"pend","Em execução":"pend"})[s]||""}">${esc(s||"—")}</span>`;
+const apprChip = l => l.tipo==="Despesa" ? statusChip(l.aprovacao||"Aguardando") : `<span class="chip">Não exige</span>`;
+const lockState = () => `<div class="state"><h2>Acesso restrito à diretoria</h2><span>Esta seção mostra informações financeiras e decisões reservadas. Ela aparece só para quem tem acesso de Editor à Central.</span></div>`;
+function approveButtons(l){
+  const self = me && l.solicitanteId===me;
+  return self ? `<span class="muted" style="font-size:12px">Você registrou este gasto. Outra pessoa autorizada precisa aprovar.</span>`
+    : `<button type="button" class="ok sm" data-appr="${esc(l.id)}" data-v="Aprovada">Aprovar</button><button type="button" class="danger sm" data-appr="${esc(l.id)}" data-v="Recusada">Recusar</button>`;
+}
+const lval = l => (l.valorRealizado!=null&&l.valorRealizado!==""&&["Pago","Reembolsado"].includes(l.status)) ? +l.valorRealizado : +(l.valorPrevisto ?? l.valorRealizado ?? 0);
+
+function toolbar(items, btn){ return `<div class="toolbar">${items.join("")}<span class="sp"></span>${btn||""}</div>`; }
+function sel(key, label, opts){ return `<label>${esc(label)}<select data-flt="${key}"><option value="">Todos</option>${optHtml(opts,flt[key])}</select></label>`; }
+function search(key){ return `<label>Buscar<input type="search" data-flt="${key}" value="${esc(flt[key]||"")}" placeholder="Digite para filtrar"></label>`; }
+const newBtn = (ent,label,admin) => canWrite&&(!admin||isAdmin) ? `<button class="primary" data-new="${ent}">${esc(label)}</button>` : "";
+const match = (o, keys, q) => !q || keys.map(k=>o[k]).join(" ").toLowerCase().includes(q.toLowerCase());
+
+function table(cols, rows, ent, empty, foot){
+  if(!rows.length) return `<div class="state"><h2>${esc(empty[0])}</h2><span>${esc(empty[1])}</span>${empty[2]||""}</div>`;
+  return `<div class="table-scroll"><table><thead><tr>${cols.map(c=>`<th class="${c.r?"r":""}">${esc(c.n)}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr class="click" tabindex="0" data-open="${ent}:${esc(r.id)}">${cols.map(c=>`<td class="${c.r?"r num":""}">${c.f?c.f(r):esc(r[c.k]||"—")}</td>`).join("")}</tr>`).join("")}</tbody>${foot||""}</table></div>`;
 }
 
-/* ---------- Eventos ---------- */
-document.addEventListener("click", e=>{
-  const t=e.target.closest("[data-move],[data-open],[data-close],[data-act],[data-editp]");
-  if(!t) { if(e.target.id==="overlay") closeSheet(); return; }
-  if(t.dataset.move){ e.stopPropagation(); move(t.dataset.move, +t.dataset.dir); return; }
-  if(t.dataset.open) return openOpp(t.dataset.open);
-  if(t.hasAttribute("data-close")) return closeSheet();
-  if(t.dataset.editp) return openPerson(t.dataset.editp);
-  if(t.dataset.act==="new") return openOpp();
-  if(t.dataset.act==="newp") return openPerson();
-});
-document.addEventListener("keydown", e=>{
-  if(e.key==="Escape" && !$("#overlay").hidden) closeSheet();
-  if((e.key==="Enter"||e.key===" ") && e.target.dataset && e.target.dataset.open && !e.target.closest("button")){ e.preventDefault(); openOpp(e.target.dataset.open); }
-});
-$("#btn-new-opp").addEventListener("click",()=>openOpp());
-$("#btn-new-person").addEventListener("click",()=>openPerson());
-["#f-q","#f-resp","#f-ev"].forEach(s=>$(s).addEventListener("input",render));
-function route(){ const h=location.hash.slice(1); view=["funil","followups","time"].includes(h)?h:"funil"; if(db) render(); else document.querySelectorAll("nav.tabs a").forEach(a=>a.setAttribute("aria-current", a.dataset.view===view?"page":"false")); }
-window.addEventListener("hashchange",route); route();
+/* ================= Vistas ================= */
+function vPainel(){
+  const t=today();
+  const ev=S.projetos.filter(p=>p.data&&p.data>=t&&!["Arquivado","Concluído"].includes(p.status)).sort((a,b)=>a.data<b.data?-1:1);
+  const next=ev[0];
+  const late=S.tarefas.filter(x=>x.status!=="Concluída"&&x.prazo&&x.prazo<t);
+  const crit=S.tarefas.filter(x=>x.status!=="Concluída"&&x.critica);
+  const openOpps=S.opps.filter(o=>OPEN.has(o.etapa));
+  const fuLate=openOpps.filter(o=>o.followup&&o.followup<t).length;
+  const pend=S.lanc.filter(l=>l.tipo==="Despesa"&&(l.aprovacao||"Aguardando")==="Aguardando");
+  const fin=finSum(S.lanc);
+  const nt = next ? S.tarefas.filter(x=>x.projeto===next.id) : [];
+  const nd = nt.filter(x=>x.status==="Concluída").length;
+  return `
+  <div class="two">
+    <div class="panel">${next?`<span class="eyebrow">Próximo evento</span>
+      <div style="display:flex;gap:18px;align-items:flex-end;flex-wrap:wrap"><div><div class="countdown num">${daysTo(next.data)}</div><span class="muted">dia${daysTo(next.data)===1?"":"s"}</span></div>
+      <div style="min-width:0"><h2>${esc(next.nome)}</h2><span class="muted">${fmtDate(next.data)}${next.cidade?" · "+esc(next.cidade):""} · ${esc(next.status)}</span></div></div>
+      <div class="bar" aria-label="Progresso do checklist"><i style="width:${nt.length?Math.round(nd/nt.length*100):0}%"></i></div>
+      <span class="muted" style="font-size:12px">${nd} de ${nt.length} tarefas concluídas · ${nt.filter(x=>x.critica&&x.status!=="Concluída").length} críticas abertas</span>
+      <div><button class="sm" data-proj="${esc(next.id)}">Abrir projeto</button></div>`
+      :`<span class="eyebrow">Próximo evento</span><h2>Nenhum evento com data futura</h2><span class="muted">Cadastre a data em Projetos para ver a contagem regressiva.</span>`}</div>
+    <div class="panel"><span class="eyebrow">Próximas datas</span><div class="list">${ev.slice(0,4).map(p=>`<div class="li click" data-proj="${esc(p.id)}"><div><div class="n">${esc(p.nome)}</div><div class="c">${esc(p.cidade||p.tipo||"")}</div></div><span class="chip">${fmtDate(p.data)} · ${daysTo(p.data)}d</span></div>`).join("")||'<span class="muted">Sem datas futuras.</span>'}</div></div>
+  </div>
+  <section class="stats" aria-label="Indicadores">
+    <a class="stat" href="#projetos"><span class="eyebrow">Projetos ativos</span><b>${S.projetos.filter(p=>!["Arquivado","Concluído"].includes(p.status)).length}</b><small>${S.projetos.filter(p=>p.status==="Planejamento").length} em planejamento</small></a>
+    <a class="stat ${late.length?"alert":""}" href="#tarefas" data-setflt="t_st=atrasadas"><span class="eyebrow">Tarefas vencidas</span><b>${late.length}</b><small>${late.length?"Ver tarefas atrasadas":"Nada vencido"}</small></a>
+    <a class="stat ${crit.length?"alert":""}" href="#tarefas" data-setflt="t_st=criticas"><span class="eyebrow">Pendências críticas</span><b>${crit.length}</b><small>Impedem marcar evento como pronto</small></a>
+    <a class="stat" href="#funil"><span class="eyebrow">Funil em aberto</span><b>${usd(openOpps.reduce((a,o)=>a+(+o.valor||0),0))}</b><small>${openOpps.length} oportunidades</small></a>
+    <a class="stat ${fuLate?"alert":""}" href="#followups"><span class="eyebrow">Follow-ups atrasados</span><b>${fuLate}</b><small>Comercial</small></a>
+    ${isAdmin?`<a class="stat ${pend.length?"alert":""}" href="#aprovacoes"><span class="eyebrow">Aguardando aprovação</span><b>${pend.length}</b><small>${usd(pend.reduce((a,l)=>a+lval(l),0))} em despesas</small></a>
+    <a class="stat" href="#financeiro"><span class="eyebrow">Saldo realizado</span><b>${usd(fin.recR-fin.despR)}</b><small>Recebido ${usd(fin.recR)} · pago ${usd(fin.despR)}</small></a>`:""}
+  </section>
+  <div class="two">
+    <div class="panel"><span class="eyebrow">Pendências críticas e atrasadas</span><div class="list">${[...new Set([...late,...crit])].sort((a,b)=>(a.prazo||"9")<(b.prazo||"9")?-1:1).slice(0,8).map(taskLi).join("")||'<span class="muted">Nenhuma pendência crítica ou atrasada.</span>'}</div></div>
+    <div class="panel"><span class="eyebrow">Próximos 14 dias</span><div class="list">${agendaItems(14).slice(0,8).map(agLi).join("")||'<span class="muted">Nada marcado nos próximos 14 dias.</span>'}</div></div>
+  </div>`;
+}
+const taskLi = x => `<div class="li click" data-open="tarefas:${esc(x.id)}"><div><div class="n">${esc(x.titulo)}</div><div class="c">${esc(projName(x.projeto))} · ${esc(x.etapa)} · ${esc(x.responsavel||"sem responsável")}</div></div><div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">${x.critica?'<span class="chip crit">Crítica</span>':""}${dateChip(x.prazo)}</div></div>`;
 
-/* ---------- Conexão ---------- */
+function vProjetos(){
+  if(openProject && S.projetos.some(p=>p.id===openProject)) return vProjeto(S.projetos.find(p=>p.id===openProject));
+  const q=flt.p_q||"", st=flt.p_st||"";
+  const rows=S.projetos.filter(p=>match(p,["nome","cidade","responsavel"],q)&&(!st||p.status===st)).sort((a,b)=>(a.data||"9999")<(b.data||"9999")?-1:1);
+  return toolbar([search("p_q"),sel("p_st","Status",P_STATUS)], newBtn("projetos","Novo projeto")) +
+    (rows.length?`<div class="grid-cards">${rows.map(p=>{
+      const ts=S.tarefas.filter(x=>x.projeto===p.id), done=ts.filter(x=>x.status==="Concluída").length;
+      const cr=ts.filter(x=>x.critica&&x.status!=="Concluída").length, lt=ts.filter(x=>x.status!=="Concluída"&&x.prazo&&x.prazo<today()).length;
+      return `<button class="panel click" data-proj="${esc(p.id)}">
+        <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><div style="min-width:0"><span class="eyebrow">${esc(p.tipo||"Projeto")}</span><h3>${esc(p.nome)}</h3></div>${statusChip(p.status)}</div>
+        <span class="muted">${p.data?fmtDate(p.data)+(daysTo(p.data)>=0?` · faltam ${daysTo(p.data)} dias`:""):"Data a definir"}${p.cidade?" · "+esc(p.cidade):""}</span>
+        <div class="bar"><i style="width:${ts.length?Math.round(done/ts.length*100):0}%"></i></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="chip">${done}/${ts.length} tarefas</span>${cr?`<span class="chip crit">${cr} críticas</span>`:""}${lt?`<span class="chip late">${lt} atrasadas</span>`:""}<span class="chip">${esc(p.responsavel||"Responsável a definir")}</span></div>
+      </button>`;}).join("")}</div>`
+    :`<div class="state"><h2>${S.projetos.length?"Nenhum projeto com esses filtros":"Nenhum projeto cadastrado"}</h2><span>Cada evento, corrida, campanha ou atividade vira um projeto com checklist e orçamento próprios.</span></div>`);
+}
+
+function vProjeto(p){
+  const ts=S.tarefas.filter(x=>x.projeto===p.id);
+  const done=ts.filter(x=>x.status==="Concluída").length;
+  const fin=finSum(S.lanc.filter(l=>l.projeto===p.id));
+  const opps=S.opps.filter(o=>o.evento===p.nome);
+  const sold=opps.filter(o=>o.etapa==="concluida");
+  return `<div class="toolbar"><button class="sm" data-back>← Todos os projetos</button><span class="sp"></span>${canWrite?`<button class="sm" data-open="projetos:${esc(p.id)}">Editar projeto</button><button class="primary sm" data-new="tarefas" data-preset-projeto="${esc(p.id)}">Nova tarefa</button>`:""}</div>
+  <div class="two">
+    <div class="panel"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><div style="min-width:0"><span class="eyebrow">${esc(p.tipo||"Projeto")}</span><h2>${esc(p.nome)}</h2></div>${statusChip(p.status)}</div>
+      <dl class="kv"><dt>Data</dt><dd>${p.data?fmtDate(p.data)+(daysTo(p.data)>=0?` · faltam ${daysTo(p.data)} dias`:""):"A definir"}</dd>
+      <dt>Local</dt><dd>${esc([p.local,p.cidade].filter(Boolean).join(" · ")||"A definir")}</dd>
+      <dt>Responsável</dt><dd>${esc(p.responsavel||"A definir")}</dd>
+      <dt>Modalidade</dt><dd>${esc(p.modalidade||"—")}${p.fuso?" · "+esc(p.fuso):""}</dd>
+      <dt>Metas</dt><dd>${p.metaParticipantes?esc(p.metaParticipantes)+" participantes":"Participantes a definir"} · ${p.metaFaturamento?usd(p.metaFaturamento):"faturamento a definir"}</dd>
+      <dt>Departamentos</dt><dd>${esc(p.departamentos||"—")}</dd>
+      ${p.objetivo?`<dt>Objetivo</dt><dd>${esc(p.objetivo)}</dd>`:""}${p.riscos?`<dt>Riscos</dt><dd>${esc(p.riscos)}</dd>`:""}${p.excecao?`<dt>Exceção</dt><dd>${esc(p.excecao)}</dd>`:""}</dl></div>
+    <div class="panel"><span class="eyebrow">Números do projeto</span>
+      <dl class="kv"><dt>Checklist</dt><dd>${done} de ${ts.length} concluídas · ${ts.filter(x=>x.critica&&x.status!=="Concluída").length} críticas abertas</dd>
+      <dt>Comercial</dt><dd>${sold.length} vendas · ${usd(sold.reduce((a,o)=>a+(+o.valor||0),0))} · ${opps.filter(o=>OPEN.has(o.etapa)).length} em aberto</dd>
+      ${isAdmin?`<dt>Orçamento</dt><dd>${p.orcamento?usd(p.orcamento):"A definir"} · despesas previstas ${usd(fin.despP)}</dd>
+      <dt>Realizado</dt><dd>Recebido ${usd(fin.recR)} · pago ${usd(fin.despR)} · resultado ${usd(fin.recR-fin.despR)}</dd>`:`<dt>Financeiro</dt><dd class="muted">Visível só para a diretoria</dd>`}</dl></div>
+  </div>
+  ${ts.length?`<div class="board-scroll"><div class="board">${ETAPAS.map(et=>{const list=ts.filter(x=>x.etapa===et).sort((a,b)=>(a.status==="Concluída")-(b.status==="Concluída")||((a.prazo||"9")<(b.prazo||"9")?-1:(a.prazo||"9")>(b.prazo||"9")?1:0));
+    return `<div class="col etapa"><h4><span>${esc(et)}</span><span class="num">${list.filter(x=>x.status==="Concluída").length}/${list.length}</span></h4>${list.map(x=>`
+      <div class="task ${x.status==="Concluída"?"done":""}"><input type="checkbox" aria-label="Concluir ${esc(x.titulo)}" data-done="${esc(x.id)}" ${x.status==="Concluída"?"checked":""} ${canWrite?"":"disabled"}>
+      <div class="body" data-open="tarefas:${esc(x.id)}" tabindex="0"><div class="n">${esc(x.titulo)}</div><div class="c" style="display:flex;gap:4px;flex-wrap:wrap;margin-top:3px">${x.critica?'<span class="chip crit">Crítica</span>':""}${x.status!=="A fazer"&&x.status!=="Concluída"?statusChip(x.status):""}${dateChip(x.prazo,x.status!=="Concluída")}<span>${esc(x.responsavel||"")}</span></div></div></div>`).join("")||'<div class="empty-col">Sem tarefas.</div>'}</div>`;}).join("")}</div></div>`
+  :`<div class="state"><h2>Este projeto ainda não tem tarefas</h2><span>O checklist padrão cria ${Object.values(CHECKLIST).flat().length} tarefas nas 8 etapas, da estratégia ao pós-evento. Depois você define responsáveis e prazos.</span>${canWrite?`<button class="primary" data-genchk="${esc(p.id)}">Gerar checklist padrão</button>`:""}</div>`}`;
+}
+
+function vTarefas(){
+  const q=flt.t_q||"", pr=flt.t_pr||"", rs=flt.t_rs||"", st=flt.t_st||"", t=today();
+  const rows=S.tarefas.filter(x=>match(x,["titulo","obs","responsavel"],q)&&(!pr||x.projeto===pr)&&(!rs||x.responsavel===rs)&&
+    (!st||(st==="abertas"?x.status!=="Concluída":st==="atrasadas"?x.status!=="Concluída"&&x.prazo&&x.prazo<t:st==="criticas"?x.critica&&x.status!=="Concluída":x.status===st)))
+    .sort((a,b)=>(a.status==="Concluída")-(b.status==="Concluída")||((a.prazo||"9999")<(b.prazo||"9999")?-1:1));
+  const stOpts=[["abertas","Abertas"],["atrasadas","Atrasadas"],["criticas","Críticas abertas"]].concat(T_STATUS);
+  return toolbar([search("t_q"),sel("t_pr","Projeto",S.projetos.map(p=>[p.id,p.nome])),sel("t_rs","Responsável",peopleNames()),sel("t_st","Status",stOpts)], S.projetos.length?newBtn("tarefas","Nova tarefa"):"") +
+    table([{n:"Tarefa",f:x=>`<b>${esc(x.titulo)}</b>${x.critica?' <span class="chip crit">Crítica</span>':""}`},{n:"Projeto",f:x=>esc(projName(x.projeto))},{n:"Etapa",k:"etapa"},{n:"Responsável",k:"responsavel"},{n:"Prioridade",k:"prioridade"},{n:"Prazo",f:x=>dateChip(x.prazo,x.status!=="Concluída")||"—"},{n:"Status",f:x=>statusChip(x.status)}],
+      rows,"tarefas",S.tarefas.length?["Nenhuma tarefa com esses filtros","Limpe os filtros para ver todas."]:["Nenhuma tarefa ainda","Abra um projeto e gere o checklist padrão, ou cadastre tarefas avulsas."]);
+}
+
+function agendaItems(days){
+  const t=today(), end=addDays(days), it=[];
+  S.projetos.forEach(p=>{ if(p.data&&p.data>=t&&p.data<=end) it.push({d:p.data,n:p.nome,c:"Evento / projeto"+(p.cidade?" · "+p.cidade:""),k:"Projeto",o:`proj:${p.id}`}); });
+  S.tarefas.forEach(x=>{ if(x.status!=="Concluída"&&x.prazo&&x.prazo<=end) it.push({d:x.prazo,n:x.titulo,c:projName(x.projeto)+" · "+(x.responsavel||"sem responsável"),k:x.critica?"Tarefa crítica":"Tarefa",o:`tarefas:${x.id}`,late:x.prazo<t}); });
+  S.opps.forEach(o=>{ if(OPEN.has(o.etapa)&&o.followup&&o.followup<=end) it.push({d:o.followup,n:"Follow-up: "+o.cliente,c:(o.proximaAcao||"")+" · "+(o.responsavel||""),k:"Comercial",o:`opps:${o.id}`,late:o.followup<t}); });
+  if(isAdmin){
+    S.lanc.forEach(l=>{ if(["Previsto","Contratado","Pendente"].includes(l.status)&&l.vencimento&&l.vencimento<=end) it.push({d:l.vencimento,n:(l.tipo==="Receita"?"Receber: ":"Pagar: ")+l.descricao,c:usd(lval(l))+" · "+projName(l.projeto),k:"Financeiro",o:`lanc:${l.id}`,late:l.vencimento<t}); });
+    S.reun.forEach(r=>{ if(r.data&&r.data>=t&&r.data<=end) it.push({d:r.data,n:r.titulo,c:r.tipo||"",k:"Reunião",o:`reun:${r.id}`}); });
+  }
+  return it.sort((a,b)=>a.d<b.d?-1:a.d>b.d?1:0);
+}
+const agLi = i => `<div class="li click" ${i.o.startsWith("proj:")?`data-proj="${esc(i.o.slice(5))}"`:`data-open="${esc(i.o)}"`}><div><div class="n">${esc(i.n)}</div><div class="c">${esc(i.k)} · ${esc(i.c)}</div></div>${i.late?`<span class="chip late">Atrasado · ${fmtDate(i.d)}</span>`:`<span class="chip">${fmtDate(i.d)}</span>`}</div>`;
+function vAgenda(){
+  const k=flt.a_k||"";
+  const items=agendaItems(90).filter(i=>!k||i.k.startsWith(k));
+  const kinds=["Projeto","Tarefa","Comercial"].concat(isAdmin?["Financeiro","Reunião"]:[]);
+  return toolbar([sel("a_k","Tipo",kinds)],"") + (items.length?`<div class="panel"><div class="list">${items.map(agLi).join("")}</div></div>`:`<div class="state"><h2>Nada nos próximos 90 dias</h2><span>Eventos, prazos de tarefas, follow-ups${isAdmin?", vencimentos e reuniões":""} aparecem aqui em ordem de data. Horários seguem o fuso de cada projeto.</span></div>`);
+}
+
+function oppFiltered(){ const q=flt.o_q||"", r=flt.o_rs||"", ev=flt.o_ev||""; return S.opps.filter(o=>match(o,["cliente","telefone","email","obs"],q)&&(!r||o.responsavel===r)&&(!ev||o.evento===ev)); }
+function oppStats(list){
+  const open=list.filter(o=>OPEN.has(o.etapa)), won=list.filter(o=>o.etapa==="concluida");
+  const sum=a=>a.reduce((s,o)=>s+(+o.valor||0),0);
+  const paid=sum(list.filter(o=>o.pagamento==="Pago")), toR=sum(list.filter(o=>["concluida","aguardando"].includes(o.etapa)&&(o.pagamento||"Pendente")==="Pendente"));
+  const late=open.filter(o=>o.followup&&o.followup<today()).length;
+  return `<section class="stats"><div class="stat"><span class="eyebrow">Em aberto</span><b>${usd(sum(open))}</b><small>${open.length} oportunidades · ponderado ${usd(Math.round(open.reduce((s,o)=>s+(+o.valor||0)*((+o.probabilidade||0)/100),0)))}</small></div>
+    <div class="stat"><span class="eyebrow">Vendas concluídas</span><b>${usd(sum(won))}</b><small>${won.length} vendas · ticket médio ${usd(won.length?Math.round(sum(won)/won.length):0)}</small></div>
+    <div class="stat"><span class="eyebrow">Recebido</span><b>${usd(paid)}</b><small>Só pagamentos confirmados</small></div>
+    <div class="stat"><span class="eyebrow">A receber</span><b>${usd(toR)}</b><small>Vendido ou aguardando, pendente</small></div>
+    <div class="stat ${late?"alert":""}"><span class="eyebrow">Follow-ups atrasados</span><b>${late}</b><small>${late?"Veja Follow-ups":"Nada atrasado"}</small></div></section>`;
+}
+function oppToolbar(){ return toolbar([search("o_q"),sel("o_rs","Responsável",[...new Set(peopleNames("Comercial").concat(S.opps.map(o=>o.responsavel).filter(Boolean)))]),sel("o_ev","Evento",eventOptions())], newBtn("opps","Nova oportunidade")); }
+function vFunil(){
+  const list=oppFiltered();
+  if(!S.opps.length) return oppStats(list)+oppToolbar()+`<div class="state"><h2>Nenhuma oportunidade ainda</h2><span>Cada contato vira um card no funil, do novo contato até a venda concluída.</span></div>`;
+  return oppStats(list)+oppToolbar()+`<div class="board-scroll"><div class="board">${STAGES.map((s,i)=>{
+    const cards=list.filter(o=>o.etapa===s.k).sort((a,b)=>(a.followup||"9")<(b.followup||"9")?-1:1);
+    return `<div class="col ${s.k==="concluida"?"won":""}"><header><span>${esc(s.n)}</span><small>${cards.length} · ${usd(cards.reduce((a,o)=>a+(+o.valor||0),0))}</small></header>
+      ${cards.map(o=>`<div class="card" role="button" tabindex="0" data-open="opps:${esc(o.id)}">
+        <div class="t">${esc(o.cliente)}</div><div class="meta">${esc(o.produto||"Sem produto")}${o.evento?" · "+esc(o.evento):""}</div>
+        <div class="row"><span class="num">${o.valor!=null&&o.valor!==""?usd(o.valor):'<span class="muted">Sem valor</span>'}${o.probabilidade!=null&&o.probabilidade!==""&&OPEN.has(o.etapa)?` <span class="muted">· ${o.probabilidade}%</span>`:""}</span>${["concluida","aguardando"].includes(s.k)?statusChip(o.pagamento||"Pendente"):""}</div>
+        <div class="row"><span class="meta">${esc(o.responsavel||"Sem responsável")}</span>${OPEN.has(o.etapa)?dateChip(o.followup):""}</div>
+        ${canWrite?`<div class="row"><span class="meta">${esc(o.proximaAcao||"")}</span><span><button class="ghost" data-move="${esc(o.id)}" data-dir="-1" ${i===0?"disabled":""} aria-label="Voltar etapa">◀</button><button class="ghost" data-move="${esc(o.id)}" data-dir="1" ${i===STAGES.length-1?"disabled":""} aria-label="Avançar etapa">▶</button></span></div>`:""}
+      </div>`).join("")||`<div class="empty-col">Nenhuma aqui.</div>`}</div>`;}).join("")}</div></div>`;
+}
+function vFollowups(){
+  const rows=oppFiltered().filter(o=>OPEN.has(o.etapa)).sort((a,b)=>(a.followup||"9999")<(b.followup||"9999")?-1:1);
+  return oppStats(oppFiltered())+oppToolbar()+table([{n:"Follow-up",f:o=>dateChip(o.followup)||'<span class="chip">Sem data</span>'},{n:"Cliente",f:o=>`<b>${esc(o.cliente)}</b>`},{n:"Próxima ação",k:"proximaAcao"},{n:"Etapa",f:o=>esc((STAGES.find(s=>s.k===o.etapa)||{}).n)},{n:"Responsável",k:"responsavel"},{n:"Contato",f:o=>esc([o.telefone,o.email].filter(Boolean).join(" · ")||"—")},{n:"Valor",r:1,f:o=>o.valor!=null&&o.valor!==""?usd(o.valor):"—"}],
+    rows,"opps",["Nenhum follow-up em aberto","Oportunidades abertas com data de follow-up aparecem aqui, as atrasadas primeiro."]);
+}
+
+function finSum(list){
+  const r={recP:0,recR:0,despP:0,despR:0,aRec:0,aPag:0,rest:0};
+  list.forEach(l=>{
+    if(l.status==="Cancelado") return;
+    const prev=+(l.valorPrevisto||0), real=+(l.valorRealizado||0);
+    if(l.restrito&&l.tipo==="Receita"){ if(l.status==="Pago") r.rest+=real; return; }
+    if(l.tipo==="Receita"){ r.recP+=prev; if(l.status==="Pago") r.recR+=real; if(["Contratado","Pendente"].includes(l.status)) r.aRec+=prev||real; }
+    else { if(l.aprovacao==="Recusada") return; r.despP+=prev; if(l.status==="Pago") r.despR+=real; if(["Contratado","Pendente"].includes(l.status)&&l.aprovacao==="Aprovada") r.aPag+=prev||real; }
+  });
+  return r;
+}
+function vFinanceiro(){
+  if(!isAdmin) return lockState();
+  const pr=flt.f_pr||"", tp=flt.f_tp||"", st=flt.f_st||"", q=flt.f_q||"";
+  const scope=S.lanc.filter(l=>!pr||l.projeto===pr);
+  const rows=scope.filter(l=>(!tp||l.tipo===tp)&&(!st||l.status===st)&&match(l,["descricao","categoria","fornecedor","justificativa"],q)).sort((a,b)=>(a.vencimento||"9999")<(b.vencimento||"9999")?-1:1);
+  const f=finSum(scope);
+  const p=pr?S.projetos.find(x=>x.id===pr):null;
+  const byProj=[["central","Central (sem evento)"]].concat(S.projetos.map(x=>[x.id,x.nome])).map(([id,n])=>{const s=finSum(S.lanc.filter(l=>l.projeto===id)); return {id,n,...s,orc:(S.projetos.find(x=>x.id===id)||{}).orcamento};}).filter(x=>x.recP||x.recR||x.despP||x.despR||x.orc);
+  const breakEven = (p&&f.despP) ? (()=>{ return `<div class="stat"><span class="eyebrow">Ponto de equilíbrio</span><b>${usd(f.despP)}</b><small>Receita necessária para cobrir as despesas previstas${p.nome.includes("Boston")?" · ≈ "+Math.ceil(f.despP/77)+" ingressos a US$77":""}</small></div>`; })() : "";
+  return toolbar([sel("f_pr","Evento / projeto",[["central","Central (sem evento)"]].concat(S.projetos.map(x=>[x.id,x.nome]))),sel("f_tp","Tipo",["Receita","Despesa"]),sel("f_st","Status",L_STATUS),search("f_q")],
+      `${S.lanc.length?'<button data-export>Exportar CSV</button>':""}${newBtn("lanc","Novo lançamento",1)}`) +
+  `<section class="stats">
+    <div class="stat"><span class="eyebrow">Receita prevista</span><b>${usd(f.recP)}</b><small>Recebido ${usd(f.recR)} · a receber ${usd(f.aRec)}</small></div>
+    <div class="stat"><span class="eyebrow">Despesa prevista</span><b>${usd(f.despP)}</b><small>Pago ${usd(f.despR)} · a pagar aprovado ${usd(f.aPag)}</small></div>
+    <div class="stat ${f.recR-f.despR<0?"alert":""}"><span class="eyebrow">Saldo realizado</span><b>${usd(f.recR-f.despR)}</b><small>Só valores efetivamente recebidos e pagos</small></div>
+    <div class="stat ${f.recP-f.despP<0?"alert":""}"><span class="eyebrow">Resultado previsto</span><b>${usd(f.recP-f.despP)}</b><small>Margem ${f.recP?Math.round((f.recP-f.despP)/f.recP*100)+"%":"—"}${p&&p.orcamento?" · orçamento "+usd(p.orcamento):""}</small></div>
+    ${breakEven}
+    ${f.rest?`<div class="stat"><span class="eyebrow">Doações restritas</span><b>${usd(f.rest)}</b><small>Separadas do resultado comercial</small></div>`:""}
+  </section>
+  ${!pr&&byProj.length?`<div class="table-scroll"><table><thead><tr><th>Evento / projeto</th><th class="r">Orçamento</th><th class="r">Receita prevista</th><th class="r">Recebido</th><th class="r">Despesa prevista</th><th class="r">Pago</th><th class="r">Resultado previsto</th><th class="r">Saldo realizado</th></tr></thead><tbody>${byProj.map(x=>`<tr class="click" data-setflt="f_pr=${esc(x.id)}"><td><b>${esc(x.n)}</b></td><td class="r num">${x.orc?usd(x.orc):"—"}</td><td class="r num">${usd(x.recP)}</td><td class="r num">${usd(x.recR)}</td><td class="r num">${usd(x.despP)}</td><td class="r num">${usd(x.despR)}</td><td class="r num">${usd(x.recP-x.despP)}</td><td class="r num">${usd(x.recR-x.despR)}</td></tr>`).join("")}</tbody></table></div>`:""}
+  ${table([{n:"Vencimento",f:l=>["Previsto","Contratado","Pendente"].includes(l.status)?dateChip(l.vencimento)||"—":fmtDate(l.vencimento)||"—"},{n:"Descrição",f:l=>`<b>${esc(l.descricao)}</b><div class="muted" style="font-size:12px">${esc(l.categoria)}${l.fornecedor?" · "+esc(l.fornecedor):""}${l.restrito?" · doação restrita":""}</div>`},{n:"Projeto",f:l=>esc(projName(l.projeto))},{n:"Tipo",k:"tipo"},{n:"Previsto",r:1,f:l=>l.valorPrevisto!=null?usd(l.valorPrevisto):"—"},{n:"Realizado",r:1,f:l=>l.valorRealizado!=null?usd(l.valorRealizado):"—"},{n:"Status",f:l=>statusChip(l.status)},{n:"Aprovação",f:apprChip},{n:"Comprovante",f:l=>l.comprovante?'<span class="chip good">Anexado</span>':(l.status==="Pago"?'<span class="chip pend">Falta</span>':"—")}],
+    rows,"lanc",S.lanc.length?["Nenhum lançamento com esses filtros","Limpe os filtros para ver todos."]:["Nenhum lançamento ainda","Registre receitas e despesas por evento. Cada evento tem orçamento e resultado separados."])}`;
+}
+function vAprovacoes(){
+  if(!isAdmin) return lockState();
+  const pend=S.lanc.filter(l=>l.tipo==="Despesa"&&(l.aprovacao||"Aguardando")==="Aguardando").sort((a,b)=>(a.vencimento||"9999")<(b.vencimento||"9999")?-1:1);
+  const hist=S.lanc.filter(l=>l.tipo==="Despesa"&&["Aprovada","Recusada"].includes(l.aprovacao)).sort((a,b)=>(b.aprovadoEm||"")<(a.aprovadoEm||"")?-1:1).slice(0,30);
+  return `<p class="muted" style="margin:0">Fluxo: solicitação → verificação de orçamento → autorização → pagamento → comprovante → conciliação. Quem solicitou não aprova o próprio gasto. As alçadas por cargo ainda serão definidas pela direção.</p>
+  ${pend.length?`<div class="list panel">${pend.map(l=>{ const p=S.projetos.find(x=>x.id===l.projeto); const f=finSum(S.lanc.filter(x=>x.projeto===l.projeto)); const over=p&&p.orcamento&&f.despP>p.orcamento;
+    return `<div class="li"><div class="click" data-open="lanc:${esc(l.id)}" style="cursor:pointer;min-width:0"><div class="n">${esc(l.descricao)} · ${usd(lval(l))}</div><div class="c">${esc(projName(l.projeto))} · ${esc(l.categoria)} · solicitado por ${esc(l.solicitante||nameOf(l.solicitanteId)||"—")}${l.vencimento?" · vence "+fmtDate(l.vencimento):""}</div>${p?`<div class="c">${p.orcamento?`Orçamento ${usd(p.orcamento)} · despesas previstas ${usd(f.despP)}`:"Projeto sem orçamento definido"}${over?' <span class="chip bad">Acima do orçamento</span>':""}</div>`:""}</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;align-items:center">${approveButtons(l)}</div></div>`;}).join("")}</div>`
+  :`<div class="state"><h2>Nenhuma despesa aguardando aprovação</h2><span>Toda despesa nova cadastrada no Financeiro aparece aqui até alguém autorizado aprovar ou recusar.</span></div>`}
+  ${hist.length?`<h3>Decisões recentes</h3>`+table([{n:"Despesa",f:l=>`<b>${esc(l.descricao)}</b>`},{n:"Projeto",f:l=>esc(projName(l.projeto))},{n:"Valor",r:1,f:l=>usd(lval(l))},{n:"Decisão",f:l=>statusChip(l.aprovacao)},{n:"Por",f:l=>esc(nameOf(l.aprovadoPorId))},{n:"Em",f:l=>fmtDate((l.aprovadoEm||"").slice(0,10))}],hist,"lanc",["",""]):""}`;
+}
+function vFornecedores(){
+  const q=flt.v_q||"", tp=flt.v_tp||"";
+  const rows=S.forn.filter(f=>match(f,["nome","contato","categoria","eventos","obs"],q)&&(!tp||f.tipo===tp)).sort((a,b)=>a.nome.localeCompare(b.nome));
+  return toolbar([search("v_q"),sel("v_tp","Tipo",["Fornecedor","Parceiro","Patrocinador","Local / espaço","Prestador de serviço"])], newBtn("forn","Novo fornecedor ou parceiro")) +
+    table([{n:"Nome",f:f=>`<b>${esc(f.nome)}</b>`},{n:"Tipo",k:"tipo"},{n:"Categoria",k:"categoria"},{n:"Contato",f:f=>esc([f.contato,f.telefone,f.email].filter(Boolean).join(" · ")||"—")},{n:"Eventos",k:"eventos"},{n:"Avaliação",f:f=>esc((f.avaliacao||"—").split(" ")[0])},{n:"Status",f:f=>statusChip(f.status)}],
+      rows,"forn",S.forn.length?["Nenhum resultado","Limpe os filtros."]:["Nenhum fornecedor ou parceiro cadastrado","Cadastre espaços, fornecedores, prestadores e parceiros uma vez e use em todos os eventos."]);
+}
+function vDocumentos(){
+  const q=flt.d_q||"", c=flt.d_c||"", pr=flt.d_pr||"";
+  const rows=S.docs.filter(d=>match(d,["titulo","obs","responsavel"],q)&&(!c||d.categoria===c)&&(!pr||d.projeto===pr)).sort((a,b)=>(b.data||"")<(a.data||"")?-1:1);
+  return toolbar([search("d_q"),sel("d_c","Categoria",["Contrato","Documento institucional","Procedimento","Planilha","Orçamento","Relatório","Material de marca","Outro"]),sel("d_pr","Projeto",[["central","Central (sem evento)"]].concat(S.projetos.map(p=>[p.id,p.nome])))], newBtn("docs","Novo documento")) +
+    table([{n:"Documento",f:d=>`<b>${esc(d.titulo)}</b>`},{n:"Categoria",k:"categoria"},{n:"Projeto",f:d=>esc(projName(d.projeto))},{n:"Responsável",k:"responsavel"},{n:"Versão",k:"versao"},{n:"Data",f:d=>fmtDate(d.data)||"—"},{n:"Arquivo",f:d=>d.link?`<a href="${esc(d.link)}" target="_blank" rel="noopener" data-stop>Abrir</a>`:"—"}],
+      rows,"docs",S.docs.length?["Nenhum documento com esses filtros","Limpe os filtros."]:["Nenhum documento registrado","Registre contratos, procedimentos, planilhas e documentos institucionais com responsável, versão e evento. O arquivo fica no Drive; aqui fica o link."]);
+}
+function vReunioes(){
+  if(!isAdmin) return lockState();
+  const q=flt.r_q||"", tp=flt.r_tp||"";
+  const rows=S.reun.filter(r=>match(r,["titulo","pauta","decisoes","participantes","responsaveis"],q)&&(!tp||r.tipo===tp)).sort((a,b)=>(b.data||"")<(a.data||"")?-1:1);
+  return toolbar([search("r_q"),sel("r_tp","Tipo",["Diretoria","Conselho","Líderes","Comercial","Projeto","Outra"])], newBtn("reun","Nova reunião ou decisão",1)) +
+    `<p class="muted" style="margin:0">Atas, decisões e mudanças de cargo ou acesso. Visível só para quem tem acesso de Editor. Cada registro guarda autor, data, responsáveis, decisão e justificativa.</p>` +
+    table([{n:"Data",f:r=>fmtDate(r.data)},{n:"Título",f:r=>`<b>${esc(r.titulo)}</b>`},{n:"Tipo",k:"tipo"},{n:"Decisões",f:r=>esc((r.decisoes||"—").slice(0,140))+((r.decisoes||"").length>140?"…":"")},{n:"Responsáveis",k:"responsaveis"},{n:"Registrado por",f:r=>esc(nameOf(r.criadoPorId)||"—")}],
+      rows,"reun",S.reun.length?["Nenhum registro com esses filtros","Limpe os filtros."]:["Nenhuma reunião registrada","Registre a pauta, as decisões e quem ficou responsável por cada uma."]);
+}
+function vTime(){
+  if(!S.people.length) return `<div class="state"><h2>Nenhuma pessoa cadastrada</h2>${canWrite?'<button class="primary" data-newp>Adicionar pessoa</button>':""}</div>`;
+  const by={}; AREAS.forEach(a=>by[a]=[]);
+  S.people.forEach(p=>(p.areas||[]).forEach(a=>(by[a]=by[a]||[]).push(p)));
+  const lead=(p,a)=>/l[íi]der|ceo|cfo|cmo|dire/i.test((p.cargos&&p.cargos[a])||"")?0:1;
+  return toolbar([`<span class="muted">Cada pessoa pode ter cargo em mais de uma área, com responsabilidades próprias.</span>`], canWrite?'<button class="primary" data-newp>Adicionar pessoa</button>':"") +
+  `<div class="grid-cards">${Object.keys(by).map(a=>`<div class="panel"><h3>${esc(a)}</h3><div class="list">${by[a].slice().sort((x,y)=>lead(x,a)-lead(y,a)||x.nome.localeCompare(y.nome)).map(p=>{
+    const nOpen=a==="Comercial"?S.opps.filter(o=>OPEN.has(o.etapa)&&o.responsavel===p.nome).length:null;
+    const nTask=S.tarefas.filter(x=>x.status!=="Concluída"&&x.responsavel===p.nome).length;
+    return `<div class="li"><div><div class="n">${esc(p.nome)}</div><div class="c">${esc((p.cargos&&p.cargos[a])||"")}${p.supervisor&&a==="Comercial"?" · supervisão: "+esc(p.supervisor):""}${p.obs?"<br>"+esc(p.obs):""}</div></div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${p.status&&p.status!=="Ativo"?statusChip(p.status):""}${nOpen!=null?`<span class="chip">${nOpen} no funil</span>`:""}${nTask?`<span class="chip">${nTask} tarefas</span>`:""}${canWrite?`<button class="ghost sm" data-editp="${esc(p.id)}">Editar</button>`:""}</div></div>`;}).join("")||'<span class="muted">A definir</span>'}</div></div>`).join("")}</div>`;
+}
+
+const RENDER = {painel:vPainel,projetos:vProjetos,tarefas:vTarefas,agenda:vAgenda,funil:vFunil,followups:vFollowups,financeiro:vFinanceiro,aprovacoes:vAprovacoes,fornecedores:vFornecedores,documentos:vDocumentos,reunioes:vReunioes,time:vTime};
+
+function renderNav(){
+  const g=groupOf(view);
+  $("#nav-main").innerHTML=NAV.map(x=>`<a href="#${x.subs[0].k}" ${x===g?'aria-current="page"':""}>${esc(x.n)}</a>`).join("");
+  $("#nav-sub").innerHTML=g.subs.length>1||g.owner?g.subs.map(s=>`<a href="#${s.k}" ${s.k===view?'aria-current="page"':""}>${esc(s.n)}${(["financeiro","aprovacoes","reunioes"].includes(s.k)&&!isAdmin)?" 🔒":""}</a>`).join("")+(g.owner?`<span class="owner">${esc(g.owner)}</span>`:""):"";
+  $("#nav-sub").hidden=!(g.subs.length>1||g.owner);
+}
+function render(){
+  renderNav();
+  if(!db) return;
+  const app=$("#app");
+  const focus=document.activeElement&&document.activeElement.dataset&&document.activeElement.dataset.flt;
+  const pos=focus?document.activeElement.selectionStart:null;
+  app.innerHTML=`<div style="display:flex;flex-direction:column;gap:14px">${RENDER[view]()}</div>`;
+  if(focus){ const el=app.querySelector(`[data-flt="${focus}"]`); if(el){ el.focus(); if(pos!=null&&el.setSelectionRange) try{el.setSelectionRange(pos,pos);}catch{} } }
+}
+
+/* ================= Ações ================= */
+async function move(id, dir){
+  const o=S.opps.find(x=>x.id===id); if(!o) return;
+  const i=STAGES.findIndex(s=>s.k===o.etapa)+dir; if(i<0||i>=STAGES.length) return;
+  try{ await db.collection("oportunidades").doc(id).update({etapa:STAGES[i].k,atualizadoEm:now()}); toast("Movida para "+STAGES[i].n); }catch(e){ toast(dbErr(e),true); }
+}
+async function approve(id, v){
+  const l=S.lanc.find(x=>x.id===id); if(!l) return;
+  if(me&&l.solicitanteId===me){ toast("Você não pode aprovar um gasto que você registrou.",true); return; }
+  try{ await db.collection(COL.lanc).doc(id).update({aprovacao:v,aprovadoPorId:me||null,aprovadoEm:now(),atualizadoEm:now()}); closeSheet(); toast(v==="Aprovada"?"Despesa aprovada":"Despesa recusada"); }
+  catch(e){ toast(dbErr(e),true); }
+}
+let genBusy=false;
+async function genChecklist(pid){
+  if(genBusy||S.tarefas.some(t=>t.projeto===pid)) return;
+  genBusy=true; let n=0;
+  try{
+    for(const [et,list] of Object.entries(CHECKLIST)) for(const [titulo,crit] of list){
+      await db.collection("tarefas").doc(pid+"-"+(++n)).set({titulo,projeto:pid,etapa:et,responsavel:"",prioridade:crit?"Alta":"Média",prazo:"",status:"A fazer",critica:!!crit,checklist:"",anexos:"",obs:"",criadoEm:now(),atualizadoEm:now()});
+    }
+    toast(n+" tarefas criadas. Defina responsáveis e prazos.");
+  }catch(e){ toast(dbErr(e),true); }
+  genBusy=false;
+}
+async function toggleDone(id, on){
+  try{ await db.collection("tarefas").doc(id).update({status:on?"Concluída":"A fazer",atualizadoEm:now()}); }catch(e){ toast(dbErr(e),true); render(); }
+}
+async function exportCsv(){
+  const dl = await claude.use("downloads").catch(()=>null);
+  if(!dl){ toast("A exportação não está disponível nesta visualização.",true); return; }
+  const cols=["tipo","descricao","projeto","categoria","valorPrevisto","valorRealizado","status","aprovacao","vencimento","fornecedor","solicitante","formaPagamento","comprovante","restrito","justificativa"];
+  const q=v=>{ const s=String(v??""); return /[",\n;]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
+  const rows=S.lanc.filter(l=>!flt.f_pr||l.projeto===flt.f_pr).map(l=>cols.map(c=>q(c==="projeto"?projName(l.projeto):l[c])).join(","));
+  try{ const r=await dl.save({filename:"the-seed-financeiro-"+today()+".csv",data:"﻿"+[cols.join(","),...rows].join("\n")}); if(r&&r.status==="saved") toast("Arquivo salvo"); }
+  catch(e){ if(e&&e.code!=="cancelled"&&e.code!=="declined") toast("Não foi possível exportar agora.",true); }
+}
+
+document.addEventListener("click", e=>{
+  if(e.target.closest("[data-stop]")) return;
+  const t=e.target.closest("[data-move],[data-open],[data-close],[data-new],[data-newp],[data-editp],[data-proj],[data-back],[data-genchk],[data-appr],[data-setflt],[data-export]");
+  if(!t){ if(e.target.id==="overlay") closeSheet(); return; }
+  if(t.dataset.setflt){ const [k,v]=t.dataset.setflt.split("="); flt[k]=v; setTimeout(render,0); return; }
+  if(t.dataset.move){ e.stopPropagation(); return move(t.dataset.move,+t.dataset.dir); }
+  if(t.dataset.appr){ e.stopPropagation(); return approve(t.dataset.appr,t.dataset.v); }
+  if(t.dataset.open){ const [ent,id]=t.dataset.open.split(":"); return openForm(ent,id); }
+  if(t.hasAttribute("data-close")) return closeSheet();
+  if(t.dataset.new){ const preset={}; if(t.dataset.presetProjeto) preset.projeto=t.dataset.presetProjeto; return openForm(t.dataset.new,null,preset); }
+  if(t.hasAttribute("data-newp")) return openPerson();
+  if(t.dataset.editp) return openPerson(t.dataset.editp);
+  if(t.dataset.proj){ openProject=t.dataset.proj; if(view!=="projetos") location.hash="#projetos"; else render(); window.scrollTo(0,0); return; }
+  if(t.hasAttribute("data-back")){ openProject=null; return render(); }
+  if(t.dataset.genchk){ t.disabled=true; return genChecklist(t.dataset.genchk); }
+  if(t.hasAttribute("data-export")) return exportCsv();
+});
+document.addEventListener("change", e=>{
+  if(e.target.dataset.done){ toggleDone(e.target.dataset.done, e.target.checked); return; }
+  if(e.target.tagName==="SELECT"&&e.target.dataset.flt){ flt[e.target.dataset.flt]=e.target.value; render(); }
+});
+document.addEventListener("input", e=>{ if(e.target.tagName==="INPUT"&&e.target.dataset.flt){ flt[e.target.dataset.flt]=e.target.value; clearTimeout(render._t); render._t=setTimeout(render,150); } });
+document.addEventListener("keydown", e=>{
+  if(e.key==="Escape"&&!$("#overlay").hidden) closeSheet();
+  if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("[data-open][tabindex],[data-proj].li")){ e.preventDefault(); e.target.click(); }
+});
+function route(){ const h=location.hash.slice(1); const v=VIEWS.includes(h)?h:"painel"; if(v!=="projetos") openProject=null; view=v; if(!$("#overlay").hidden) closeSheet(); render(); }
+window.addEventListener("hashchange",route);
+
+/* ================= Conexão ================= */
 async function start(){
   const status=$("#status");
+  route();
   for(let i=0;i<30&&!(window.claude&&window.claude.use);i++) await new Promise(r=>setTimeout(r,100));
-  if(!window.claude || !claude.use){ status.innerHTML=`<h2>Abra este CRM pelo claude.ai</h2><span>Os dados ficam salvos no claude.ai e só carregam lá.</span>`; return; }
+  if(!window.claude||!claude.use){ status.innerHTML=`<h2>Abra a Central pelo claude.ai</h2><span>Os dados ficam salvos no claude.ai e só carregam lá.</span>`; return; }
   try{ db=await claude.use("db"); }catch{ db=null; }
-  if(!db){ status.innerHTML=`<h2>Entre na sua conta para usar o CRM</h2><span>Os dados do time só aparecem para quem está conectado ao claude.ai e tem acesso a este link.</span>`; return; }
-  try{ const u=await claude.use("user"); const c=u? await u.can("data.write") : null; if(c===false) canWrite=false; }catch{}
-  let gotO=false, gotP=false;
-  const ready=()=>{ if(gotO&&gotP){ status.hidden=true; $("#app").hidden=false; fillFilters(); render(); } };
-  const fail=e=>{ status.hidden=false; $("#app").hidden=true; status.innerHTML=`<h2>Não foi possível carregar o CRM</h2><span>${e&&e.code==="revoked"?"Seu acesso a este CRM foi encerrado.":"Recarregue a página para tentar de novo."}</span>`; };
-  db.collection("oportunidades").onSnapshot(s=>{ opps=s.docs.map(d=>({id:d.id,...d.data()})); gotO=true; if(!$("#app").hidden){fillFilters();render();} else ready(); }, fail);
-  db.collection("pessoas").onSnapshot(s=>{ people=s.docs.map(d=>({id:d.id,...d.data()})); gotP=true; if(!$("#app").hidden){fillFilters();render();} else ready(); }, fail);
+  if(!db){ status.innerHTML=`<h2>Entre na sua conta para usar a Central</h2><span>Os dados só aparecem para quem está conectado ao claude.ai e tem acesso a este link.</span>`; db=null; return; }
+  try{ user=await claude.use("user"); if(user){ me=await user.id(); isAdmin=!!(await user.canEdit()); const c=await user.can("data.write"); if(c===false) canWrite=false; } }catch{}
+  const keys=Object.keys(COL).filter(k=>!RESTRICTED.has(k)||isAdmin);
+  const got=new Set(); let shown=false;
+  const fail=e=>{ status.hidden=false; $("#app").hidden=true; status.innerHTML=`<h2>Não foi possível carregar a Central</h2><span>${e&&e.code==="revoked"?"Seu acesso foi encerrado.":"Recarregue a página para tentar de novo."}</span>`; };
+  keys.forEach(k=>db.collection(COL[k]).onSnapshot(s=>{
+    S[k]=s.docs.map(d=>({id:d.id,...d.data()})); got.add(k);
+    if(!shown&&got.size===keys.length){ shown=true; status.hidden=true; $("#app").hidden=false; }
+    if(shown) render();
+  }, k==="lanc"||k==="reun" ? (()=>{}) : fail));
 }
 start();
 })();
