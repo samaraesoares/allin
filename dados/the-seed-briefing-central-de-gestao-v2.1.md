@@ -278,12 +278,12 @@ Status inicial: planejamento.
 
 Registrar os valores discutidos:
 
-* Ingresso individual Boston: US$77.
-* Segunda condição comercial mencionada: US$107 para 2 ingressos, interpretação provisória a confirmar.
+* Ingresso Boston — Lote 1: US$77.
+* Lote 2 (W): US$107, segundo o plano de ação da reunião de 03/11/2026. Confirmar o que significa “W” e quando o lote começa.
 
 O sistema deve permitir configurar ingresso individual, combo, lote, cortesia, VIP e cupom.
 
-Não publicar nem ativar automaticamente a condição de US$107 antes de confirmar se representa combo de dois ingressos ou outro formato.
+Não publicar nem ativar o Lote 2 (W) de US$107 antes de confirmar o formato.
 
 Funcionalidades:
 
@@ -911,3 +911,33 @@ Comece pelo dashboard executivo e pela estrutura de departamentos, conectando de
 Próximas edições: Newark (19/12/2026) e Boston (30/01/2027). Utilize Boston como projeto inicial de planejamento e New Jersey como referência de aprendizado da primeira edição.
 
 Visão final: transformar THE SEED em um ecossistema com processos, responsabilidades, controle financeiro, gestão comercial e capacidade de crescer sem depender da memória ou da execução individual de uma única pessoa.
+
+---
+
+## Anexo — Plano de ação da reunião de 03/11/2026
+
+Fonte: `dados/the-seed-plano-de-acao-2026-11-03.xlsx`. Importado para a Central de Gestão como o projeto “Plano de ação — reunião 03/11/2026”.
+
+| Nº | Área | Ação | Responsável | Detalhes | Prioridade | Status |
+|---|---|---|---|---|---|---|
+| 1 | Ingressos e Vendas | Definir preço do ingresso Boston | — | US$77 | Alta | Pendente |
+| 2 | Ingressos e Vendas | Estruturar lotes de ingresso | — | Lote 1 US$77 / Lote 2 (W) US$107 | Alta | Pendente |
+| 3 | Ingressos e Vendas | Carol nas vendas | Carol | Já atuando (12) — esclarecer | Média | Em andamento |
+| 4 | Ingressos e Vendas | Liderança de vendas | Douglas | Alinhar com quem quer imergir nas vendas | Alta | Pendente |
+| 5 | Palco – Next On | Momento no palco | Dani Lima | Confirmar participação | Média | Pendente |
+| 6 | Palco – Next On | Momento no palco | Thiago | Real estate — confirmar | Média | Pendente |
+| 7 | Palco – Next On | Momento de palco | Leia | Definir formato e tempo | Média | Pendente |
+| 8 | Palco – Next On | Momento de palco | Hellen | Sondar testemunho | Média | Pendente |
+| 9 | Palco – Next On | Fora do palco no próximo evento | Henrique e esposa | Seguem como voluntários | Média | Pendente |
+| 10 | Palco – Next On | Apresentador | Ricky | Testar outra pessoa | Alta | Pendente |
+| 11 | Palco – Next On | Cachê dos palestrantes | — | US$250 por palestrante | Média | Pendente |
+| 12 | Equipe e Liderança | Liderança do staff | Hellen | Assumir como líder do staff | Alta | Pendente |
+| 13 | Equipe e Liderança | Entrada na equipe | Débora | Junto com o Kayque | Média | Pendente |
+| 14 | Equipe e Liderança | Criar movimento | Rafael Dias / Douglas / Karina | Mobilização e engajamento | Média | Pendente |
+| 15–16 | Conselho / Board | Ajustes na composição do conselho | Direção | Tratar internamente (ver Board na Central, acesso restrito) | Alta | Pendente |
+| 17 | Relacionamento | Aproximação | Regis | Ajudar a encontrar a missão | Baixa | Pendente |
+| 18 | Agenda | Marcar datas | Paulo Kazaks / Nézio | Definir datas | Alta | Pendente |
+| 19 | Agenda | Organizar almoço | — | Almoço raquesaque | Média | Pendente |
+| 20 | Administrativo | Planilhas e ferramentas | — | Central criada; importar planilhas existentes | Média | Em andamento |
+
+A confirmar: “Next On” é o nome da edição de Newark (19/12/2026) ou de outro evento?
