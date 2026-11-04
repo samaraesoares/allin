@@ -4,7 +4,7 @@ Briefing mestre atualizado para desenvolvimento no Claude
 
 Versão 2.1 | Gestão estratégica, administrativa, financeira, comercial e operacional
 
-> **Alteração da v2.1:** Douglas passa a integrar a liderança do RUN, junto com Thiago e Rafael Dias. A Liderança Comercial continua com ele. São duas posições distintas, cada uma com responsabilidades e permissões próprias (ver seções 2, 11 e 18).
+> **Alteração da v2.1:** Douglas e Karina passam a integrar a liderança do RUN, junto com Thiago e Rafael Dias. Douglas continua na Liderança Comercial e Karina em Eventos e Produção. São duas posições distintas, cada uma com responsabilidades e permissões próprias (ver seções 2, 11 e 18).
 
 ## 1. Objetivo do sistema
 
@@ -29,7 +29,7 @@ Identidade visual: verde floresta, verde oliva, branco, preto e detalhes terroso
 | Direção de Projetos | Samara |
 | CMO — Marketing | Tcharles |
 | Liderança Comercial | Douglas |
-| RUN — Corridas | Thiago, Rafael Dias e Douglas |
+| RUN — Corridas | Thiago, Rafael Dias, Douglas e Karina |
 | Eventos e Produção | Daniela Lima e Karina |
 | Liderança do Staff | Hellen |
 | Caridade | A definir |
@@ -37,7 +37,7 @@ Identidade visual: verde floresta, verde oliva, branco, preto e detalhes terroso
 
 O sistema deverá permitir cadastrar diretorias, conselheiros, líderes, vice-líderes, monitores, voluntários, colaboradores e parceiros.
 
-Uma mesma pessoa pode ocupar posições em mais de uma área (ex.: Douglas na Liderança Comercial e no RUN). Cada posição é cadastrada separadamente, com responsabilidades, metas e permissões próprias.
+Uma mesma pessoa pode ocupar posições em mais de uma área (ex.: Douglas na Liderança Comercial e no RUN; Karina em Eventos e Produção e no RUN). Cada posição é cadastrada separadamente, com responsabilidades, metas e permissões próprias.
 
 O cargo de uma pessoa não significa automaticamente que ela tem poder de decisão sobre toda a empresa.
 
@@ -490,11 +490,9 @@ Incluir um campo reservado para avaliar a possibilidade de Hellen compartilhar u
 
 Criar uma frente independente para atividades esportivas.
 
-**Liderança do RUN:** Thiago, Rafael Dias e Douglas.
+**Liderança do RUN:** Thiago, Rafael Dias, Douglas e Karina.
 
-Karina também está vinculada às atividades de corrida como liderança operacional proposta; confirmar a função dela no RUN, já que a posição principal registrada é Eventos e Produção.
-
-Douglas acumula a Liderança Comercial (seção 14). No RUN, ele recebe permissões de líder do RUN; elas não ampliam nem reduzem o acesso dele como líder comercial.
+Douglas acumula a Liderança Comercial (seção 14) e Karina acumula Eventos e Produção. No RUN, cada um recebe permissões de líder do RUN; elas não ampliam nem reduzem o acesso que já têm na outra área.
 
 Objetivo: formar um movimento recorrente de saúde, disciplina, conexões e relacionamento por meio da corrida e caminhada.
 
