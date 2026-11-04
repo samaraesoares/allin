@@ -4,7 +4,7 @@ Briefing mestre atualizado para desenvolvimento no Claude
 
 Versão 2.1 | Gestão estratégica, administrativa, financeira, comercial e operacional
 
-> **Alteração da v2.1:** Douglas e Karina passam a integrar a liderança do RUN, junto com Thiago e Rafael Dias. Douglas continua na Liderança Comercial, agora com Dani Lenzi, Dani Lima e Carol sob sua supervisão principal. Karina continua em Eventos e Produção. Cada posição é distinta, com responsabilidades e permissões próprias (ver seções 2, 11 e 18).
+> **Alterações da v2.1:** próxima edição em Newark (19/12/2026) e Boston em 30/01/2027; Henrique e esposa somente como voluntários por enquanto. Douglas e Karina passam a integrar a liderança do RUN, junto com Thiago e Rafael Dias. Douglas continua na Liderança Comercial, agora com Dani Lenzi, Dani Lima e Carol sob sua supervisão principal. Karina continua em Eventos e Produção. Cada posição é distinta, com responsabilidades e permissões próprias (ver seções 2, 11 e 18).
 
 ## 1. Objetivo do sistema
 
@@ -261,11 +261,16 @@ Nenhum evento deverá ser marcado como pronto sem verificação das pendências 
 
 ---
 
-## 6. Próxima edição — THE SEED Boston
+## 6. Próximas edições — Newark e Boston
+
+**THE SEED — NEWARK, NJ** · 19 de dezembro de 2026 (próxima edição)
+
+Local, programação, ingressos e metas a definir. Orçamento e checklist próprios, separados de Boston.
+
 
 Criar imediatamente um projeto específico:
 
-**THE SEED EXPERIENCE — BOSTON**
+**THE SEED EXPERIENCE — BOSTON** · 30 de janeiro de 2027
 
 Status inicial: planejamento.
 
@@ -344,7 +349,7 @@ Criar um módulo com:
 | Débora e Kayque | Planejar participação conjunta |
 | Paulo Kazaks | Alinhar disponibilidade e datas |
 | Nézio | Alinhar disponibilidade e datas |
-| Henrique e esposa | Revisar participação na próxima edição antes de escalar |
+| Henrique e esposa | Somente como voluntários, por enquanto |
 | Regis | Aproximar, conversar e identificar a missão em que melhor poderá contribuir |
 
 Todas essas participações começam com status "Em avaliação" até confirmação.
@@ -471,6 +476,8 @@ Criar manuais específicos por função:
 * Montagem e desmontagem.
 
 Cada guia deverá trazer responsabilidades, horários, dress code, instruções, limites de atuação, procedimentos de emergência, responsável para escalonamento e checklist de tarefas.
+
+Voluntários definidos até agora: Henrique e esposa, somente como voluntários por enquanto.
 
 Hellen terá uma área para:
 
@@ -901,6 +908,6 @@ Entregas desejadas:
 
 Comece pelo dashboard executivo e pela estrutura de departamentos, conectando depois os módulos administrativos, financeiros e de eventos.
 
-Utilize Boston como projeto inicial de planejamento e New Jersey como referência de aprendizado da primeira edição.
+Próximas edições: Newark (19/12/2026) e Boston (30/01/2027). Utilize Boston como projeto inicial de planejamento e New Jersey como referência de aprendizado da primeira edição.
 
 Visão final: transformar THE SEED em um ecossistema com processos, responsabilidades, controle financeiro, gestão comercial e capacidade de crescer sem depender da memória ou da execução individual de uma única pessoa.
