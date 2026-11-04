@@ -4,7 +4,7 @@ Briefing mestre atualizado para desenvolvimento no Claude
 
 Versão 2.1 | Gestão estratégica, administrativa, financeira, comercial e operacional
 
-> **Alteração da v2.1:** Douglas e Karina passam a integrar a liderança do RUN, junto com Thiago e Rafael Dias. Douglas continua na Liderança Comercial e Karina em Eventos e Produção. São duas posições distintas, cada uma com responsabilidades e permissões próprias (ver seções 2, 11 e 18).
+> **Alteração da v2.1:** Douglas e Karina passam a integrar a liderança do RUN, junto com Thiago e Rafael Dias. Douglas continua na Liderança Comercial, agora com Dani Lenzi, Dani Lima e Carol sob sua supervisão principal. Karina continua em Eventos e Produção. São duas posições distintas, cada uma com responsabilidades e permissões próprias (ver seções 2, 11 e 18).
 
 ## 1. Objetivo do sistema
 
@@ -28,7 +28,7 @@ Identidade visual: verde floresta, verde oliva, branco, preto e detalhes terroso
 | CFO — Financeiro | Larissa |
 | Direção de Projetos | Samara |
 | CMO — Marketing | Tcharles |
-| Liderança Comercial | Douglas |
+| Liderança Comercial | Douglas (time: Dani Lenzi, Dani Lima e Carol) |
 | RUN — Corridas | Thiago, Rafael Dias, Douglas e Karina |
 | Eventos e Produção | Daniela Lima e Karina |
 | Liderança do Staff | Hellen |
@@ -600,6 +600,17 @@ Cada oportunidade terá:
 * Observações.
 
 ### Gestão do time
+
+**Time comercial sob supervisão principal de Douglas:**
+
+| Pessoa | Vínculo | Observação |
+|---|---|---|
+| Douglas | Líder comercial | Supervisão principal do time |
+| Dani Lenzi | Comercial | — |
+| Dani Lima | Comercial | Também em Eventos e Produção |
+| Carol | Comercial | Confirmar se é a mesma pessoa registrada como "Karol" abaixo |
+
+A supervisão é *principalmente* de Douglas: o sistema deve permitir registrar um supervisor principal e, se necessário, supervisores secundários por pessoa.
 
 Douglas deverá organizar um alinhamento específico com os membros que realmente desejam se comprometer com a área de vendas.
 
