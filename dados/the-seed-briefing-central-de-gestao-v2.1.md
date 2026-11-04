@@ -4,7 +4,7 @@ Briefing mestre atualizado para desenvolvimento no Claude
 
 Versão 2.1 | Gestão estratégica, administrativa, financeira, comercial e operacional
 
-> **Alteração da v2.1:** Douglas e Karina passam a integrar a liderança do RUN, junto com Thiago e Rafael Dias. Douglas continua na Liderança Comercial, agora com Dani Lenzi, Dani Lima e Carol sob sua supervisão principal. Karina continua em Eventos e Produção. Cada posição é distinta, com com responsabilidades e permissões próprias (ver seções 2, 11 e 18).
+> **Alteração da v2.1:** Douglas e Karina passam a integrar a liderança do RUN, junto com Thiago e Rafael Dias. Douglas continua na Liderança Comercial, agora com Dani Lenzi, Dani Lima e Carol sob sua supervisão principal. Karina continua em Eventos e Produção. Cada posição é distinta, com responsabilidades e permissões próprias (ver seções 2, 11 e 18).
 
 ## 1. Objetivo do sistema
 
