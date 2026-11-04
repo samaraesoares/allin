@@ -4,7 +4,7 @@ Briefing mestre atualizado para desenvolvimento no Claude
 
 Versão 2.1 | Gestão estratégica, administrativa, financeira, comercial e operacional
 
-> **Alteração da v2.1:** Douglas e Karina passam a integrar a liderança do RUN, junto com Thiago e Rafael Dias. Douglas continua na Liderança Comercial, agora com Dani Lenzi, Dani Lima e Carol sob sua supervisão principal. Karina continua em Eventos e Produção. São duas posições distintas, cada uma com responsabilidades e permissões próprias (ver seções 2, 11 e 18).
+> **Alteração da v2.1:** Douglas e Karina passam a integrar a liderança do RUN, junto com Thiago e Rafael Dias. Douglas continua na Liderança Comercial, agora com Dani Lenzi, Dani Lima e Carol sob sua supervisão principal. Karina continua em Eventos e Produção. Cada posição é distinta, com com responsabilidades e permissões próprias (ver seções 2, 11 e 18).
 
 ## 1. Objetivo do sistema
 
@@ -337,7 +337,7 @@ Criar um módulo com:
 | Pessoa | Direcionamento |
 |---|---|
 | Rick/Ricky | Possível apresentador; avaliar e testar também outras pessoas |
-| Dani | Previsão de momento no palco; confirmar qual Dani e formato |
+| Dani Lima | Previsão de momento no palco; confirmar formato. (Não confundir com Dani Lenzi, do time comercial.) |
 | Thiago | Possível participação no palco sobre real estate |
 | Hellen | Liderança do staff e possível momento no palco/testemunho |
 | Leia | Prever momento de palco |
@@ -608,7 +608,7 @@ Cada oportunidade terá:
 | Douglas | Líder comercial | Supervisão principal do time |
 | Dani Lenzi | Comercial | — |
 | Dani Lima | Comercial | Também em Eventos e Produção |
-| Carol | Comercial | Confirmar se é a mesma pessoa registrada como "Karol" abaixo |
+| Carol | Comercial | Mesma pessoa antes registrada como "Karol" |
 
 A supervisão é *principalmente* de Douglas: o sistema deve permitir registrar um supervisor principal e, se necessário, supervisores secundários por pessoa.
 
@@ -627,7 +627,7 @@ Criar:
 * Registro de reuniões.
 * Acompanhamento de conversão.
 
-Karol: cadastrar na frente comercial e registrar a observação "já no (12)" como pendência de esclarecimento, sem interpretar o número automaticamente.
+Carol (grafada antes como "Karol"): já cadastrada no time comercial acima. Registrar a observação "já no (12)" como pendência de esclarecimento, sem interpretar o número automaticamente.
 
 ### Patrocínios
 
