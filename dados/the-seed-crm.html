@@ -1,0 +1,486 @@
+<title>THE SEED CRM</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: barra superior com abas, faixa de números, filtros, e a vista (funil em colunas roláveis, follow-ups em tabela, time por área). */
+:root{
+  --bg:#f6f5ef; --surface:#ffffff; --sunk:#eceade; --line:#d9d6c6;
+  --fg:#16190f; --muted:#5d6152;
+  --forest:#1f3d2b; --olive:#6b7a3a; --earth:#8a5a3b;
+  --accent:var(--forest); --accent-fg:#ffffff;
+  --danger:#a3352b; --danger-bg:#f6e3df; --warn:#8a6116; --warn-bg:#f5ebd3; --ok:#2f6b3a; --ok-bg:#e2efdf;
+  --display:"Young Serif", Georgia, "Times New Roman", serif;
+  --body:"Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --r:8px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#11150f; --surface:#1a2018; --sunk:#151a13; --line:#2f3829;
+  --fg:#ebeee2; --muted:#a2a894;
+  --forest:#7fb08d; --olive:#b3c27a; --earth:#d29b74;
+  --accent:#8fbf9c; --accent-fg:#0e140f;
+  --danger:#ee8b80; --danger-bg:#3a1d19; --warn:#e3b765; --warn-bg:#352a14; --ok:#8fcf98; --ok-bg:#1b3020;
+  color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#11150f; --surface:#1a2018; --sunk:#151a13; --line:#2f3829;
+  --fg:#ebeee2; --muted:#a2a894;
+  --forest:#7fb08d; --olive:#b3c27a; --earth:#d29b74;
+  --accent:#8fbf9c; --accent-fg:#0e140f;
+  --danger:#ee8b80; --danger-bg:#3a1d19; --warn:#e3b765; --warn-bg:#352a14; --ok:#8fcf98; --ok-bg:#1b3020;
+  color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:14px;line-height:1.45}
+.wrap{max-width:1400px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+h1,h2,h3{font-weight:400;margin:0;text-wrap:balance}
+h1{font-family:var(--display);font-size:26px;letter-spacing:.01em;color:var(--forest)}
+h2{font-family:var(--display);font-size:19px}
+.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--olive);font-weight:600}
+.muted{color:var(--muted)}
+.num{font-variant-numeric:tabular-nums}
+
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+.brand{display:flex;flex-direction:column;gap:2px}
+nav.tabs{display:flex;gap:4px;background:var(--sunk);padding:4px;border-radius:999px;flex-wrap:wrap}
+nav.tabs a{padding:7px 14px;border-radius:999px;color:var(--muted);text-decoration:none;font-weight:500}
+nav.tabs a[aria-current="page"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 2px rgb(0 0 0 / .08)}
+nav.tabs a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+button,.btn{font:inherit;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:var(--r);padding:8px 14px;cursor:pointer;font-weight:500}
+button:hover{border-color:var(--olive)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+button.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+button.danger{color:var(--danger);border-color:var(--danger)}
+button.danger.armed{background:var(--danger);color:var(--surface)}
+button.ghost{border-color:transparent;background:transparent;padding:4px 8px}
+button:disabled{opacity:.5;cursor:not-allowed}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.stat{background:var(--surface);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font-size:22px;font-weight:500;font-variant-numeric:tabular-nums}
+.stat small{color:var(--muted)}
+.stat.alert b{color:var(--danger)}
+
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filters label{display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--muted)}
+input,select,textarea{font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:7px 9px;min-width:0}
+.filters input,.filters select{min-width:150px}
+
+.board-scroll{overflow-x:auto;padding-bottom:6px}
+.board{display:grid;grid-template-columns:repeat(8,minmax(230px,1fr));gap:10px;min-width:min-content}
+.col{background:var(--sunk);border-radius:var(--r);padding:10px;display:flex;flex-direction:column;gap:8px;min-height:160px}
+.col header{display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+.col header span{font-weight:600;font-size:13px}
+.col header small{color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.col.won{background:var(--ok-bg)} .col.lost{opacity:.85}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px;display:flex;flex-direction:column;gap:6px;cursor:pointer;text-align:left;width:100%}
+.card:hover{border-color:var(--olive)}
+.card .t{font-weight:600;overflow-wrap:anywhere}
+.card .meta{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.card .row{display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap}
+.card .moves{display:flex;gap:2px}
+.empty-col{font-size:12px;color:var(--muted);padding:6px 2px}
+
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--sunk);color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.chip.late{background:var(--danger-bg);color:var(--danger);font-weight:600}
+.chip.today{background:var(--warn-bg);color:var(--warn);font-weight:600}
+.chip.paid{background:var(--ok-bg);color:var(--ok)}
+.chip.pend{background:var(--warn-bg);color:var(--warn)}
+.chip.cancel{background:var(--danger-bg);color:var(--danger)}
+
+.table-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:720px}
+th,td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;background:var(--sunk)}
+tr:last-child td{border-bottom:0}
+tr.click{cursor:pointer} tr.click:hover td{background:var(--sunk)}
+
+.areas{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.area{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.area h3{font-family:var(--display);font-size:16px;color:var(--forest)}
+.person{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;padding:6px 0;border-top:1px solid var(--line)}
+.person:first-of-type{border-top:0}
+.person div{min-width:0}
+.person .n{font-weight:600}
+.person .c{font-size:12px;color:var(--muted)}
+
+.state{border:1px dashed var(--line);border-radius:var(--r);padding:28px;text-align:center;color:var(--muted);display:flex;flex-direction:column;gap:10px;align-items:center}
+.state h2{color:var(--fg)}
+
+.overlay{position:fixed;inset:0;background:rgb(10 14 8 / .45);display:flex;justify-content:flex-end;z-index:20}
+.sheet{background:var(--bg);width:min(560px,100%);height:100%;overflow-y:auto;padding:20px max(18px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) 18px;padding-top:calc(20px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;gap:14px;border-left:1px solid var(--line)}
+.sheet header{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.grid2{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;font-weight:600;color:var(--muted)}
+.field.full{grid-column:1/-1}
+.field .err{color:var(--danger);font-size:12px;min-height:0}
+.field.bad input,.field.bad select{border-color:var(--danger)}
+.note{font-size:12px;padding:8px 10px;border-radius:6px;background:var(--warn-bg);color:var(--warn)}
+.actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:14px}
+.actions .r{display:flex;gap:8px;flex-wrap:wrap}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:999px;z-index:30;font-weight:500;max-width:calc(100% - 32px)}
+.toast.err{background:var(--danger);color:#fff}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:slide .18s ease-out}@keyframes slide{from{transform:translateX(24px);opacity:.6}}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span class="eyebrow">Propósito · Conexão · Expansão</span>
+      <h1>THE SEED · CRM</h1>
+      <span class="muted" id="sub">Funil comercial e time · liderança comercial: Douglas</span>
+    </div>
+    <nav class="tabs" aria-label="Seções">
+      <a href="#funil" data-view="funil">Funil</a>
+      <a href="#followups" data-view="followups">Follow-ups</a>
+      <a href="#time" data-view="time">Time</a>
+    </nav>
+  </header>
+
+  <div id="status" class="state"><h2>Conectando ao CRM…</h2><span>Carregando oportunidades e time.</span></div>
+
+  <main id="app" hidden>
+    <section class="stats" id="stats" aria-label="Resumo"></section>
+
+    <div class="filters" id="filters">
+      <label>Buscar<input id="f-q" type="search" placeholder="Cliente, telefone, e-mail"></label>
+      <label>Responsável<select id="f-resp"></select></label>
+      <label>Evento<select id="f-ev"></select></label>
+      <span style="flex:1"></span>
+      <button class="primary" id="btn-new-opp">Nova oportunidade</button>
+      <button id="btn-new-person" hidden>Adicionar pessoa</button>
+    </div>
+
+    <section id="v-funil"></section>
+    <section id="v-followups" hidden></section>
+    <section id="v-time" hidden></section>
+  </main>
+</div>
+
+<div id="overlay" class="overlay" hidden></div>
+<div id="toast" class="toast" hidden role="status"></div>
+
+<script>
+(() => {
+const STAGES = [
+  {k:"novo", n:"1. Novo contato"},
+  {k:"iniciado", n:"2. Contato iniciado"},
+  {k:"interesse", n:"3. Interesse identificado"},
+  {k:"oferta", n:"4. Apresentação da oferta"},
+  {k:"negociacao", n:"5. Negociação"},
+  {k:"aguardando", n:"6. Aguardando pagamento"},
+  {k:"concluida", n:"7. Venda concluída"},
+  {k:"perdido", n:"8. Perdido ou cancelado"},
+];
+const OPEN = new Set(["novo","iniciado","interesse","oferta","negociacao","aguardando"]);
+const EVENTOS = ["THE SEED Experience — Boston","THE SEED RUN","THE SEED Care","THE SEED Life","Outro"];
+const PRODUTOS = [
+  {n:"Ingresso individual (US$77)", v:77},
+  {n:"Condição US$107 (formato a confirmar)", v:107, warn:"A condição de US$107 ainda não foi confirmada (combo de 2 ingressos ou outro formato). Não ofereça antes da confirmação."},
+  {n:"Ingresso VIP"},{n:"Combo"},{n:"Cortesia", v:0},{n:"Patrocínio"},{n:"Expositor"},{n:"Programa / mentoria"},{n:"Outro"}
+];
+const ORIGENS = ["Instagram","WhatsApp","Indicação","Evento anterior","Link de inscrição","Parceiro / patrocinador","Outro"];
+const PAGTOS = [{k:"pendente",n:"Pendente"},{k:"pago",n:"Pago"},{k:"cancelado",n:"Cancelado"},{k:"reembolsado",n:"Reembolsado"}];
+const AREAS = ["Direção Executiva","Financeiro","Direção de Projetos","Marketing","Comercial","RUN","Eventos e Produção","Staff","Caridade","Lazer"];
+const STATUS_P = ["Ativo","Em avaliação","Inativo"];
+
+let db=null, canWrite=true, opps=[], people=[], view="funil";
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const usd = n => "US$" + Number(n||0).toLocaleString("pt-BR",{minimumFractionDigits:0,maximumFractionDigits:2});
+const today = () => { const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); };
+const fmtDate = s => s ? s.split("-").reverse().join("/") : "";
+const stageName = k => (STAGES.find(s=>s.k===k)||{}).n || k;
+
+function toast(msg, err){ const t=$("#toast"); t.textContent=msg; t.className="toast"+(err?" err":""); t.hidden=false; clearTimeout(toast._t); toast._t=setTimeout(()=>t.hidden=true, err?5000:2600); }
+function dbErr(e){
+  const c=e&&e.code;
+  if(c==="invalid_argument") { canWrite=false; render(); return "Você não tem permissão para editar este CRM. Peça acesso de Contribuidor à dona do link."; }
+  if(c==="quota_exceeded") return "O CRM atingiu o limite de registros. Arquive ou exclua oportunidades antigas.";
+  if(c==="revoked") return "Seu acesso a este CRM foi encerrado.";
+  return "Não foi possível salvar agora. Tente de novo em alguns segundos.";
+}
+
+function followChip(o){
+  if(!o.followup || !OPEN.has(o.etapa)) return "";
+  const t=today();
+  const cls = o.followup<t ? "late" : o.followup===t ? "today" : "";
+  const lbl = o.followup<t ? "Atrasado · " : o.followup===t ? "Hoje · " : "Follow-up ";
+  return `<span class="chip ${cls}">${lbl}${fmtDate(o.followup)}</span>`;
+}
+function payChip(o){
+  const p=o.pagamento||"pendente";
+  const cls={pago:"paid",pendente:"pend",cancelado:"cancel",reembolsado:"cancel"}[p];
+  return `<span class="chip ${cls}">${esc((PAGTOS.find(x=>x.k===p)||{}).n||p)}</span>`;
+}
+
+function filtered(){
+  const q=$("#f-q").value.trim().toLowerCase(), r=$("#f-resp").value, ev=$("#f-ev").value;
+  return opps.filter(o=>{
+    if(r && o.responsavel!==r) return false;
+    if(ev && o.evento!==ev) return false;
+    if(q && ![o.cliente,o.telefone,o.email,o.obs].join(" ").toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+function renderStats(list){
+  const open=list.filter(o=>OPEN.has(o.etapa));
+  const pipe=open.reduce((a,o)=>a+(+o.valor||0),0);
+  const pond=open.reduce((a,o)=>a+(+o.valor||0)*((+o.probabilidade||0)/100),0);
+  const won=list.filter(o=>o.etapa==="concluida");
+  const wonV=won.reduce((a,o)=>a+(+o.valor||0),0);
+  const paid=list.filter(o=>o.pagamento==="pago").reduce((a,o)=>a+(+o.valor||0),0);
+  const toRecv=list.filter(o=>(o.etapa==="concluida"||o.etapa==="aguardando")&&(o.pagamento||"pendente")==="pendente").reduce((a,o)=>a+(+o.valor||0),0);
+  const late=open.filter(o=>o.followup && o.followup<today()).length;
+  $("#stats").innerHTML = `
+    <div class="stat"><span class="eyebrow">Em aberto</span><b>${usd(pipe)}</b><small>${open.length} oportunidade${open.length===1?"":"s"} · ponderado ${usd(Math.round(pond))}</small></div>
+    <div class="stat"><span class="eyebrow">Vendas concluídas</span><b>${usd(wonV)}</b><small>${won.length} venda${won.length===1?"":"s"} registrada${won.length===1?"":"s"}</small></div>
+    <div class="stat"><span class="eyebrow">Recebido</span><b>${usd(paid)}</b><small>Só pagamentos marcados como pagos</small></div>
+    <div class="stat"><span class="eyebrow">A receber</span><b>${usd(toRecv)}</b><small>Vendido ou aguardando, ainda pendente</small></div>
+    <div class="stat ${late?"alert":""}"><span class="eyebrow">Follow-ups atrasados</span><b>${late}</b><small>${late?"Veja a aba Follow-ups":"Nada atrasado"}</small></div>`;
+}
+
+function renderFunil(list){
+  const el=$("#v-funil");
+  if(!opps.length){
+    el.innerHTML=`<div class="state"><h2>Nenhuma oportunidade ainda</h2><span>Cada contato vira um card no funil, do novo contato até a venda concluída.</span>${canWrite?'<button class="primary" data-act="new">Cadastrar a primeira oportunidade</button>':""}</div>`;
+    return;
+  }
+  el.innerHTML=`<div class="board-scroll"><div class="board">${STAGES.map((s,i)=>{
+    const cards=list.filter(o=>o.etapa===s.k).sort((a,b)=>(a.followup||"9")<(b.followup||"9")?-1:1);
+    const tot=cards.reduce((a,o)=>a+(+o.valor||0),0);
+    return `<div class="col ${s.k==="concluida"?"won":s.k==="perdido"?"lost":""}">
+      <header><span>${esc(s.n)}</span><small>${cards.length} · ${usd(tot)}</small></header>
+      ${cards.length?cards.map(o=>`
+        <div class="card" role="button" tabindex="0" data-open="${esc(o.id)}">
+          <div class="t">${esc(o.cliente)}</div>
+          <div class="meta">${esc(o.produto||"Sem produto")}${o.evento?" · "+esc(o.evento):""}</div>
+          <div class="row"><span class="num">${o.valor!==""&&o.valor!=null?usd(o.valor):"<span class='muted'>Sem valor</span>"}${o.probabilidade!==""&&o.probabilidade!=null&&OPEN.has(o.etapa)?` <span class="muted">· ${o.probabilidade}%</span>`:""}</span>${s.k==="concluida"||s.k==="aguardando"?payChip(o):""}</div>
+          <div class="row"><span class="meta">${esc(o.responsavel||"Sem responsável")}</span>${followChip(o)}</div>
+          ${canWrite?`<div class="row"><span class="meta">${o.proximaAcao?esc(o.proximaAcao):""}</span><span class="moves">
+            <button class="ghost" data-move="${esc(o.id)}" data-dir="-1" ${i===0?"disabled":""} aria-label="Voltar etapa">◀</button>
+            <button class="ghost" data-move="${esc(o.id)}" data-dir="1" ${i===STAGES.length-1?"disabled":""} aria-label="Avançar etapa">▶</button></span></div>`:""}
+        </div>`).join(""):`<div class="empty-col">Nenhuma aqui${list.length!==opps.length?" com esses filtros":""}.</div>`}
+    </div>`;}).join("")}</div></div>`;
+}
+
+function renderFollow(list){
+  const el=$("#v-followups");
+  const rows=list.filter(o=>OPEN.has(o.etapa)).sort((a,b)=>(a.followup||"9999")<(b.followup||"9999")?-1:1);
+  if(!rows.length){ el.innerHTML=`<div class="state"><h2>Nenhum follow-up em aberto</h2><span>Oportunidades abertas com data de follow-up aparecem aqui, as atrasadas primeiro.</span></div>`; return; }
+  el.innerHTML=`<div class="table-scroll"><table><thead><tr><th>Follow-up</th><th>Cliente</th><th>Próxima ação</th><th>Etapa</th><th>Responsável</th><th>Contato</th><th>Valor</th></tr></thead><tbody>${rows.map(o=>`
+    <tr class="click" data-open="${esc(o.id)}" tabindex="0"><td>${followChip(o)||'<span class="chip">Sem data</span>'}</td><td><b>${esc(o.cliente)}</b></td><td>${esc(o.proximaAcao||"—")}</td><td>${esc(stageName(o.etapa))}</td><td>${esc(o.responsavel||"—")}</td><td class="num">${esc(o.telefone||"")}${o.telefone&&o.email?"<br>":""}${esc(o.email||"")}</td><td class="num">${o.valor!==""&&o.valor!=null?usd(o.valor):"—"}</td></tr>`).join("")}</tbody></table></div>`;
+}
+
+function renderTime(){
+  const el=$("#v-time");
+  if(!people.length){ el.innerHTML=`<div class="state"><h2>Nenhuma pessoa cadastrada</h2><span>Cadastre o time por área para usar como responsáveis no funil.</span>${canWrite?'<button class="primary" data-act="newp">Adicionar pessoa</button>':""}</div>`; return; }
+  const by={};
+  AREAS.forEach(a=>by[a]=[]);
+  people.forEach(p=>(p.areas||[]).forEach(a=>{(by[a]=by[a]||[]).push(p);}));
+  el.innerHTML=`<div class="areas">${Object.keys(by).map(a=>{
+    const lead=p=>/l[íi]der|ceo|cfo|cmo|dire/i.test((p.cargos&&p.cargos[a])||"")?0:1;
+    const ps=by[a].slice().sort((x,y)=>lead(x)-lead(y)||x.nome.localeCompare(y.nome));
+    return `<div class="area"><h3>${esc(a)}</h3>${ps.length?ps.map(p=>{
+      const openN=a==="Comercial"?opps.filter(o=>OPEN.has(o.etapa)&&o.responsavel===p.nome).length:0;
+      return `<div class="person"><div><div class="n">${esc(p.nome)}</div><div class="c">${esc((p.cargos&&p.cargos[a])||"")}${p.supervisor&&a==="Comercial"&&p.supervisor!==p.nome?" · supervisão: "+esc(p.supervisor):""}${p.obs?"<br>"+esc(p.obs):""}</div></div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${p.status&&p.status!=="Ativo"?`<span class="chip pend">${esc(p.status)}</span>`:""}${a==="Comercial"?`<span class="chip">${openN} em aberto</span>`:""}${canWrite?`<button class="ghost" data-editp="${esc(p.id)}">Editar</button>`:""}</div></div>`;}).join(""):`<div class="muted">A definir</div>`}</div>`;}).join("")}</div>`;
+}
+
+function fillFilters(){
+  const r=$("#f-resp"), cur=r.value;
+  const resp=[...new Set([...people.filter(p=>(p.areas||[]).includes("Comercial")).map(p=>p.nome), ...opps.map(o=>o.responsavel).filter(Boolean)])].sort();
+  r.innerHTML=`<option value="">Todos</option>`+resp.map(n=>`<option ${n===cur?"selected":""}>${esc(n)}</option>`).join("");
+  const e=$("#f-ev"), ce=e.value;
+  e.innerHTML=`<option value="">Todos</option>`+EVENTOS.map(n=>`<option ${n===ce?"selected":""}>${esc(n)}</option>`).join("");
+}
+
+function render(){
+  document.querySelectorAll("nav.tabs a").forEach(a=>a.setAttribute("aria-current", a.dataset.view===view?"page":"false"));
+  ["funil","followups","time"].forEach(v=>$("#v-"+v).hidden = v!==view);
+  $("#btn-new-opp").hidden = !canWrite || view==="time";
+  $("#btn-new-person").hidden = !canWrite || view!=="time";
+  $("#f-q").parentElement.hidden = $("#f-resp").parentElement.hidden = $("#f-ev").parentElement.hidden = view==="time";
+  const list=filtered();
+  renderStats(list);
+  if(view==="funil") renderFunil(list);
+  if(view==="followups") renderFollow(list);
+  if(view==="time") renderTime();
+}
+
+/* ---------- Formulários ---------- */
+function opt(list, val, key){ return list.map(x=>{const v=key?x[key]:x, n=key?x.n:x; return `<option value="${esc(v)}" ${v===val?"selected":""}>${esc(n)}</option>`;}).join(""); }
+function closeSheet(){ const o=$("#overlay"); o.hidden=true; o.innerHTML=""; }
+
+function openOpp(id){
+  if(!canWrite && !id) return;
+  const o = id ? opps.find(x=>x.id===id) : {etapa:"novo", pagamento:"pendente", responsavel:""};
+  if(!o) return;
+  const ro = !canWrite;
+  const comercial=people.filter(p=>(p.areas||[]).includes("Comercial")).map(p=>p.nome);
+  if(o.responsavel && !comercial.includes(o.responsavel)) comercial.push(o.responsavel);
+  const prodNames=PRODUTOS.map(p=>p.n); if(o.produto && !prodNames.includes(o.produto)) prodNames.push(o.produto);
+  const ov=$("#overlay");
+  ov.innerHTML=`<form class="sheet" id="opp-form" novalidate aria-labelledby="opp-h">
+    <header><div><span class="eyebrow">${id?"Oportunidade":"Nova oportunidade"}</span><h2 id="opp-h">${id?esc(o.cliente):"Cadastrar contato"}</h2></div><button type="button" class="ghost" data-close aria-label="Fechar">✕</button></header>
+    <fieldset ${ro?"disabled":""} style="border:0;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;min-width:0">
+    <div class="grid2">
+      <div class="field full"><label for="o-cliente">Cliente *</label><input id="o-cliente" name="cliente" value="${esc(o.cliente)}" maxlength="120" required><span class="err"></span></div>
+      <div class="field"><label for="o-tel">Telefone</label><input id="o-tel" name="telefone" type="tel" value="${esc(o.telefone)}" maxlength="40"><span class="err"></span></div>
+      <div class="field"><label for="o-email">E-mail</label><input id="o-email" name="email" type="email" value="${esc(o.email)}" maxlength="120"><span class="err"></span></div>
+      <div class="field"><label for="o-evento">Evento *</label><select id="o-evento" name="evento" required><option value="">Escolha…</option>${opt(EVENTOS,o.evento)}</select><span class="err"></span></div>
+      <div class="field"><label for="o-produto">Produto</label><select id="o-produto" name="produto"><option value="">Escolha…</option>${opt(prodNames,o.produto)}</select><span class="err"></span></div>
+      <div class="field full" id="prod-warn" hidden><div class="note"></div></div>
+      <div class="field"><label for="o-origem">Origem</label><select id="o-origem" name="origem"><option value="">Escolha…</option>${opt(ORIGENS,o.origem)}</select><span class="err"></span></div>
+      <div class="field"><label for="o-resp">Responsável *</label><select id="o-resp" name="responsavel" required><option value="">Escolha…</option>${opt(comercial,o.responsavel)}</select><span class="err"></span></div>
+      <div class="field"><label for="o-valor">Valor (US$)</label><input id="o-valor" name="valor" type="number" min="0" step="0.01" inputmode="decimal" value="${o.valor??""}"><span class="err"></span></div>
+      <div class="field"><label for="o-prob">Probabilidade (%)</label><input id="o-prob" name="probabilidade" type="number" min="0" max="100" step="5" inputmode="numeric" value="${o.probabilidade??""}"><span class="err"></span></div>
+      <div class="field"><label for="o-etapa">Etapa *</label><select id="o-etapa" name="etapa">${opt(STAGES,o.etapa,"k")}</select><span class="err"></span></div>
+      <div class="field"><label for="o-pag">Pagamento</label><select id="o-pag" name="pagamento">${opt(PAGTOS,o.pagamento||"pendente","k")}</select><span class="err"></span></div>
+      <div class="field"><label for="o-acao">Próxima ação</label><input id="o-acao" name="proximaAcao" value="${esc(o.proximaAcao)}" maxlength="160" placeholder="Ex.: enviar link de pagamento"><span class="err"></span></div>
+      <div class="field"><label for="o-fu">Data do follow-up</label><input id="o-fu" name="followup" type="date" value="${esc(o.followup)}"><span class="err"></span></div>
+      <div class="field full"><label for="o-obs">Observações</label><textarea id="o-obs" name="obs" rows="3" maxlength="2000">${esc(o.obs)}</textarea></div>
+    </div></fieldset>
+    <p class="muted" style="margin:0;font-size:12px">Venda concluída não é dinheiro recebido: marque “Pago” só quando o pagamento for confirmado. Nenhum desconto, exclusividade ou benefício fora do autorizado.</p>
+    <div class="actions">
+      <div>${id&&canWrite?'<button type="button" class="danger" id="o-del">Excluir</button>':""}</div>
+      <div class="r"><button type="button" data-close>${ro?"Fechar":"Cancelar"}</button>${ro?"":`<button class="primary" type="submit">${id?"Salvar alterações":"Cadastrar"}</button>`}</div>
+    </div>
+  </form>`;
+  ov.hidden=false;
+  const f=$("#opp-form");
+  const warn=()=>{ const p=PRODUTOS.find(x=>x.n===f.produto.value); const w=$("#prod-warn"); w.hidden=!(p&&p.warn); if(p&&p.warn) w.querySelector(".note").textContent=p.warn; };
+  warn();
+  f.produto.addEventListener("change",()=>{ const p=PRODUTOS.find(x=>x.n===f.produto.value); if(p&&p.v!=null&&f.valor.value==="") f.valor.value=p.v; warn(); });
+  if(!ro) f.cliente.focus();
+  f.addEventListener("submit", async ev=>{
+    ev.preventDefault();
+    const d=Object.fromEntries(new FormData(f).entries());
+    let ok=true;
+    const setErr=(name,msg)=>{const fld=f[name].closest(".field"); fld.classList.toggle("bad",!!msg); fld.querySelector(".err").textContent=msg||""; if(msg) ok=false;};
+    setErr("cliente", d.cliente.trim()?"":"Informe o nome do cliente.");
+    setErr("evento", d.evento?"":"Escolha o evento.");
+    setErr("responsavel", d.responsavel?"":"Escolha quem acompanha esta oportunidade.");
+    setErr("email", !d.email||/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)?"":"E-mail inválido. Confira o endereço.");
+    setErr("valor", d.valor===""||(+d.valor>=0)?"":"O valor não pode ser negativo.");
+    setErr("probabilidade", d.probabilidade===""||(+d.probabilidade>=0&&+d.probabilidade<=100)?"":"Use um número de 0 a 100.");
+    setErr("pagamento", d.pagamento==="pago"&&!["concluida","aguardando"].includes(d.etapa)?"Só marque como pago uma venda concluída ou aguardando pagamento.":"");
+    if(!ok){ f.querySelector(".bad input, .bad select")?.focus(); return; }
+    const body={cliente:d.cliente.trim(),telefone:d.telefone.trim(),email:d.email.trim(),evento:d.evento,produto:d.produto,origem:d.origem,responsavel:d.responsavel,
+      valor:d.valor===""?null:+d.valor, probabilidade:d.probabilidade===""?null:+d.probabilidade, etapa:d.etapa, pagamento:d.pagamento,
+      proximaAcao:d.proximaAcao.trim(), followup:d.followup, obs:d.obs.trim(), atualizadoEm:new Date().toISOString()};
+    const btn=f.querySelector("button[type=submit]"); btn.disabled=true;
+    try{
+      if(id) await db.collection("oportunidades").doc(id).update(body);
+      else await db.collection("oportunidades").add({...body, criadoEm:new Date().toISOString()});
+      closeSheet(); toast(id?"Alterações salvas":"Oportunidade cadastrada");
+    }catch(e){ btn.disabled=false; toast(dbErr(e),true); }
+  });
+  const del=$("#o-del");
+  if(del) del.addEventListener("click", async ()=>{
+    if(!del.classList.contains("armed")){ del.classList.add("armed"); del.textContent="Confirmar exclusão"; setTimeout(()=>{del.classList.remove("armed");del.textContent="Excluir";},4000); return; }
+    del.disabled=true;
+    try{ await db.collection("oportunidades").doc(id).delete(); closeSheet(); toast("Oportunidade excluída"); }
+    catch(e){ del.disabled=false; toast(dbErr(e),true); }
+  });
+}
+
+function openPerson(id){
+  if(!canWrite) return;
+  const p = id ? people.find(x=>x.id===id) : {areas:[], cargos:{}, status:"Ativo"};
+  if(!p) return;
+  const ov=$("#overlay");
+  const cargos=p.cargos||{};
+  ov.innerHTML=`<form class="sheet" id="p-form" novalidate aria-labelledby="p-h">
+    <header><div><span class="eyebrow">${id?"Pessoa":"Nova pessoa"}</span><h2 id="p-h">${id?esc(p.nome):"Adicionar ao time"}</h2></div><button type="button" class="ghost" data-close aria-label="Fechar">✕</button></header>
+    <div class="grid2">
+      <div class="field full"><label for="p-nome">Nome *</label><input id="p-nome" name="nome" value="${esc(p.nome)}" maxlength="80"><span class="err"></span></div>
+      <div class="field"><label for="p-status">Status</label><select id="p-status" name="status">${opt(STATUS_P,p.status)}</select></div>
+      <div class="field"><label for="p-sup">Supervisor no comercial</label><input id="p-sup" name="supervisor" value="${esc(p.supervisor)}" maxlength="80" placeholder="Ex.: Douglas"></div>
+      <div class="field full"><label>Áreas e cargo em cada uma *</label>
+        <div style="display:flex;flex-direction:column;gap:6px" id="p-areas">${AREAS.map((a,i)=>`
+          <div style="display:grid;grid-template-columns:minmax(0,170px) 1fr;gap:8px;align-items:center">
+            <label style="display:flex;gap:6px;align-items:center;font-weight:500;color:var(--fg)"><input type="checkbox" id="pa-${i}" value="${esc(a)}" ${(p.areas||[]).includes(a)?"checked":""}> ${esc(a)}</label>
+            <input id="pc-${i}" aria-label="Cargo em ${esc(a)}" placeholder="Cargo (ex.: Líder)" value="${esc(cargos[a])}" maxlength="80">
+          </div>`).join("")}</div><span class="err" id="p-areas-err"></span></div>
+      <div class="field full"><label for="p-obs">Observações</label><textarea id="p-obs" name="obs" rows="2" maxlength="500">${esc(p.obs)}</textarea></div>
+    </div>
+    <p class="muted" style="margin:0;font-size:12px">Não registre aqui assuntos reservados da diretoria ou dados pessoais sensíveis: todos com acesso ao CRM veem esta ficha.</p>
+    <div class="actions"><div>${id?'<button type="button" class="danger" id="p-del">Remover</button>':""}</div>
+      <div class="r"><button type="button" data-close>Cancelar</button><button class="primary" type="submit">${id?"Salvar":"Adicionar"}</button></div></div>
+  </form>`;
+  ov.hidden=false;
+  const f=$("#p-form"); f.nome.focus();
+  f.addEventListener("submit", async ev=>{
+    ev.preventDefault();
+    const nome=f.nome.value.trim();
+    const areas=[], cg={};
+    AREAS.forEach((a,i)=>{ if($("#pa-"+i).checked){ areas.push(a); const c=$("#pc-"+i).value.trim(); if(c) cg[a]=c; } });
+    const nf=f.nome.closest(".field"); nf.classList.toggle("bad",!nome); nf.querySelector(".err").textContent=nome?"":"Informe o nome.";
+    $("#p-areas-err").textContent=areas.length?"":"Marque pelo menos uma área.";
+    if(!nome||!areas.length) return;
+    const body={nome, areas, cargos:cg, status:f.status.value, supervisor:f.supervisor.value.trim(), obs:f.obs.value.trim(), atualizadoEm:new Date().toISOString()};
+    const btn=f.querySelector("button[type=submit]"); btn.disabled=true;
+    try{
+      if(id) await db.collection("pessoas").doc(id).set(body); else await db.collection("pessoas").add(body);
+      closeSheet(); toast(id?"Ficha atualizada":"Pessoa adicionada");
+    }catch(e){ btn.disabled=false; toast(dbErr(e),true); }
+  });
+  const del=$("#p-del");
+  if(del) del.addEventListener("click", async ()=>{
+    if(!del.classList.contains("armed")){ del.classList.add("armed"); del.textContent="Confirmar remoção"; setTimeout(()=>{del.classList.remove("armed");del.textContent="Remover";},4000); return; }
+    del.disabled=true;
+    try{ await db.collection("pessoas").doc(id).delete(); closeSheet(); toast("Pessoa removida do time"); }
+    catch(e){ del.disabled=false; toast(dbErr(e),true); }
+  });
+}
+
+async function move(id, dir){
+  const o=opps.find(x=>x.id===id); if(!o) return;
+  const i=STAGES.findIndex(s=>s.k===o.etapa)+dir; if(i<0||i>=STAGES.length) return;
+  try{ await db.collection("oportunidades").doc(id).update({etapa:STAGES[i].k, atualizadoEm:new Date().toISOString()}); toast("Movida para "+STAGES[i].n); }
+  catch(e){ toast(dbErr(e),true); }
+}
+
+/* ---------- Eventos ---------- */
+document.addEventListener("click", e=>{
+  const t=e.target.closest("[data-move],[data-open],[data-close],[data-act],[data-editp]");
+  if(!t) { if(e.target.id==="overlay") closeSheet(); return; }
+  if(t.dataset.move){ e.stopPropagation(); move(t.dataset.move, +t.dataset.dir); return; }
+  if(t.dataset.open) return openOpp(t.dataset.open);
+  if(t.hasAttribute("data-close")) return closeSheet();
+  if(t.dataset.editp) return openPerson(t.dataset.editp);
+  if(t.dataset.act==="new") return openOpp();
+  if(t.dataset.act==="newp") return openPerson();
+});
+document.addEventListener("keydown", e=>{
+  if(e.key==="Escape" && !$("#overlay").hidden) closeSheet();
+  if((e.key==="Enter"||e.key===" ") && e.target.dataset && e.target.dataset.open && !e.target.closest("button")){ e.preventDefault(); openOpp(e.target.dataset.open); }
+});
+$("#btn-new-opp").addEventListener("click",()=>openOpp());
+$("#btn-new-person").addEventListener("click",()=>openPerson());
+["#f-q","#f-resp","#f-ev"].forEach(s=>$(s).addEventListener("input",render));
+function route(){ const h=location.hash.slice(1); view=["funil","followups","time"].includes(h)?h:"funil"; if(db) render(); else document.querySelectorAll("nav.tabs a").forEach(a=>a.setAttribute("aria-current", a.dataset.view===view?"page":"false")); }
+window.addEventListener("hashchange",route); route();
+
+/* ---------- Conexão ---------- */
+async function start(){
+  const status=$("#status");
+  for(let i=0;i<30&&!(window.claude&&window.claude.use);i++) await new Promise(r=>setTimeout(r,100));
+  if(!window.claude || !claude.use){ status.innerHTML=`<h2>Abra este CRM pelo claude.ai</h2><span>Os dados ficam salvos no claude.ai e só carregam lá.</span>`; return; }
+  try{ db=await claude.use("db"); }catch{ db=null; }
+  if(!db){ status.innerHTML=`<h2>Entre na sua conta para usar o CRM</h2><span>Os dados do time só aparecem para quem está conectado ao claude.ai e tem acesso a este link.</span>`; return; }
+  try{ const u=await claude.use("user"); const c=u? await u.can("data.write") : null; if(c===false) canWrite=false; }catch{}
+  let gotO=false, gotP=false;
+  const ready=()=>{ if(gotO&&gotP){ status.hidden=true; $("#app").hidden=false; fillFilters(); render(); } };
+  const fail=e=>{ status.hidden=false; $("#app").hidden=true; status.innerHTML=`<h2>Não foi possível carregar o CRM</h2><span>${e&&e.code==="revoked"?"Seu acesso a este CRM foi encerrado.":"Recarregue a página para tentar de novo."}</span>`; };
+  db.collection("oportunidades").onSnapshot(s=>{ opps=s.docs.map(d=>({id:d.id,...d.data()})); gotO=true; if(!$("#app").hidden){fillFilters();render();} else ready(); }, fail);
+  db.collection("pessoas").onSnapshot(s=>{ people=s.docs.map(d=>({id:d.id,...d.data()})); gotP=true; if(!$("#app").hidden){fillFilters();render();} else ready(); }, fail);
+}
+start();
+})();
+</script>
