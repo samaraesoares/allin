@@ -161,7 +161,7 @@ tfoot td{font-weight:600;background:var(--sunk)}
     <div class="brand">
       <span class="eyebrow">Propósito · Conexão · Expansão</span>
       <h1>THE SEED · Central de Gestão</h1>
-      <span class="muted">Projetos, comercial, administrativo e time em um só lugar</span>
+      <span class="muted">Direção, board, projetos, eventos, comercial, marketing, frentes e administrativo em um só lugar</span>
     </div>
     <nav class="tabs" id="nav-main" aria-label="Áreas"></nav>
   </header>
@@ -179,11 +179,18 @@ tfoot td{font-weight:600;background:var(--sunk)}
 /* ================= Configuração ================= */
 const NAV = [
   {k:"painel", n:"Painel", subs:[{k:"painel",n:"Visão geral"}]},
+  {k:"direcao", n:"Direção", owner:"Direção executiva · Guilherme", subs:[{k:"direcao",n:"Visão por área"},{k:"metas",n:"Plano 30/60/90 e metas"}]},
+  {k:"board", n:"Board", owner:"Conselho e governança · acesso restrito", subs:[{k:"conselho",n:"Composição"},{k:"reunioes",n:"Reuniões e deliberações"},{k:"mudancas",n:"Mudanças de cargo e acesso"}]},
   {k:"projetos", n:"Projetos", owner:"Direção de Projetos · Samara", subs:[{k:"projetos",n:"Projetos"},{k:"tarefas",n:"Tarefas"},{k:"agenda",n:"Agenda 90 dias"}]},
-  {k:"comercial", n:"Comercial", owner:"Liderança comercial · Douglas", subs:[{k:"funil",n:"Funil"},{k:"followups",n:"Follow-ups"}]},
-  {k:"adm", n:"Administrativo", owner:"Administrativo e financeiro · Larissa", subs:[{k:"financeiro",n:"Financeiro"},{k:"aprovacoes",n:"Aprovações"},{k:"fornecedores",n:"Fornecedores e parceiros"},{k:"documentos",n:"Documentos"},{k:"reunioes",n:"Reuniões e decisões"}]},
-  {k:"time", n:"Time", subs:[{k:"time",n:"Pessoas por área"}]},
+  {k:"eventos", n:"Eventos", owner:"Eventos e Produção · Daniela Lima e Karina · Staff · Hellen", subs:[{k:"palestrantes",n:"Palestrantes"},{k:"programacao",n:"Programação e roteiro"},{k:"dinamicas",n:"Dinâmicas"},{k:"logistica",n:"Logística"},{k:"staff",n:"Staff e escalas"},{k:"guias",n:"Guias de monitores"},{k:"ocorrencias",n:"Ocorrências"}]},
+  {k:"comercial", n:"Comercial", owner:"Liderança comercial · Douglas", subs:[{k:"funil",n:"Funil"},{k:"followups",n:"Follow-ups"},{k:"patrocinios",n:"Patrocínios"}]},
+  {k:"marketing", n:"Marketing", owner:"Marketing e comunicação · Tcharles", subs:[{k:"campanhas",n:"Campanhas"},{k:"editorial",n:"Calendário editorial"}]},
+  {k:"interacoes", n:"Interações", owner:"Relacionamento com participantes, palestrantes, parceiros e comunidade", subs:[{k:"interacoes",n:"Registro de interações"}]},
+  {k:"frentes", n:"RUN · Care · Life", owner:"RUN · Thiago, Rafael Dias, Douglas e Karina", subs:[{k:"run",n:"THE SEED RUN"},{k:"care",n:"THE SEED Care"},{k:"life",n:"THE SEED Life"}]},
+  {k:"adm", n:"Administrativo", owner:"Administrativo e financeiro · Larissa", subs:[{k:"financeiro",n:"Financeiro"},{k:"aprovacoes",n:"Aprovações"},{k:"fornecedores",n:"Fornecedores e parceiros"},{k:"documentos",n:"Documentos"},{k:"materiais",n:"Materiais e manutenção"}]},
+  {k:"time", n:"Time", subs:[{k:"time",n:"Pessoas por área"},{k:"sistema",n:"Acessos e manutenção do sistema"}]},
 ];
+const LOCKED_VIEWS = new Set(["financeiro","aprovacoes","reunioes","conselho","mudancas"]);
 const VIEWS = NAV.flatMap(g=>g.subs.map(s=>s.k));
 const groupOf = v => NAV.find(g=>g.subs.some(s=>s.k===v));
 
@@ -218,12 +225,28 @@ const CHECKLIST = {
   "Dia do evento":[["Check-in e credenciamento",1],["Gestão de palco e equipe",0],["Registro de vendas e incidentes",0]],
   "Pós-evento":[["Fechamento financeiro",1],["Pesquisa de feedback",0],["Relatório pós-evento e lições aprendidas",0],["Relacionamento pós-evento",0]],
 };
+const PAL_CAT = ["Palestrante","Apresentador","Testemunho","Facilitador","Convidado especial"];
+const PAL_CONV = ["Em avaliação","Convidado","Aceito","Recusado"];
+const PAL_CONF = ["Em avaliação","Confirmado","Cancelado"];
+const PAL_NAT = ["A definir","Sem valor","Cachê pago ao palestrante","Contribuição cobrada do palestrante","Taxa de participação","Outro acordo"];
+const PROG_TIPOS = ["Abertura","Palestra","Transição","Dinâmica","Intervalo","Almoço","Pitch","Testemunho","Encerramento","Outro"];
+const LOG_CAT = ["Local e contrato","Layout","Acessibilidade","Estacionamento","Alimentação","Decoração","Equipamentos","Som, luz e vídeo","Internet","Sinalização","Kits e crachás","Transporte","Hospedagem","Segurança e emergência","Montagem","Ensaio","Desmontagem","Outro"];
+const LOG_ST = ["A providenciar","Solicitado","Confirmado","Entregue","Problema"];
+const FUNCOES = ["Recepção e credenciamento","Entrega de kits","Orientação dos convidados","Organização de filas","Apoio às dinâmicas","Controle de salas","Apoio aos palestrantes","Camarim","Alimentação","Vendas","Estacionamento","Técnica e audiovisual","Montagem e desmontagem"];
+const FRENTE_TIPOS = {RUN:["Corrida semanal","Caminhada comunitária","Desafio mensal","Evento esportivo"],Care:["Campanha de arrecadação","Distribuição de itens","Ação voluntária","Outro"],Life:["Almoço","Jantar","Passeio","Viagem","Encontro de networking","Atividade cultural","Celebração","Experiência familiar"]};
+const APROV_ST = ["Ideia","Em produção","Em aprovação","Aprovada","Publicada"];
+const projOpts = () => S.projetos.map(p=>[p.id,p.nome]);
+const projOptsC = () => [["central","Central (sem evento)"]].concat(projOpts());
+const LOG_PADRAO = ["Contrato do local","Layout do espaço","Acessibilidade","Estacionamento","Alimentação","Decoração","Equipamentos","Som, luz e vídeo","Internet","Sinalização","Kits e crachás","Logística e transporte","Segurança e plano de emergência","Montagem","Ensaio","Desmontagem"];
+const LOG_PADRAO_CAT = ["Local e contrato","Layout","Acessibilidade","Estacionamento","Alimentação","Decoração","Equipamentos","Som, luz e vídeo","Internet","Sinalização","Kits e crachás","Transporte","Segurança e emergência","Montagem","Ensaio","Desmontagem"];
 
 /* ================= Estado ================= */
 let db=null, user=null, me=null, isAdmin=false, canWrite=true, view="painel", openProject=null;
-const S = {opps:[],people:[],projetos:[],tarefas:[],forn:[],docs:[],lanc:[],reun:[]};
-const COL = {opps:"oportunidades",people:"pessoas",projetos:"projetos",tarefas:"tarefas",forn:"fornecedores",docs:"documentos",lanc:"adm/restrito/lancamentos",reun:"adm/restrito/reunioes"};
-const RESTRICTED = new Set(["lanc","reun"]);
+const S = {opps:[],people:[],projetos:[],tarefas:[],forn:[],docs:[],lanc:[],reun:[],pal:[],prog:[],din:[],logi:[],staff:[],guias:[],ocor:[],patro:[],camp:[],peca:[],inter:[],ativ:[],metas:[],cons:[],mud:[],mat:[]};
+const COL = {opps:"oportunidades",people:"pessoas",projetos:"projetos",tarefas:"tarefas",forn:"fornecedores",docs:"documentos",lanc:"adm/restrito/lancamentos",reun:"adm/restrito/reunioes",
+  pal:"palestrantes",prog:"programacao",din:"dinamicas",logi:"logistica",staff:"escalas",guias:"guias",ocor:"ocorrencias",patro:"patrocinios",camp:"campanhas",peca:"pecas",inter:"interacoes",ativ:"atividades",metas:"metas",
+  cons:"adm/restrito/conselho",mud:"adm/restrito/mudancas",mat:"materiais"};
+const RESTRICTED = new Set(["lanc","reun","cons","mud"]);
 const flt = {};
 const names = {}; let namesPending=false;
 
@@ -285,7 +308,7 @@ const ENT = {
     {k:"modalidade",n:"Modalidade",t:"select",opts:["Presencial","Online","Híbrida"]},
     {k:"responsavel",n:"Responsável principal",t:"select",opts:peopleNames()},
     {k:"capacidade",n:"Capacidade",t:"num"},{k:"metaParticipantes",n:"Meta de participantes",t:"num"},
-    {k:"metaFaturamento",n:"Meta de faturamento (US$)",t:"num"},{k:"orcamento",n:"Orçamento previsto (US$)",t:"num"},
+    {k:"metaFaturamento",n:"Meta de faturamento (US$)",t:"num"},{k:"monitoresNecessarios",n:"Monitores necessários",t:"num"},{k:"orcamento",n:"Orçamento previsto (US$)",t:"num"},
     {k:"departamentos",n:"Departamentos envolvidos",full:1,max:200},
     {k:"objetivo",n:"Objetivo e propósito",t:"area",full:1},
     {k:"riscos",n:"Riscos e plano de contingência",t:"area",full:1},
@@ -361,6 +384,211 @@ const ENT = {
     {k:"proximosPassos",n:"Próximos passos e prazos",t:"area",full:1},
     {k:"link",n:"Link da ata completa",t:"url",full:1}],
     before:(b,id)=>{ if(!id) b.criadoPorId=me||null; }},
+  pal:{title:"Palestrante ou participação de palco", newTitle:"Nova participação de palco", label:p=>p.nome, fields:()=>[
+    {k:"nome",n:"Nome",req:1,full:1,max:120},
+    {k:"categoria",n:"Participação",t:"select",req:1,opts:PAL_CAT,def:"Palestrante"},
+    {k:"projeto",n:"Edição",t:"select",opts:projOpts()},
+    {k:"tema",n:"Tema",max:160},{k:"duracao",n:"Duração (min)",t:"num"},
+    {k:"data",n:"Data",t:"date"},{k:"horario",n:"Horário",t:"time"},
+    {k:"modalidade",n:"Modalidade",t:"select",opts:["Presencial","Remota"],def:"Presencial"},
+    {k:"convite",n:"Status do convite",t:"select",req:1,opts:PAL_CONV,def:"Em avaliação"},
+    {k:"confirmacao",n:"Confirmação",t:"select",req:1,opts:PAL_CONF,def:"Em avaliação"},
+    {k:"responsavel",n:"Responsável pelo relacionamento",t:"select",opts:peopleNames()},
+    {k:"telefone",n:"Telefone",t:"tel",max:40},{k:"email",n:"E-mail",t:"email",max:120},
+    {k:"naturezaValor",n:"Natureza do valor",t:"select",req:1,opts:PAL_NAT,def:"A definir"},
+    {k:"valor",n:"Valor acordado (US$)",t:"num"},
+    {k:"condicoes",n:"Benefícios, contrapartidas e condições de pagamento",t:"area",full:1},
+    {k:"autorizacaoImagem",n:"Autorização de imagem assinada",t:"bool",full:1},
+    {k:"contrato",n:"Link do contrato",t:"url"},{k:"slides",n:"Link de slides e mídia",t:"url"},
+    {k:"chegada",n:"Horário de chegada",t:"time"},
+    {k:"rider",n:"Rider técnico",t:"area",full:1},{k:"briefing",n:"Briefing",t:"area",full:1},
+    {k:"bio",n:"Biografia",t:"area",full:1},{k:"obs",n:"Observações internas",t:"area",full:1}],
+    note:"Toda participação começa “Em avaliação”. Quem decide apresentador, palestrante e tempo de palco é a curadoria. O valor não entra no financeiro automaticamente: lance no Financeiro depois de validar a natureza.",
+    validate:d=>({confirmacao: d.confirmacao==="Confirmado"&&d.convite!=="Aceito"?"Só confirme depois que o convite estiver como “Aceito”.":""})},
+
+  prog:{title:"Bloco da programação", newTitle:"Novo bloco", label:b=>b.titulo, fields:()=>[
+    {k:"projeto",n:"Edição",t:"select",req:1,opts:projOpts()},
+    {k:"tipo",n:"Tipo",t:"select",req:1,opts:PROG_TIPOS,def:"Palestra"},
+    {k:"titulo",n:"Título",req:1,full:1,max:160},
+    {k:"inicio",n:"Início",t:"time",req:1},{k:"fim",n:"Fim",t:"time",req:1},
+    {k:"quem",n:"Palestrante ou facilitador",t:"text",list:()=>[...new Set(S.pal.map(p=>p.nome).concat(peopleNames()))],max:120},
+    {k:"tecnico",n:"Responsável técnico",t:"select",opts:peopleNames()},
+    {k:"objetivo",n:"Objetivo",full:1,max:240},
+    {k:"recursos",n:"Recursos necessários (som, luz, vídeo, materiais)",t:"area",full:1},
+    {k:"transicao",n:"Transição para o próximo bloco",full:1,max:240},
+    {k:"falaApresentador",n:"Fala / deixa do apresentador",t:"area",full:1},
+    {k:"obsProducao",n:"Observações de produção",t:"area",full:1},
+    {k:"instrucoesStaff",n:"Instruções para o staff",t:"area",full:1}],
+    validate:d=>({fim: d.inicio&&d.fim&&d.fim<=d.inicio?"O fim precisa ser depois do início.":""})},
+
+  din:{title:"Dinâmica", newTitle:"Nova dinâmica", label:d=>d.nome, fields:()=>[
+    {k:"nome",n:"Nome",req:1,full:1,max:120},
+    {k:"objetivo",n:"Objetivo",t:"area",full:1},{k:"mensagem",n:"Fundamentação e mensagem",t:"area",full:1},
+    {k:"publico",n:"Perfil do público",max:160},{k:"participantes",n:"Quantidade de participantes",max:60},
+    {k:"duracao",n:"Duração (min)",t:"num"},{k:"facilitador",n:"Facilitador principal",max:120},
+    {k:"monitores",n:"Monitores necessários",t:"num"},{k:"custo",n:"Custo previsto (US$)",t:"num"},
+    {k:"materiais",n:"Materiais",t:"area",full:1},{k:"preparacao",n:"Preparação do espaço",t:"area",full:1},
+    {k:"passos",n:"Instruções passo a passo",t:"area",full:1},{k:"musica",n:"Música e recursos visuais",t:"area",full:1},
+    {k:"riscos",n:"Riscos e adaptações de acessibilidade",t:"area",full:1},
+    {k:"resultado",n:"Resultado esperado",t:"area",full:1},{k:"encerramento",n:"Forma de encerramento",t:"area",full:1}],
+    note:"A participação respeita consentimento, privacidade e limites pessoais, sem exigir exposição íntima.",
+    extra:o=>o.id&&S.projetos.length&&canWrite?`<div class="toolbar"><label>Copiar para a programação de<select id="copy-ev">${optHtml(projOpts(),"")}</select></label><button type="button" class="sm" data-copydin="${esc(o.id)}">Adicionar à programação</button></div>`:""},
+
+  logi:{title:"Item de logística", newTitle:"Novo item de logística", label:l=>l.item, fields:()=>[
+    {k:"projeto",n:"Edição",t:"select",req:1,opts:projOpts()},
+    {k:"categoria",n:"Categoria",t:"select",req:1,opts:LOG_CAT},
+    {k:"item",n:"Item",req:1,full:1,max:160},
+    {k:"status",n:"Status",t:"select",req:1,opts:LOG_ST,def:"A providenciar"},
+    {k:"responsavel",n:"Responsável",t:"select",opts:peopleNames()},
+    {k:"fornecedor",n:"Fornecedor",t:"select",opts:S.forn.map(f=>f.nome)},
+    {k:"data",n:"Data",t:"date"},{k:"horario",n:"Horário",t:"time"},
+    {k:"quantidade",n:"Quantidade",t:"num"},
+    {k:"obs",n:"Detalhes",t:"area",full:1}]},
+
+  staff:{title:"Escala de staff", newTitle:"Escalar pessoa", label:s=>s.pessoa, fields:()=>[
+    {k:"pessoa",n:"Monitor / voluntário",req:1,list:()=>peopleNames(),max:120},
+    {k:"projeto",n:"Edição",t:"select",req:1,opts:projOpts()},
+    {k:"funcao",n:"Função",t:"select",req:1,opts:FUNCOES},
+    {k:"turno",n:"Turno",t:"select",opts:["Manhã","Tarde","Noite","Integral"]},
+    {k:"inicio",n:"Início",t:"time"},{k:"fim",n:"Fim",t:"time"},
+    {k:"lider",n:"Responsável direto",t:"select",opts:peopleNames(),def:"Hellen"},
+    {k:"confirmacao",n:"Confirmação",t:"select",req:1,opts:["Pendente","Confirmado","Ausente","Substituído"],def:"Pendente"},
+    {k:"telefone",n:"Telefone",t:"tel",max:40},{k:"substituto",n:"Substituído por",max:120},
+    {k:"treinamento",n:"Treinamento realizado",t:"bool"},{k:"briefing",n:"Presente no briefing",t:"bool"},
+    {k:"checkin",n:"Check-in",t:"time"},{k:"checkout",n:"Check-out",t:"time"},
+    {k:"obs",n:"Observações",t:"area",full:1}],
+    note:"Contato de emergência e dados de saúde não ficam aqui: ficam só com a liderança do staff."},
+
+  guias:{title:"Guia de função", newTitle:"Novo guia", label:g=>g.funcao, fields:()=>[
+    {k:"funcao",n:"Função",req:1,full:1,max:120},
+    {k:"responsabilidades",n:"Responsabilidades",t:"area",full:1},{k:"horarios",n:"Horários",t:"area",full:1},
+    {k:"dressCode",n:"Dress code",max:200,full:1},{k:"instrucoes",n:"Instruções",t:"area",full:1},
+    {k:"limites",n:"Limites de atuação",t:"area",full:1},{k:"emergencia",n:"Procedimentos de emergência",t:"area",full:1},
+    {k:"escalonamento",n:"A quem escalar",max:160,full:1,def:"Hellen (liderança do staff)"},
+    {k:"checklist",n:"Checklist da função (um item por linha)",t:"area",full:1}]},
+
+  ocor:{title:"Ocorrência", newTitle:"Registrar ocorrência", label:o=>o.tipo+" · "+fmtDate(o.data), fields:()=>[
+    {k:"projeto",n:"Edição",t:"select",req:1,opts:projOpts()},
+    {k:"data",n:"Data",t:"date",req:1,def:today()},{k:"hora",n:"Hora",t:"time"},
+    {k:"tipo",n:"Tipo",t:"select",req:1,opts:["Atraso","Ausência","Saúde / primeiros socorros","Segurança","Técnica","Fornecedor","Participante","Outro"]},
+    {k:"status",n:"Status",t:"select",req:1,opts:["Aberta","Resolvida"],def:"Aberta"},
+    {k:"registradoPor",n:"Registrado por",t:"select",opts:peopleNames()},
+    {k:"descricao",n:"O que aconteceu",t:"area",req:1,full:1},{k:"acao",n:"Ação tomada",t:"area",full:1}],
+    note:"Descreva o fato sem expor dados de saúde ou informações pessoais além do necessário."},
+
+  patro:{title:"Patrocínio", newTitle:"Novo patrocínio", label:p=>p.empresa, fields:()=>[
+    {k:"empresa",n:"Empresa",req:1,full:1,max:120},
+    {k:"projeto",n:"Edição",t:"select",req:1,opts:projOpts()},
+    {k:"cota",n:"Cota",t:"select",opts:["Bronze","Prata","Ouro","Master","Apoio","Outra"]},
+    {k:"valor",n:"Valor (US$)",t:"num"},
+    {k:"status",n:"Status",t:"select",req:1,opts:["Prospectado","Proposta enviada","Negociação","Fechado","Pago","Perdido"],def:"Prospectado"},
+    {k:"responsavel",n:"Responsável",t:"select",opts:peopleNames("Comercial")},
+    {k:"contato",n:"Pessoa de contato",max:80},{k:"telefone",n:"Telefone",t:"tel",max:40},{k:"email",n:"E-mail",t:"email",max:120},
+    {k:"proximoPasso",n:"Próximo passo",max:160},{k:"followup",n:"Data do follow-up",t:"date"},
+    {k:"beneficios",n:"Benefícios da cota",t:"area",full:1},
+    {k:"proposta",n:"Link da proposta",t:"url"},{k:"contrato",n:"Link do contrato",t:"url"},
+    {k:"logoRecebido",n:"Logo recebido",t:"bool"},{k:"stand",n:"Tem stand",t:"bool"},
+    {k:"palcoAutorizado",n:"Participação de palco autorizada pela curadoria",t:"bool",full:1},
+    {k:"entregasMidia",n:"Entregas de mídia (o que foi entregue e quando)",t:"area",full:1},
+    {k:"historico",n:"Histórico de relacionamento",t:"area",full:1}],
+    note:"Nenhum vendedor promete desconto, exclusividade, tempo de palco ou benefício fora dos parâmetros autorizados.",
+    validate:d=>({status: d.status==="Pago"&&!d.contrato?"Registre o link do contrato antes de marcar como pago.":""})},
+
+  camp:{title:"Campanha", newTitle:"Nova campanha", label:c=>c.nome, fields:()=>[
+    {k:"nome",n:"Campanha",req:1,full:1,max:160},
+    {k:"projeto",n:"Edição",t:"select",opts:projOptsC()},
+    {k:"status",n:"Status",t:"select",req:1,opts:["Planejamento","Em aprovação","Aprovada","No ar","Encerrada"],def:"Planejamento"},
+    {k:"inicio",n:"Início",t:"date"},{k:"fim",n:"Fim",t:"date"},
+    {k:"responsavel",n:"Responsável",t:"select",opts:peopleNames(),def:"Tcharles"},
+    {k:"canais",n:"Canais",max:200},{k:"objetivo",n:"Objetivo",full:1,max:240},
+    {k:"linkInscricao",n:"Link de inscrição",t:"url"},
+    {k:"leads",n:"Leads",t:"num"},{k:"inscritos",n:"Inscritos",t:"num"},
+    {k:"aprovadoPor",n:"Aprovado por",t:"select",opts:peopleNames()},
+    {k:"obs",n:"Observações",t:"area",full:1}],
+    note:"Publicação institucional, mudança de preço e compromisso comercial só vão ao ar com aprovação registrada.",
+    validate:d=>({aprovadoPor:["Aprovada","No ar"].includes(d.status)&&!d.aprovadoPor?"Registre quem aprovou antes de colocar no ar.":""})},
+
+  peca:{title:"Peça do calendário editorial", newTitle:"Nova peça", label:p=>p.tema, fields:()=>[
+    {k:"tema",n:"Tema / título",req:1,full:1,max:160},
+    {k:"data",n:"Data de publicação",t:"date",req:1},
+    {k:"canal",n:"Canal",t:"select",req:1,opts:["Instagram feed","Reels","Stories","WhatsApp","E-mail","Site","Anúncio","Outro"]},
+    {k:"formato",n:"Formato",max:60},
+    {k:"projeto",n:"Edição",t:"select",opts:projOptsC()},
+    {k:"campanha",n:"Campanha",t:"select",opts:S.camp.map(c=>c.nome)},
+    {k:"responsavel",n:"Responsável",t:"select",opts:peopleNames(),def:"Tcharles"},
+    {k:"status",n:"Status",t:"select",req:1,opts:APROV_ST,def:"Ideia"},
+    {k:"aprovadoPor",n:"Aprovado por",t:"select",opts:peopleNames()},
+    {k:"linkCriativo",n:"Link do criativo",t:"url"},
+    {k:"copy",n:"Copy",t:"area",full:1},{k:"obs",n:"Observações",t:"area",full:1}],
+    validate:d=>({aprovadoPor:["Aprovada","Publicada"].includes(d.status)&&!d.aprovadoPor?"Registre quem aprovou a peça.":""})},
+
+  inter:{title:"Interação", newTitle:"Registrar interação", label:i=>i.contato, fields:()=>[
+    {k:"contato",n:"Com quem",req:1,full:1,max:120},
+    {k:"data",n:"Data",t:"date",req:1,def:today()},
+    {k:"publico",n:"Público",t:"select",req:1,opts:["Participante","Palestrante","Patrocinador","Parceiro","Voluntário","Fornecedor","Comunidade","Imprensa","Outro"]},
+    {k:"canal",n:"Canal",t:"select",opts:["WhatsApp","Ligação","E-mail","Instagram","Presencial","Reunião online","Outro"]},
+    {k:"projeto",n:"Edição",t:"select",opts:projOptsC()},
+    {k:"responsavel",n:"Quem conversou",t:"select",opts:peopleNames()},
+    {k:"status",n:"Status",t:"select",opts:["Aberta","Concluída"],def:"Aberta"},
+    {k:"resumo",n:"Resumo",t:"area",req:1,full:1},
+    {k:"proximoPasso",n:"Próximo passo",max:200},{k:"dataProximo",n:"Data do próximo passo",t:"date"}]},
+
+  ativ:{title:"Atividade", newTitle:"Nova atividade", label:a=>a.nome, fields:d=>{ const fr=(d&&d.frente)||"RUN"; const f=[
+    {k:"frente",n:"Frente",t:"select",req:1,opts:["RUN","Care","Life"],def:"RUN",rerender:["tipo"]},
+    {k:"nome",n:"Nome",req:1,full:1,max:160},
+    {k:"tipo",n:"Tipo",t:"select",req:1,opts:FRENTE_TIPOS[fr]},
+    {k:"status",n:"Status",t:"select",req:1,opts:["A confirmar","Planejada","Confirmada","Realizada","Cancelada"],def:"Planejada"},
+    {k:"data",n:"Data",t:"date"},{k:"horario",n:"Horário",t:"time"},
+    {k:"local",n:"Local",max:160,full:1},
+    {k:"responsavel",n:"Responsável",t:"select",opts:peopleNames()},
+    {k:"vagas",n:"Vagas",t:"num"},{k:"inscritos",n:"Inscritos",t:"num"},{k:"presentes",n:"Presentes",t:"num"},
+    {k:"custo",n:"Custo previsto (US$)",t:"num"},{k:"parceiros",n:"Parceiros e patrocínios",max:200}];
+    if(fr==="RUN") f.push({k:"percurso",n:"Percurso e distância",max:200,full:1},{k:"nivel",n:"Níveis de participação",max:160},
+      {k:"seguranca",n:"Segurança: autorização do local, hidratação, clima, plano de emergência e contatos de apoio",t:"area",full:1});
+    if(fr==="Care") f.push({k:"beneficiarios",n:"Público beneficiário",max:200,full:1},{k:"meta",n:"Meta",max:160},{k:"arrecadado",n:"Arrecadado (US$)",t:"num"},
+      {k:"doacoesItens",n:"Doações de produtos e distribuição",t:"area",full:1},{k:"prestacao",n:"Prestação de contas e impacto",t:"area",full:1});
+    if(fr==="Life") f.push({k:"alimentacao",n:"Alimentação",max:200,full:1},{k:"orientacoes",n:"Orientações",t:"area",full:1});
+    f.push({k:"obs",n:"Observações",t:"area",full:1}); return f; },
+    note:"Dados de saúde dos participantes não ficam aqui. Dinheiro de campanha beneficente é lançado no Financeiro como doação restrita."},
+
+  metas:{title:"Meta", newTitle:"Nova meta", label:m=>m.titulo, fields:()=>[
+    {k:"titulo",n:"Meta / entrega",req:1,full:1,max:200},
+    {k:"area",n:"Área",t:"select",req:1,opts:AREAS},
+    {k:"horizonte",n:"Horizonte",t:"select",req:1,opts:["30 dias","60 dias","90 dias","Trimestre","Ano"],def:"30 dias"},
+    {k:"responsavel",n:"Responsável",t:"select",opts:peopleNames()},{k:"prazo",n:"Prazo",t:"date"},
+    {k:"indicador",n:"Indicador",max:160},{k:"alvo",n:"Valor-alvo",t:"num"},{k:"atual",n:"Valor atual",t:"num"},
+    {k:"status",n:"Status",t:"select",req:1,opts:["No prazo","Em risco","Atrasada","Concluída"],def:"No prazo"},
+    {k:"obs",n:"Observações",t:"area",full:1}]},
+
+  cons:{title:"Membro do conselho", newTitle:"Novo membro do conselho", label:c=>c.nome, fields:()=>[
+    {k:"nome",n:"Nome",req:1,full:1,max:120},
+    {k:"papel",n:"Papel",t:"select",opts:["Presidente","Conselheiro","Conselheiro consultivo","Secretário","Outro"]},
+    {k:"status",n:"Status",t:"select",req:1,opts:["Proposto","Em validação","Confirmado","Saída em formalização","Encerrado"],def:"Proposto"},
+    {k:"desde",n:"Desde",t:"date"},
+    {k:"responsabilidades",n:"Responsabilidades",t:"area",full:1},{k:"obs",n:"Observações reservadas",t:"area",full:1}]},
+
+  mud:{title:"Mudança de cargo ou acesso", newTitle:"Nova solicitação de mudança", label:m=>m.tipo+(m.pessoa?" · "+m.pessoa:""), fields:()=>[
+    {k:"tipo",n:"Tipo",t:"select",req:1,opts:["Mudança de liderança","Revisão de cargo","Ajuste de acesso","Novo projeto","Outra"]},
+    {k:"pessoa",n:"Pessoa ou área",max:120},{k:"de",n:"Situação atual",max:200},{k:"para",n:"Situação proposta",max:200},
+    {k:"solicitante",n:"Solicitante",t:"select",opts:peopleNames()},{k:"data",n:"Data",t:"date",def:today()},
+    {k:"status",n:"Status",t:"select",req:1,opts:["Em avaliação","Aprovada","Recusada","Concluída"],def:"Em avaliação"},
+    {k:"decisao",n:"Decisão documentada",t:"area",full:1},{k:"justificativa",n:"Justificativa",t:"area",full:1},
+    {k:"acessosAjustados",n:"Acessos ajustados na Central e nas ferramentas",t:"bool",full:1},
+    {k:"comunicado",n:"Comunicação feita",t:"bool",full:1}],
+    note:"Fluxo: avaliação reservada → decisão documentada → ajuste de acessos → comunicação adequada.",
+    validate:d=>({status: d.status==="Concluída"&&(!d.decisao.trim()||!d.acessosAjustados)?"Para concluir, documente a decisão e confirme o ajuste de acessos.":""}),
+    before:(b,id)=>{ if(!id) b.criadoPorId=me||null; }},
+
+  mat:{title:"Material ou equipamento", newTitle:"Novo material ou equipamento", label:m=>m.nome, fields:()=>[
+    {k:"nome",n:"Item",req:1,full:1,max:160},
+    {k:"categoria",n:"Categoria",t:"select",opts:["Equipamento","Som, luz e vídeo","Decoração","Sinalização","Kits e brindes","Material esportivo","Escritório","Outro"]},
+    {k:"estado",n:"Estado",t:"select",req:1,opts:["Novo","Bom","Precisa de reparo","Em manutenção","Descartar"],def:"Bom"},
+    {k:"quantidade",n:"Quantidade",t:"num"},{k:"minimo",n:"Estoque mínimo",t:"num"},
+    {k:"unidade",n:"Unidade",max:30},{k:"local",n:"Onde fica guardado",max:160},
+    {k:"responsavel",n:"Responsável",t:"select",opts:peopleNames()},
+    {k:"ultimaManutencao",n:"Última manutenção",t:"date"},{k:"proximaManutencao",n:"Próxima manutenção",t:"date"},
+    {k:"projeto",n:"Reservado para",t:"select",opts:projOpts()},
+    {k:"obs",n:"Observações",t:"area",full:1}]},
 };
 
 function optHtml(opts,val){ return (opts||[]).map(o=>{const [v,n]=Array.isArray(o)?o:[o,o]; return `<option value="${esc(v)}" ${String(v)===String(val??"")?"selected":""}>${esc(n)}</option>`;}).join(""); }
@@ -370,8 +598,8 @@ function fieldHtml(f,v){
   if(f.t==="select"){ let opts=f.opts||[]; if(v&&!opts.some(o=>(Array.isArray(o)?o[0]:o)===v)) opts=opts.concat([v]); input=`<select id="${id}" name="${f.k}">${f.req&&f.def?"":'<option value="">Escolha…</option>'}${optHtml(opts,v)}</select>`; }
   else if(f.t==="area") input=`<textarea id="${id}" name="${f.k}" rows="3" maxlength="4000">${esc(v)}</textarea>`;
   else if(f.t==="bool") return `<div class="${cls}"><input type="checkbox" id="${id}" name="${f.k}" ${v?"checked":""}><label for="${id}" style="font-weight:500;color:var(--fg)">${esc(f.n)}</label></div>`;
-  else { const t={num:"number",date:"date",email:"email",tel:"tel",url:"url"}[f.t]||"text";
-    input=`<input id="${id}" name="${f.k}" type="${t}" ${f.t==="num"?`min="0" step="${f.max100?1:0.01}" inputmode="decimal"`:""} ${f.max?`maxlength="${f.max}"`:""} value="${esc(v)}">`; }
+  else { const t={num:"number",date:"date",email:"email",tel:"tel",url:"url",time:"time"}[f.t]||"text"; const dl=f.list?`<datalist id="${id}-dl">${optHtml(f.list(),"")}</datalist>`:"";
+    input=`<input id="${id}" name="${f.k}" type="${t}" ${f.t==="num"?`min="0" step="${f.max100?1:0.01}" inputmode="decimal"`:""} ${f.max?`maxlength="${f.max}"`:""} value="${esc(v)}" ${f.list?`list="${id}-dl"`:""}>${dl}`; }
   return `<div class="${cls}"><label for="${id}">${esc(f.n)}${f.req?" *":""}</label>${input}${f.warn?`<div class="note" data-warn="${f.k}" hidden></div>`:""}${f.hint?`<span class="hint">${esc(f.hint)}</span>`:""}<span class="err"></span></div>`;
 }
 function closeSheet(){ const o=$("#overlay"); o.hidden=true; o.innerHTML=""; }
@@ -392,18 +620,20 @@ function openForm(ent, id, preset){
     <fieldset ${ro?"disabled":""} style="border:0;padding:0;margin:0;min-width:0"><div class="grid2" id="ent-fields">${fields.map(f=>fieldHtml(f,cur[f.k])).join("")}</div></fieldset>
     ${E.note?`<p class="muted" style="margin:0;font-size:12px">${esc(E.note)}</p>`:""}
     ${apprBtns?`<div class="toolbar">${apprBtns}</div>`:""}
+    ${E.extra&&id?E.extra(o):""}
     <div class="actions"><div>${id&&!ro?'<button type="button" class="danger" id="ent-del">Excluir</button>':""}</div>
       <div class="r"><button type="button" data-close>${ro?"Fechar":"Cancelar"}</button>${ro?"":`<button class="primary" type="submit">${id?"Salvar alterações":"Cadastrar"}</button>`}</div></div>
   </form>`;
   ov.hidden=false;
   const f=$("#ent-form");
-  const read=()=>{ const d={}; E.fields(cur).forEach(x=>{ const el=f.elements[x.k]; if(!el) return; d[x.k]= x.t==="bool"?el.checked:el.value; }); return d; };
-  const warns=()=>E.fields(cur).forEach(x=>{ if(!x.warn) return; const w=f.querySelector(`[data-warn="${x.k}"]`); const m=x.warn(f.elements[x.k].value); w.hidden=!m; if(m) w.textContent=m; });
+  const fe=k=>f.querySelector(`[name="${k}"]`);
+  const read=()=>{ const d={}; E.fields(cur).forEach(x=>{ const el=fe(x.k); if(!el) return; d[x.k]= x.t==="bool"?el.checked:el.value; }); return d; };
+  const warns=()=>E.fields(cur).forEach(x=>{ if(!x.warn) return; const w=f.querySelector(`[data-warn="${x.k}"]`); const m=x.warn(fe(x.k).value); w.hidden=!m; if(m) w.textContent=m; });
   warns();
   f.addEventListener("change",e=>{
     const x=E.fields(cur).find(y=>y.k===e.target.name); if(!x) return;
-    if(x.fill){ const p=x.fill(e.target.value); if(p) Object.entries(p).forEach(([k,v])=>{ if(f.elements[k]&&f.elements[k].value==="") f.elements[k].value=v; }); }
-    if(x.rerender){ cur={...cur,...read()}; const cat=f.elements.categoria; const opts=E.fields(cur).find(y=>y.k==="categoria").opts; cat.innerHTML='<option value="">Escolha…</option>'+optHtml(opts,""); }
+    if(x.fill){ const p=x.fill(e.target.value); if(p) Object.entries(p).forEach(([k,v])=>{ if(fe(k)&&fe(k).value==="") fe(k).value=v; }); }
+    if(x.rerender){ cur={...cur,...read()}; (Array.isArray(x.rerender)?x.rerender:["categoria"]).forEach(k=>cur[k]=""); $("#ent-fields").innerHTML=E.fields(cur).map(y=>fieldHtml(y,cur[y.k])).join(""); fe(x.k)?.focus(); }
     warns();
   });
   if(!ro) f.querySelector("input,select,textarea")?.focus();
@@ -421,7 +651,7 @@ function openForm(ent, id, preset){
     });
     Object.entries(E.validate?E.validate(d,id,o):{}).forEach(([k,m])=>{ if(m&&!errs[k]) errs[k]=m; });
     f.querySelectorAll(".field").forEach(el=>{el.classList.remove("bad"); const e=el.querySelector(".err"); if(e) e.textContent="";});
-    Object.entries(errs).forEach(([k,m])=>{ const el=f.elements[k]?.closest(".field"); if(el){ el.classList.add("bad"); el.querySelector(".err").textContent=m; } });
+    Object.entries(errs).forEach(([k,m])=>{ const el=fe(k)?.closest(".field"); if(el){ el.classList.add("bad"); el.querySelector(".err").textContent=m; } });
     if(Object.keys(errs).length){ f.querySelector(".bad input,.bad select,.bad textarea")?.focus(); return; }
     const body={}; fl.forEach(x=>{ const v=d[x.k]; body[x.k]= x.t==="num"?(v===""?null:+v) : x.t==="bool"?!!v : String(v).trim(); });
     body.atualizadoEm=now();
@@ -549,6 +779,14 @@ function vPainel(){
     ${isAdmin?`<a class="stat ${pend.length?"alert":""}" href="#aprovacoes"><span class="eyebrow">Aguardando aprovação</span><b>${pend.length}</b><small>${usd(pend.reduce((a,l)=>a+lval(l),0))} em despesas</small></a>
     <a class="stat" href="#financeiro"><span class="eyebrow">Saldo realizado</span><b>${usd(fin.recR-fin.despR)}</b><small>Recebido ${usd(fin.recR)} · pago ${usd(fin.despR)}</small></a>`:""}
   </section>
+  <section class="stats" aria-label="Eventos, marketing e frentes">
+    <a class="stat" href="#palestrantes"><span class="eyebrow">Palestrantes confirmados</span><b>${S.pal.filter(p=>p.confirmacao==="Confirmado").length}</b><small>${S.pal.filter(p=>p.confirmacao==="Em avaliação").length} em avaliação</small></a>
+    <a class="stat" href="#staff"><span class="eyebrow">Monitores${next?" · "+esc(next.nome):""}</span><b>${next?S.staff.filter(s=>s.projeto===next.id).length:0}${next&&next.monitoresNecessarios?" / "+next.monitoresNecessarios:""}</b><small>${next&&next.monitoresNecessarios?"escalados / necessários":"escalados · defina a necessidade no projeto"}</small></a>
+    <a class="stat" href="#patrocinios"><span class="eyebrow">Patrocínios</span><b>${S.patro.filter(p=>["Fechado","Pago"].includes(p.status)).length} fechados</b><small>${S.patro.filter(p=>["Prospectado","Proposta enviada","Negociação"].includes(p.status)).length} pendentes</small></a>
+    <a class="stat" href="#campanhas"><span class="eyebrow">Campanhas no ar</span><b>${S.camp.filter(c=>c.status==="No ar").length}</b><small>${S.peca.filter(p=>p.status==="Em aprovação").length} peças em aprovação</small></a>
+    <a class="stat" href="#run"><span class="eyebrow">RUN · Care · Life</span><b>${["RUN","Care","Life"].map(f=>S.ativ.filter(a=>a.frente===f&&a.data>=t&&a.status!=="Cancelada").length).join(" · ")}</b><small>próximas atividades por frente</small></a>
+    <a class="stat ${S.ocor.some(o=>o.status==="Aberta")?"alert":""}" href="#ocorrencias"><span class="eyebrow">Ocorrências abertas</span><b>${S.ocor.filter(o=>o.status==="Aberta").length}</b><small>Eventos</small></a>
+  </section>
   <div class="two">
     <div class="panel"><span class="eyebrow">Pendências críticas e atrasadas</span><div class="list">${[...new Set([...late,...crit])].sort((a,b)=>(a.prazo||"9")<(b.prazo||"9")?-1:1).slice(0,8).map(taskLi).join("")||'<span class="muted">Nenhuma pendência crítica ou atrasada.</span>'}</div></div>
     <div class="panel"><span class="eyebrow">Próximos 14 dias</span><div class="list">${agendaItems(14).slice(0,8).map(agLi).join("")||'<span class="muted">Nada marcado nos próximos 14 dias.</span>'}</div></div>
@@ -622,13 +860,22 @@ function agendaItems(days){
     S.lanc.forEach(l=>{ if(["Previsto","Contratado","Pendente"].includes(l.status)&&l.vencimento&&l.vencimento<=end) it.push({d:l.vencimento,n:(l.tipo==="Receita"?"Receber: ":"Pagar: ")+l.descricao,c:usd(lval(l))+" · "+projName(l.projeto),k:"Financeiro",o:`lanc:${l.id}`,late:l.vencimento<t}); });
     S.reun.forEach(r=>{ if(r.data&&r.data>=t&&r.data<=end) it.push({d:r.data,n:r.titulo,c:r.tipo||"",k:"Reunião",o:`reun:${r.id}`}); });
   }
+  S.ativ.forEach(a=>{ if(a.data&&a.data>=t&&a.data<=end&&a.status!=="Cancelada") it.push({d:a.data,n:a.nome,c:(a.horario||"")+" "+(a.local||""),k:a.frente,o:`ativ:${a.id}`}); });
+  S.pal.forEach(p=>{ if(p.data&&p.data>=t&&p.data<=end&&p.confirmacao!=="Cancelado") it.push({d:p.data,n:"Palco: "+p.nome,c:(p.horario||"")+" "+(p.tema||""),k:"Palestrante",o:`pal:${p.id}`}); });
+  S.logi.forEach(l=>{ if(l.data&&l.data<=end&&!["Entregue","Confirmado"].includes(l.status)) it.push({d:l.data,n:"Logística: "+l.item,c:projName(l.projeto)+" · "+(l.responsavel||"sem responsável"),k:"Logística",o:`logi:${l.id}`,late:l.data<t}); });
+  S.peca.forEach(p=>{ if(p.data&&p.data<=end&&p.status!=="Publicada") it.push({d:p.data,n:"Publicar: "+p.tema,c:(p.canal||"")+" · "+(p.status||""),k:"Marketing",o:`peca:${p.id}`,late:p.data<t}); });
+  S.camp.forEach(c=>{ if(c.inicio&&c.inicio>=t&&c.inicio<=end) it.push({d:c.inicio,n:"Início da campanha: "+c.nome,c:c.canais||"",k:"Marketing",o:`camp:${c.id}`}); });
+  S.inter.forEach(i=>{ if(i.status!=="Concluída"&&i.dataProximo&&i.dataProximo<=end) it.push({d:i.dataProximo,n:"Retorno: "+i.contato,c:i.proximoPasso||"",k:"Interação",o:`inter:${i.id}`,late:i.dataProximo<t}); });
+  S.patro.forEach(p=>{ if(!["Fechado","Pago","Perdido"].includes(p.status)&&p.followup&&p.followup<=end) it.push({d:p.followup,n:"Patrocínio: "+p.empresa,c:p.proximoPasso||"",k:"Comercial",o:`patro:${p.id}`,late:p.followup<t}); });
+  S.mat.forEach(m=>{ if(m.proximaManutencao&&m.proximaManutencao<=end) it.push({d:m.proximaManutencao,n:"Manutenção: "+m.nome,c:m.local||"",k:"Manutenção",o:`mat:${m.id}`,late:m.proximaManutencao<t}); });
+  S.metas.forEach(m=>{ if(m.prazo&&m.prazo<=end&&m.status!=="Concluída") it.push({d:m.prazo,n:"Meta: "+m.titulo,c:m.area+" · "+(m.responsavel||""),k:"Direção",o:`metas:${m.id}`,late:m.prazo<t}); });
   return it.sort((a,b)=>a.d<b.d?-1:a.d>b.d?1:0);
 }
 const agLi = i => `<div class="li click" ${i.o.startsWith("proj:")?`data-proj="${esc(i.o.slice(5))}"`:`data-open="${esc(i.o)}"`}><div><div class="n">${esc(i.n)}</div><div class="c">${esc(i.k)} · ${esc(i.c)}</div></div>${i.late?`<span class="chip late">Atrasado · ${fmtDate(i.d)}</span>`:`<span class="chip">${fmtDate(i.d)}</span>`}</div>`;
 function vAgenda(){
   const k=flt.a_k||"";
   const items=agendaItems(90).filter(i=>!k||i.k.startsWith(k));
-  const kinds=["Projeto","Tarefa","Comercial"].concat(isAdmin?["Financeiro","Reunião"]:[]);
+  const kinds=["Projeto","Tarefa","Comercial","Palestrante","Logística","Marketing","Interação","RUN","Care","Life","Manutenção","Direção"].concat(isAdmin?["Financeiro","Reunião"]:[]);
   return toolbar([sel("a_k","Tipo",kinds)],"") + (items.length?`<div class="panel"><div class="list">${items.map(agLi).join("")}</div></div>`:`<div class="state"><h2>Nada nos próximos 90 dias</h2><span>Eventos, prazos de tarefas, follow-ups${isAdmin?", vencimentos e reuniões":""} aparecem aqui em ordem de data. Horários seguem o fuso de cada projeto.</span></div>`);
 }
 
@@ -745,12 +992,198 @@ function vTime(){
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${p.status&&p.status!=="Ativo"?statusChip(p.status):""}${nOpen!=null?`<span class="chip">${nOpen} no funil</span>`:""}${nTask?`<span class="chip">${nTask} tarefas</span>`:""}${canWrite?`<button class="ghost sm" data-editp="${esc(p.id)}">Editar</button>`:""}</div></div>`;}).join("")||'<span class="muted">A definir</span>'}</div></div>`).join("")}</div>`;
 }
 
-const RENDER = {painel:vPainel,projetos:vProjetos,tarefas:vTarefas,agenda:vAgenda,funil:vFunil,followups:vFollowups,financeiro:vFinanceiro,aprovacoes:vAprovacoes,fornecedores:vFornecedores,documentos:vDocumentos,reunioes:vReunioes,time:vTime};
+/* ---------- Vistas genéricas de lista ---------- */
+function listView(ent, o){
+  const p=o.key, q=flt[p+"_q"]||"";
+  let rows=S[ent].filter(r=>(!o.pre||o.pre(r))&&match(r,o.search,q)&&(o.filters||[]).every(([k])=>!flt[p+"_"+k]||String(r[k])===flt[p+"_"+k]));
+  if(o.sort) rows=rows.slice().sort(o.sort);
+  const tb=toolbar([search(p+"_q")].concat((o.filters||[]).map(([k,n,opts])=>sel(p+"_"+k,n,typeof opts==="function"?opts():opts))).concat(o.tools||[]),
+    (o.btns||"")+newBtn(ent,o.btn,RESTRICTED.has(ent)));
+  const all=S[ent].filter(r=>!o.pre||o.pre(r));
+  return (o.top?o.top(rows,all):"")+tb+(o.intro?`<p class="muted" style="margin:0">${o.intro}</p>`:"")+
+    table(o.cols,rows,ent,all.length?["Nenhum registro com esses filtros","Limpe os filtros para ver todos."]:o.empty);
+}
+const byDate=k=>(a,b)=>(a[k]||"9999")<(b[k]||"9999")?-1:(a[k]||"9999")>(b[k]||"9999")?1:0;
+const byDateDesc=k=>(a,b)=>(b[k]||"")<(a[k]||"")?-1:(b[k]||"")>(a[k]||"")?1:0;
+const tdText=(k,n=120)=>r=>esc((r[k]||"—").slice(0,n))+((r[k]||"").length>n?"…":"");
+const statRow=items=>`<section class="stats">${items.map(([e,b,s,alert])=>`<div class="stat ${alert?"alert":""}"><span class="eyebrow">${esc(e)}</span><b>${b}</b><small>${esc(s||"")}</small></div>`).join("")}</section>`;
+const hm=s=>{ if(!s) return null; const [h,m]=s.split(":").map(Number); return h*60+m; };
+const fmtMin=n=>n==null?"—":(Math.floor(n/60)?Math.floor(n/60)+"h":"")+(n%60?String(n%60).padStart(Math.floor(n/60)?2:1,"0")+"min":(Math.floor(n/60)?"":"0min"));
+
+function vPalestrantes(){
+  const conf=S.pal.filter(p=>p.confirmacao==="Confirmado").length;
+  return listView("pal",{key:"pl",search:["nome","tema","bio","responsavel"],btn:"Nova participação",
+    filters:[["projeto","Edição",projOpts],["categoria","Participação",PAL_CAT],["confirmacao","Confirmação",PAL_CONF]],
+    sort:(a,b)=>a.nome.localeCompare(b.nome),
+    top:()=>statRow([["Confirmados",conf,"palestrantes e participações"],["Em avaliação",S.pal.filter(p=>p.confirmacao==="Em avaliação").length,"aguardando curadoria"],["Sem autorização de imagem",S.pal.filter(p=>p.confirmacao==="Confirmado"&&!p.autorizacaoImagem).length,"entre os confirmados",S.pal.some(p=>p.confirmacao==="Confirmado"&&!p.autorizacaoImagem)],["Valor a definir",S.pal.filter(p=>p.valor&&p.naturezaValor==="A definir").length,"natureza do valor pendente"]]),
+    cols:[{n:"Nome",f:p=>`<b>${esc(p.nome)}</b>`},{n:"Participação",k:"categoria"},{n:"Edição",f:p=>esc(projName(p.projeto)==="—"?"A definir":projName(p.projeto))},{n:"Tema",k:"tema"},{n:"Data",f:p=>p.data?fmtDate(p.data)+(p.horario?" "+esc(p.horario):""):"—"},{n:"Convite",f:p=>statusChip(p.convite)},{n:"Confirmação",f:p=>statusChip(p.confirmacao)},{n:"Valor",f:p=>p.valor?usd(p.valor)+`<div class="muted" style="font-size:12px">${esc(p.naturezaValor)}</div>`:esc(p.naturezaValor||"—")},{n:"Relacionamento",k:"responsavel"}],
+    empty:["Nenhuma participação de palco cadastrada","Cadastre palestrantes, apresentadores e testemunhos. Tudo começa “Em avaliação” até a curadoria confirmar."]});
+}
+
+const ROTEIROS={executivo:["Executivo",["inicio","fim","dur","tipo","titulo","quem","objetivo"]],producao:["Produção",["inicio","fim","dur","titulo","quem","tecnico","recursos","transicao","obsProducao"]],apresentador:["Apresentador",["inicio","dur","titulo","quem","falaApresentador","transicao"]],tecnico:["Técnico",["inicio","fim","titulo","tecnico","recursos","transicao"]],staff:["Staff (simplificado)",["inicio","fim","titulo","instrucoesStaff"]]};
+const PCOL={inicio:"Início",fim:"Fim",dur:"Duração",tipo:"Tipo",titulo:"Bloco",quem:"Palestrante / facilitador",objetivo:"Objetivo",tecnico:"Resp. técnico",recursos:"Recursos",transicao:"Transição",obsProducao:"Obs. de produção",falaApresentador:"Fala do apresentador",instrucoesStaff:"Instruções"};
+function vProgramacao(){
+  if(!S.projetos.length) return `<div class="state"><h2>Cadastre um projeto primeiro</h2><span>A programação é montada por edição.</span></div>`;
+  const pr=flt.pg_pr||S.projetos.slice().sort(byDate("data"))[0].id, ver=flt.pg_v||"executivo";
+  const blocks=S.prog.filter(b=>b.projeto===pr).sort((a,b)=>(a.inicio||"")<(b.inicio||"")?-1:1);
+  let total=0, issues=[];
+  blocks.forEach((b,i)=>{ b._dur=hm(b.fim)-hm(b.inicio); if(b._dur>0) total+=b._dur; const n=blocks[i+1];
+    if(n&&hm(n.inicio)<hm(b.fim)){ b._conf=1; n._conf=1; issues.push(`“${b.titulo}” termina às ${b.fim}, depois do início de “${n.titulo}” (${n.inicio}).`); }
+    else if(n&&hm(n.inicio)>hm(b.fim)) b._gap=hm(n.inicio)-hm(b.fim); });
+  const p=S.projetos.find(x=>x.id===pr); const span=blocks.length?hm(blocks[blocks.length-1].fim)-hm(blocks[0].inicio):0;
+  const cols=ROTEIROS[ver][1];
+  return toolbar([`<label>Edição<select data-flt="pg_pr">${optHtml(projOpts(),pr)}</select></label>`,`<label>Versão do roteiro<select data-flt="pg_v">${optHtml(Object.entries(ROTEIROS).map(([k,v])=>[k,v[0]]),ver)}</select></label>`],
+    canWrite?`<button class="primary" data-new="prog" data-preset-projeto="${esc(pr)}">Novo bloco</button>`:"") +
+    statRow([["Blocos",blocks.length,p?p.nome:""],["Duração total",fmtMin(span),blocks.length?`${blocks[0].inicio} às ${blocks[blocks.length-1].fim}`:"sem blocos"],["Conflitos",issues.length,issues.length?"blocos sobrepostos":"nenhum",issues.length],["Palestrantes no roteiro",new Set(blocks.map(b=>b.quem).filter(Boolean)).size,"pessoas diferentes"]]) +
+    (issues.length?`<div class="note">${issues.map(esc).join("<br>")}</div>`:"") +
+    (blocks.length?`<div class="table-scroll"><table><thead><tr>${cols.map(c=>`<th>${esc(PCOL[c])}</th>`).join("")}</tr></thead><tbody>${blocks.map(b=>`<tr class="click" tabindex="0" data-open="prog:${esc(b.id)}">${cols.map(c=>`<td class="${["inicio","fim","dur"].includes(c)?"num":""}">${c==="dur"?fmtMin(b._dur>0?b._dur:null):c==="titulo"?`<b>${esc(b.titulo)}</b>${b._conf?' <span class="chip bad">Conflito</span>':""}`:c==="tipo"?esc(b.tipo):esc(b[c]||"—")}</td>`).join("")}</tr>${b._gap?`<tr><td colspan="${cols.length}" class="muted" style="font-size:12px;background:var(--sunk)">Intervalo livre de ${fmtMin(b._gap)}</td></tr>`:""}`).join("")}</tbody></table></div>`
+    :`<div class="state"><h2>Nenhum bloco nesta edição</h2><span>Monte abertura, palestras, transições, dinâmicas, intervalos, almoço, pitch e encerramento. A Central soma a duração e avisa sobreposições. A programação de New Jersey serve de aprendizado, não de cronograma fixo.</span></div>`);
+}
+function vDinamicas(){
+  return listView("din",{key:"dn",search:["nome","objetivo","mensagem","facilitador"],btn:"Nova dinâmica",sort:(a,b)=>a.nome.localeCompare(b.nome),
+    intro:"Biblioteca reutilizável. Abra uma dinâmica para copiá-la para a programação de qualquer edição.",
+    cols:[{n:"Dinâmica",f:d=>`<b>${esc(d.nome)}</b>`},{n:"Objetivo",f:tdText("objetivo",140)},{n:"Duração",f:d=>d.duracao?d.duracao+" min":"—"},{n:"Facilitador",k:"facilitador"},{n:"Monitores",f:d=>d.monitores??"—"},{n:"Custo",f:d=>d.custo!=null?usd(d.custo):"—"},{n:"Ficha",f:d=>["passos","materiais","encerramento"].every(k=>d[k])?'<span class="chip good">Completa</span>':'<span class="chip pend">A completar</span>'}],
+    empty:["Nenhuma dinâmica na biblioteca","Cadastre dinâmicas com objetivo, passo a passo, materiais e monitores necessários."]});
+}
+function vLogistica(){
+  const pr=flt.lg_projeto||"";
+  const scope=S.logi.filter(l=>!pr||l.projeto===pr);
+  const gen = pr&&canWrite&&!S.logi.some(l=>l.projeto===pr) ? `<button data-genlog="${esc(pr)}">Gerar lista padrão</button>` : "";
+  return listView("logi",{key:"lg",search:["item","obs","fornecedor"],btn:"Novo item",btns:gen,
+    filters:[["projeto","Edição",projOpts],["categoria","Categoria",LOG_CAT],["status","Status",LOG_ST],["responsavel","Responsável",peopleNames]],
+    sort:(a,b)=>LOG_CAT.indexOf(a.categoria)-LOG_CAT.indexOf(b.categoria)||byDate("data")(a,b),
+    top:()=>statRow([["Itens",scope.length,pr?projName(pr):"todas as edições"],["Confirmados ou entregues",scope.filter(l=>["Confirmado","Entregue"].includes(l.status)).length,`de ${scope.length}`],["A providenciar",scope.filter(l=>["A providenciar","Solicitado"].includes(l.status)).length,""],["Com problema",scope.filter(l=>l.status==="Problema").length,"precisam de ação",scope.some(l=>l.status==="Problema")]]),
+    intro: pr&&!scope.length?"Escolha “Gerar lista padrão” para criar os itens de produção do briefing: local, layout, acessibilidade, estacionamento, alimentação, técnica, sinalização, kits, segurança, montagem, ensaio e desmontagem.":"",
+    cols:[{n:"Categoria",k:"categoria"},{n:"Item",f:l=>`<b>${esc(l.item)}</b>`},{n:"Edição",f:l=>esc(projName(l.projeto))},{n:"Fornecedor",k:"fornecedor"},{n:"Responsável",k:"responsavel"},{n:"Data",f:l=>l.data?dateChip(l.data,!["Entregue","Confirmado"].includes(l.status))+(l.horario?" "+esc(l.horario):""):"—"},{n:"Qtd.",f:l=>l.quantidade??"—"},{n:"Status",f:l=>statusChip(l.status==="Entregue"?"Concluída":l.status==="Problema"?"Bloqueada":l.status).replace(/>[^<]*</,">"+esc(l.status)+"<")}],
+    empty:["Nenhum item de logística","Filtre uma edição e gere a lista padrão, ou cadastre itens avulsos."]});
+}
+function vStaff(){
+  const pr=flt.sf_projeto||(S.projetos.slice().sort(byDate("data")).find(p=>p.data&&p.data>=today())||{}).id||"";
+  if(!flt.sf_projeto&&pr) flt.sf_projeto=pr;
+  const p=S.projetos.find(x=>x.id===pr), sc=S.staff.filter(s=>!pr||s.projeto===pr);
+  const conf=sc.filter(s=>s.confirmacao==="Confirmado").length, need=p&&p.monitoresNecessarios;
+  return listView("staff",{key:"sf",search:["pessoa","funcao","obs"],btn:"Escalar pessoa",
+    filters:[["projeto","Edição",projOpts],["funcao","Função",FUNCOES],["confirmacao","Confirmação",["Pendente","Confirmado","Ausente","Substituído"]]],
+    sort:(a,b)=>FUNCOES.indexOf(a.funcao)-FUNCOES.indexOf(b.funcao)||((a.inicio||"")<(b.inicio||"")?-1:1),
+    top:()=>statRow([["Escalados",sc.length,need?`necessários: ${need}`:"defina a necessidade no projeto",need&&sc.length<need],["Confirmados",conf,`de ${sc.length}`],["Pendentes",sc.filter(s=>s.confirmacao==="Pendente").length,"aguardando confirmação"],["Ausências",sc.filter(s=>s.confirmacao==="Ausente").length,"substituir",sc.some(s=>s.confirmacao==="Ausente"&&!s.substituto)],["Sem briefing",sc.filter(s=>s.confirmacao==="Confirmado"&&!s.briefing).length,"entre os confirmados"]]),
+    intro:"Liderança do staff: Hellen. Escale, confirme presença, registre briefing, check-in, check-out e substituições.",
+    cols:[{n:"Pessoa",f:s=>`<b>${esc(s.pessoa)}</b>`},{n:"Função",k:"funcao"},{n:"Edição",f:s=>esc(projName(s.projeto))},{n:"Turno",f:s=>esc([s.turno,s.inicio&&s.fim?s.inicio+"–"+s.fim:""].filter(Boolean).join(" · ")||"—")},{n:"Responsável",k:"lider"},{n:"Confirmação",f:s=>statusChip(s.confirmacao==="Confirmado"?"Concluída":s.confirmacao==="Ausente"?"Bloqueada":"Pendente").replace(/>[^<]*</,">"+esc(s.confirmacao)+"<")},{n:"Briefing",f:s=>s.briefing?'<span class="chip good">Sim</span>':'<span class="chip">Não</span>'},{n:"Check-in / out",f:s=>esc([s.checkin,s.checkout].filter(Boolean).join(" → ")||"—")}],
+    empty:["Ninguém escalado ainda","Escale monitores e voluntários por função e turno. Henrique e a esposa estão no Time como voluntários."]});
+}
+function vGuias(){
+  return listView("guias",{key:"gd",search:["funcao","responsabilidades","instrucoes"],btn:"Novo guia",sort:(a,b)=>FUNCOES.indexOf(a.funcao)-FUNCOES.indexOf(b.funcao),
+    intro:"Um manual por função: responsabilidades, horários, dress code, instruções, limites, emergência, a quem escalar e checklist.",
+    cols:[{n:"Função",f:g=>`<b>${esc(g.funcao)}</b>`},{n:"Responsabilidades",f:tdText("responsabilidades",140)},{n:"Dress code",k:"dressCode"},{n:"Escalar para",k:"escalonamento"},{n:"Guia",f:g=>["responsabilidades","instrucoes","emergencia","checklist"].every(k=>g[k])?'<span class="chip good">Completo</span>':'<span class="chip pend">A preencher</span>'}],
+    empty:["Nenhum guia cadastrado","Crie um guia por função do staff."]});
+}
+function vOcorrencias(){
+  return listView("ocor",{key:"oc",search:["descricao","acao"],btn:"Registrar ocorrência",filters:[["projeto","Edição",projOpts],["status","Status",["Aberta","Resolvida"]]],sort:byDateDesc("data"),
+    top:(r,all)=>statRow([["Abertas",all.filter(o=>o.status==="Aberta").length,"precisam de ação",all.some(o=>o.status==="Aberta")],["Resolvidas",all.filter(o=>o.status==="Resolvida").length,""]]),
+    cols:[{n:"Data",f:o=>fmtDate(o.data)+(o.hora?" "+esc(o.hora):"")},{n:"Tipo",k:"tipo"},{n:"Edição",f:o=>esc(projName(o.projeto))},{n:"O que aconteceu",f:tdText("descricao",140)},{n:"Registrado por",k:"registradoPor"},{n:"Status",f:o=>statusChip(o.status==="Resolvida"?"Concluída":"Pendente").replace(/>[^<]*</,">"+esc(o.status)+"<")}],
+    empty:["Nenhuma ocorrência registrada","No dia do evento, registre atrasos, ausências, problemas técnicos e incidentes."]});
+}
+function vPatrocinios(){
+  const all=S.patro, fech=all.filter(p=>["Fechado","Pago"].includes(p.status)), pend=all.filter(p=>["Prospectado","Proposta enviada","Negociação"].includes(p.status));
+  const sum=a=>a.reduce((s,p)=>s+(+p.valor||0),0);
+  return listView("patro",{key:"pt",search:["empresa","contato","beneficios","historico"],btn:"Novo patrocínio",
+    filters:[["projeto","Edição",projOpts],["cota","Cota",["Bronze","Prata","Ouro","Master","Apoio","Outra"]],["status","Status",["Prospectado","Proposta enviada","Negociação","Fechado","Pago","Perdido"]]],sort:byDate("followup"),
+    top:()=>statRow([["Fechados",usd(sum(fech)),`${fech.length} patrocínios`],["Recebidos",usd(sum(all.filter(p=>p.status==="Pago"))),"só os marcados como pagos"],["Em negociação",usd(sum(pend)),`${pend.length} empresas`],["Logos pendentes",fech.filter(p=>!p.logoRecebido).length,"entre os fechados",fech.some(p=>!p.logoRecebido)]]),
+    cols:[{n:"Empresa",f:p=>`<b>${esc(p.empresa)}</b>`},{n:"Edição",f:p=>esc(projName(p.projeto))},{n:"Cota",k:"cota"},{n:"Valor",r:1,f:p=>p.valor!=null?usd(p.valor):"—"},{n:"Status",f:p=>statusChip(p.status==="Pago"?"Pago":p.status==="Perdido"?"Cancelado":p.status==="Fechado"?"Aprovada":"Pendente").replace(/>[^<]*</,">"+esc(p.status)+"<")},{n:"Responsável",k:"responsavel"},{n:"Follow-up",f:p=>["Fechado","Pago","Perdido"].includes(p.status)?"—":dateChip(p.followup)||"—"},{n:"Entregas",f:p=>[p.logoRecebido?"logo":"",p.stand?"stand":"",p.palcoAutorizado?"palco":""].filter(Boolean).join(" · ")||"—"}],
+    empty:["Nenhum patrocínio cadastrado","Registre empresas prospectadas, cotas, benefícios, contratos e entregas."]});
+}
+function vCampanhas(){
+  return listView("camp",{key:"cp",search:["nome","objetivo","canais"],btn:"Nova campanha",filters:[["projeto","Edição",projOptsC],["status","Status",["Planejamento","Em aprovação","Aprovada","No ar","Encerrada"]]],sort:byDate("inicio"),
+    top:(r,all)=>{ const L=all.reduce((s,c)=>s+(+c.leads||0),0), I=all.reduce((s,c)=>s+(+c.inscritos||0),0); return statRow([["No ar",all.filter(c=>c.status==="No ar").length,"campanhas ativas"],["Em aprovação",all.filter(c=>c.status==="Em aprovação").length,"aguardando aprovação"],["Leads",L,"somados"],["Inscritos",I,L?`conversão ${Math.round(I/L*100)}%`:"conversão —"]]); },
+    cols:[{n:"Campanha",f:c=>`<b>${esc(c.nome)}</b>`},{n:"Edição",f:c=>esc(projName(c.projeto))},{n:"Período",f:c=>esc([fmtDate(c.inicio),fmtDate(c.fim)].filter(Boolean).join(" → ")||"—")},{n:"Canais",k:"canais"},{n:"Responsável",k:"responsavel"},{n:"Leads",r:1,f:c=>c.leads??"—"},{n:"Inscritos",r:1,f:c=>c.inscritos??"—"},{n:"Conversão",r:1,f:c=>c.leads?Math.round((+c.inscritos||0)/c.leads*100)+"%":"—"},{n:"Status",f:c=>statusChip(c.status==="No ar"?"Em execução":c.status==="Aprovada"?"Aprovada":c.status==="Em aprovação"?"Aguardando":c.status).replace(/>[^<]*</,">"+esc(c.status)+"<")}],
+    empty:["Nenhuma campanha cadastrada","Planeje campanhas por edição com canais, período, links de inscrição e indicadores."]});
+}
+function vEditorial(){
+  return listView("peca",{key:"ed",search:["tema","copy","formato"],btn:"Nova peça",filters:[["canal","Canal",["Instagram feed","Reels","Stories","WhatsApp","E-mail","Site","Anúncio","Outro"]],["status","Status",APROV_ST],["responsavel","Responsável",peopleNames]],sort:byDate("data"),
+    top:(r,all)=>statRow([["Próximos 7 dias",all.filter(p=>p.data>=today()&&p.data<=addDays(7)).length,"peças programadas"],["Em aprovação",all.filter(p=>p.status==="Em aprovação").length,""],["Atrasadas",all.filter(p=>p.data<today()&&p.status!=="Publicada").length,"data passou sem publicar",all.some(p=>p.data<today()&&p.status!=="Publicada")],["Publicadas",all.filter(p=>p.status==="Publicada").length,""]]),
+    cols:[{n:"Data",f:p=>p.status==="Publicada"?fmtDate(p.data):dateChip(p.data)},{n:"Peça",f:p=>`<b>${esc(p.tema)}</b>`},{n:"Canal",k:"canal"},{n:"Formato",k:"formato"},{n:"Campanha",k:"campanha"},{n:"Responsável",k:"responsavel"},{n:"Status",f:p=>statusChip(p.status==="Publicada"?"Concluída":p.status==="Aprovada"?"Aprovada":p.status==="Em aprovação"?"Aguardando":p.status).replace(/>[^<]*</,">"+esc(p.status)+"<")}],
+    empty:["Calendário editorial vazio","Programe peças por data e canal, com copy, criativo e aprovação."]});
+}
+function vInteracoes(){
+  return listView("inter",{key:"it",search:["contato","resumo","proximoPasso"],btn:"Registrar interação",filters:[["publico","Público",["Participante","Palestrante","Patrocinador","Parceiro","Voluntário","Fornecedor","Comunidade","Imprensa","Outro"]],["projeto","Edição",projOptsC],["responsavel","Quem conversou",peopleNames],["status","Status",["Aberta","Concluída"]]],sort:byDateDesc("data"),
+    top:(r,all)=>statRow([["Interações",all.length,"registradas"],["Próximos passos atrasados",all.filter(i=>i.status!=="Concluída"&&i.dataProximo&&i.dataProximo<today()).length,"",all.some(i=>i.status!=="Concluída"&&i.dataProximo&&i.dataProximo<today())],["Últimos 30 dias",all.filter(i=>i.data>=addDays(-30)).length,"conversas"]]),
+    intro:"Histórico de conversas com participantes, palestrantes, patrocinadores, parceiros, voluntários e comunidade, para ninguém depender da memória ou do WhatsApp.",
+    cols:[{n:"Data",f:i=>fmtDate(i.data)},{n:"Com quem",f:i=>`<b>${esc(i.contato)}</b>`},{n:"Público",k:"publico"},{n:"Canal",k:"canal"},{n:"Resumo",f:tdText("resumo",140)},{n:"Próximo passo",f:i=>esc(i.proximoPasso||"—")+(i.dataProximo&&i.status!=="Concluída"?" "+dateChip(i.dataProximo):"")},{n:"Por",k:"responsavel"}],
+    empty:["Nenhuma interação registrada","Registre conversas importantes e o próximo passo combinado."]});
+}
+function vFrente(fr){
+  const all=S.ativ.filter(a=>a.frente===fr), next=all.filter(a=>a.data>=today()&&a.status!=="Cancelada"), done=all.filter(a=>a.status==="Realizada");
+  const lead={RUN:"Liderança: Thiago, Rafael Dias, Douglas e Karina. Movimento recorrente de saúde, disciplina e conexões por corrida e caminhada.",Care:"Responsável a definir. Campanhas sociais com meta, voluntários, doações e prestação de contas.",Life:"Responsável a definir. Almoços, jantares, passeios, networking e celebrações."}[fr];
+  const stats = fr==="Care" ? [["Campanhas",all.length,""],["Arrecadado",usd(all.reduce((s,a)=>s+(+a.arrecadado||0),0)),"registrado nas campanhas"],["Próximas",next.length,""]]
+    : [["Próximas",next.length,"atividades com data"],["Realizadas",done.length,""],["Presentes",done.reduce((s,a)=>s+(+a.presentes||0),0),"somados nas realizadas"],["Inscritos",next.reduce((s,a)=>s+(+a.inscritos||0),0),"nas próximas"]];
+  return listView("ativ",{key:"fr"+fr,pre:a=>a.frente===fr,search:["nome","local","obs"],btn:"Nova atividade",filters:[["tipo","Tipo",FRENTE_TIPOS[fr]],["status","Status",["A confirmar","Planejada","Confirmada","Realizada","Cancelada"]]],sort:byDate("data"),
+    top:()=>statRow(stats), intro:esc(lead),
+    cols:[{n:"Data",f:a=>a.data?fmtDate(a.data)+(a.horario?" "+esc(a.horario):""):"A definir"},{n:"Atividade",f:a=>`<b>${esc(a.nome)}</b>`},{n:"Tipo",k:"tipo"},{n:"Local",f:a=>esc(a.local||"—")+(a.percurso?`<div class="muted" style="font-size:12px">${esc(a.percurso)}</div>`:"")},{n:"Responsável",k:"responsavel"},{n:fr==="Care"?"Meta / arrecadado":"Inscritos / vagas",f:a=>fr==="Care"?esc([a.meta,a.arrecadado!=null?usd(a.arrecadado):""].filter(Boolean).join(" · ")||"—"):esc([a.inscritos??"",a.vagas??""].join(" / ").replace(/^ \/ $/,"—"))},{n:"Status",f:a=>statusChip(a.status==="Realizada"?"Concluída":a.status==="Cancelada"?"Cancelado":a.status==="Confirmada"?"Aprovada":"Pendente").replace(/>[^<]*</,">"+esc(a.status)+"<")}],
+    btns: canWrite?`<button data-new="ativ" data-preset-frente="${fr}">Nova atividade ${fr}</button>`:"",
+    empty:[`Nenhuma atividade ${fr} cadastrada`, fr==="RUN"?"Crie corridas semanais, caminhadas, desafios mensais e eventos esportivos com percurso e plano de segurança.":"Cadastre a primeira atividade."]}).replace(/<button class="primary" data-new="ativ">[^<]*<\/button>/,"");
+}
+function vMetas(){
+  const H=["30 dias","60 dias","90 dias","Trimestre","Ano"];
+  const rows=S.metas.filter(m=>(!flt.mt_area||m.area===flt.mt_area)&&(!flt.mt_resp||m.responsavel===flt.mt_resp));
+  return toolbar([sel("mt_area","Área",AREAS),sel("mt_resp","Responsável",peopleNames())], newBtn("metas","Nova meta")) +
+    statRow([["Metas",rows.length,""],["No prazo",rows.filter(m=>m.status==="No prazo").length,""],["Em risco ou atrasadas",rows.filter(m=>["Em risco","Atrasada"].includes(m.status)).length,"",rows.some(m=>["Em risco","Atrasada"].includes(m.status))],["Concluídas",rows.filter(m=>m.status==="Concluída").length,""]]) +
+    (rows.length?`<div class="grid-cards">${H.map(h=>{ const ms=rows.filter(m=>m.horizonte===h); if(!ms.length) return ""; return `<div class="panel"><h3>${esc(h)}</h3><div class="list">${ms.sort(byDate("prazo")).map(m=>`<div class="li click" data-open="metas:${esc(m.id)}"><div style="flex:1"><div class="n">${esc(m.titulo)}</div><div class="c">${esc(m.area)} · ${esc(m.responsavel||"sem responsável")}${m.indicador?" · "+esc(m.indicador):""}</div>${m.alvo?`<div class="bar" style="margin-top:6px"><i style="width:${Math.min(100,Math.round((+m.atual||0)/m.alvo*100))}%"></i></div><div class="c num">${m.atual??0} de ${m.alvo}</div>`:""}</div><div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">${statusChip(m.status==="Concluída"?"Concluída":m.status==="No prazo"?"Aprovada":m.status==="Em risco"?"Pendente":"Bloqueada").replace(/>[^<]*</,">"+esc(m.status)+"<")}${m.prazo?dateChip(m.prazo,m.status!=="Concluída"):""}</div></div>`).join("")}</div></div>`;}).join("")}</div>`
+    :`<div class="state"><h2>Nenhuma meta cadastrada</h2><span>Monte o plano estratégico de 30, 60 e 90 dias com metas por área, responsável, indicador e prazo.</span></div>`);
+}
+function vDirecao(){
+  const t=today();
+  const rows=AREAS.map(a=>{ const ps=S.people.filter(p=>(p.areas||[]).includes(a)); const nm=ps.map(p=>p.nome);
+    const ts=S.tarefas.filter(x=>x.status!=="Concluída"&&nm.includes(x.responsavel)); const ms=S.metas.filter(m=>m.area===a&&m.status!=="Concluída");
+    return {a,leads:ps.filter(p=>/l[íi]der|ceo|cfo|cmo|dire/i.test((p.cargos||{})[a]||"")).map(p=>p.nome),n:ps.length,open:ts.length,late:ts.filter(x=>x.prazo&&x.prazo<t).length,metas:ms.length,risk:ms.filter(m=>["Em risco","Atrasada"].includes(m.status)).length}; });
+  const semResp=S.tarefas.filter(x=>x.status!=="Concluída"&&!x.responsavel).length;
+  return statRow([["Projetos ativos",S.projetos.filter(p=>!["Arquivado","Concluído"].includes(p.status)).length,""],["Tarefas sem responsável",semResp,"distribuir entre as áreas",semResp>0],["Metas em risco",S.metas.filter(m=>["Em risco","Atrasada"].includes(m.status)).length,"",S.metas.some(m=>["Em risco","Atrasada"].includes(m.status))],["Áreas sem liderança",rows.filter(r=>!r.leads.length).length,rows.filter(r=>!r.leads.length).map(r=>r.a).join(", ")]]) +
+  `<div class="table-scroll"><table><thead><tr><th>Área</th><th>Liderança</th><th class="r">Pessoas</th><th class="r">Tarefas abertas</th><th class="r">Atrasadas</th><th class="r">Metas ativas</th><th class="r">Em risco</th></tr></thead><tbody>${rows.map(r=>`<tr class="click" data-setflt="mt_area=${esc(r.a)}" data-go="metas"><td><b>${esc(r.a)}</b></td><td>${esc(r.leads.join(", ")||"A definir")}</td><td class="r num">${r.n}</td><td class="r num">${r.open}</td><td class="r num">${r.late?`<span class="chip late">${r.late}</span>`:0}</td><td class="r num">${r.metas}</td><td class="r num">${r.risk?`<span class="chip bad">${r.risk}</span>`:0}</td></tr>`).join("")}</tbody></table></div>
+  <p class="muted" style="margin:0">Tarefas contam pela área de quem é responsável. Clique numa área para ver as metas dela.</p>`;
+}
+function vConselho(){
+  if(!isAdmin) return lockState();
+  return listView("cons",{key:"cs",search:["nome","responsabilidades"],btn:"Novo membro",filters:[["status","Status",["Proposto","Em validação","Confirmado","Saída em formalização","Encerrado"]]],sort:(a,b)=>a.nome.localeCompare(b.nome),
+    intro:"Composição do conselho com status de validação. Mudanças são formalizadas pela direção em “Mudanças de cargo e acesso”.",
+    cols:[{n:"Nome",f:c=>`<b>${esc(c.nome)}</b>`},{n:"Papel",k:"papel"},{n:"Status",f:c=>statusChip(c.status==="Confirmado"?"Concluída":c.status==="Encerrado"?"Cancelado":"Pendente").replace(/>[^<]*</,">"+esc(c.status)+"<")},{n:"Desde",f:c=>fmtDate(c.desde)||"—"},{n:"Responsabilidades",f:tdText("responsabilidades")}],
+    empty:["Nenhum membro cadastrado","Cadastre a composição proposta do conselho."]});
+}
+function vMudancas(){
+  if(!isAdmin) return lockState();
+  return listView("mud",{key:"md",search:["pessoa","decisao","justificativa"],btn:"Nova solicitação",filters:[["tipo","Tipo",["Mudança de liderança","Revisão de cargo","Ajuste de acesso","Novo projeto","Outra"]],["status","Status",["Em avaliação","Aprovada","Recusada","Concluída"]]],sort:byDateDesc("data"),
+    intro:"Avaliação reservada → decisão documentada → ajuste de acessos → comunicação adequada.",
+    cols:[{n:"Data",f:m=>fmtDate(m.data)},{n:"Tipo",k:"tipo"},{n:"Pessoa / área",k:"pessoa"},{n:"De → para",f:m=>esc([m.de,m.para].filter(Boolean).join(" → ")||"—")},{n:"Status",f:m=>statusChip(m.status==="Concluída"?"Concluída":m.status==="Recusada"?"Recusada":m.status==="Aprovada"?"Aprovada":"Pendente").replace(/>[^<]*</,">"+esc(m.status)+"<")},{n:"Acessos",f:m=>m.acessosAjustados?'<span class="chip good">Ajustados</span>':'<span class="chip">Pendente</span>'},{n:"Comunicado",f:m=>m.comunicado?'<span class="chip good">Feito</span>':'<span class="chip">Pendente</span>'}],
+    empty:["Nenhuma solicitação registrada","Registre mudanças de liderança, revisões de cargo e ajustes de acesso."]});
+}
+function vMateriais(){
+  const t=today(), all=S.mat;
+  const due=all.filter(m=>m.proximaManutencao&&m.proximaManutencao<=addDays(14)), low=all.filter(m=>m.minimo!=null&&m.quantidade!=null&&+m.quantidade<=+m.minimo), rep=all.filter(m=>["Precisa de reparo","Em manutenção"].includes(m.estado));
+  return listView("mat",{key:"mt2",search:["nome","local","obs"],btn:"Novo item",filters:[["categoria","Categoria",["Equipamento","Som, luz e vídeo","Decoração","Sinalização","Kits e brindes","Material esportivo","Escritório","Outro"]],["estado","Estado",["Novo","Bom","Precisa de reparo","Em manutenção","Descartar"]],["projeto","Reservado para",projOpts]],sort:(a,b)=>a.nome.localeCompare(b.nome),
+    top:()=>statRow([["Itens",all.length,"no inventário"],["Manutenção em até 14 dias",due.length,due.filter(m=>m.proximaManutencao<t).length+" vencidas",due.some(m=>m.proximaManutencao<t)],["Estoque baixo",low.length,"no mínimo ou abaixo",low.length>0],["Precisam de reparo",rep.length,""]]),
+    cols:[{n:"Item",f:m=>`<b>${esc(m.nome)}</b>`},{n:"Categoria",k:"categoria"},{n:"Qtd.",r:1,f:m=>m.quantidade!=null?m.quantidade+(m.unidade?" "+esc(m.unidade):"")+(m.minimo!=null&&+m.quantidade<=+m.minimo?' <span class="chip bad">Baixo</span>':""):"—"},{n:"Estado",f:m=>statusChip(["Precisa de reparo","Descartar"].includes(m.estado)?"Bloqueada":m.estado==="Em manutenção"?"Pendente":"Concluída").replace(/>[^<]*</,">"+esc(m.estado)+"<")},{n:"Local",k:"local"},{n:"Responsável",k:"responsavel"},{n:"Próxima manutenção",f:m=>m.proximaManutencao?dateChip(m.proximaManutencao):"—"},{n:"Reservado para",f:m=>m.projeto?esc(projName(m.projeto)):"—"}],
+    empty:["Inventário vazio","Cadastre equipamentos, decoração, sinalização, kits e materiais, com estoque mínimo e manutenção."]});
+}
+function vSistema(){
+  const vis=Object.keys(COL).filter(k=>!RESTRICTED.has(k)||isAdmin);
+  const LBL={opps:"Oportunidades",people:"Pessoas",projetos:"Projetos",tarefas:"Tarefas",forn:"Fornecedores",docs:"Documentos",lanc:"Lançamentos financeiros",reun:"Reuniões",pal:"Palestrantes",prog:"Blocos de programação",din:"Dinâmicas",logi:"Logística",staff:"Escalas",guias:"Guias",ocor:"Ocorrências",patro:"Patrocínios",camp:"Campanhas",peca:"Peças editoriais",inter:"Interações",ativ:"Atividades RUN/Care/Life",metas:"Metas",cons:"Conselho",mud:"Mudanças",mat:"Materiais"};
+  return `<div class="two"><div class="panel"><span class="eyebrow">Níveis de acesso</span>
+    <div class="list">
+      <div class="li"><div><div class="n">Editor</div><div class="c">Vê e edita tudo, inclusive Financeiro, Aprovações e Board. Para diretoria: Guilherme, Larissa, Samara e quem a direção definir.</div></div></div>
+      <div class="li"><div><div class="n">Contribuidor</div><div class="c">Cadastra e edita projetos, tarefas, funil, eventos, marketing e frentes. Não vê financeiro nem board.</div></div></div>
+      <div class="li"><div><div class="n">Leitor ou comentarista</div><div class="c">Só visualiza as áreas abertas. Não altera nada.</div></div></div>
+    </div><p class="muted" style="margin:0;font-size:12px">Os níveis são definidos no botão Compartilhar da página. Para revogar um acesso, remova a pessoa ali. Seu nível agora: <b>${isAdmin?"Editor":canWrite?"Contribuidor":"Leitor"}</b>.</p></div>
+    <div class="panel"><span class="eyebrow">Manutenção e backup</span>
+      <p style="margin:0">Exporte uma cópia de tudo que você pode ver, em JSON. Faça isso ao fim de cada mês e guarde no Drive.</p>
+      <div><button class="primary" data-backup>Baixar backup completo</button></div>
+      <p class="muted" style="margin:0;font-size:12px">Dados de teste: crie com “[TESTE]” no nome e exclua depois, para não misturar com dados reais. O histórico de versões da página fica no menu da Central.</p></div></div>
+  <div class="table-scroll"><table><thead><tr><th>Cadastro</th><th class="r">Registros</th><th>Acesso</th></tr></thead><tbody>${vis.map(k=>`<tr><td>${esc(LBL[k]||k)}</td><td class="r num">${S[k].length}</td><td>${RESTRICTED.has(k)?'<span class="chip pend">Só diretoria</span>':'<span class="chip">Time</span>'}</td></tr>`).join("")}</tbody></table></div>`;
+}
+
+const RENDER = {painel:vPainel,projetos:vProjetos,tarefas:vTarefas,agenda:vAgenda,funil:vFunil,followups:vFollowups,financeiro:vFinanceiro,aprovacoes:vAprovacoes,fornecedores:vFornecedores,documentos:vDocumentos,reunioes:vReunioes,time:vTime,
+  direcao:vDirecao,metas:vMetas,conselho:vConselho,mudancas:vMudancas,palestrantes:vPalestrantes,programacao:vProgramacao,dinamicas:vDinamicas,logistica:vLogistica,staff:vStaff,guias:vGuias,ocorrencias:vOcorrencias,patrocinios:vPatrocinios,campanhas:vCampanhas,editorial:vEditorial,interacoes:vInteracoes,run:()=>vFrente("RUN"),care:()=>vFrente("Care"),life:()=>vFrente("Life"),materiais:vMateriais,sistema:vSistema};
 
 function renderNav(){
   const g=groupOf(view);
   $("#nav-main").innerHTML=NAV.map(x=>`<a href="#${x.subs[0].k}" ${x===g?'aria-current="page"':""}>${esc(x.n)}</a>`).join("");
-  $("#nav-sub").innerHTML=g.subs.length>1||g.owner?g.subs.map(s=>`<a href="#${s.k}" ${s.k===view?'aria-current="page"':""}>${esc(s.n)}${(["financeiro","aprovacoes","reunioes"].includes(s.k)&&!isAdmin)?" 🔒":""}</a>`).join("")+(g.owner?`<span class="owner">${esc(g.owner)}</span>`:""):"";
+  $("#nav-sub").innerHTML=g.subs.length>1||g.owner?g.subs.map(s=>`<a href="#${s.k}" ${s.k===view?'aria-current="page"':""}>${esc(s.n)}${(LOCKED_VIEWS.has(s.k)&&!isAdmin)?" (restrito)":""}</a>`).join("")+(g.owner?`<span class="owner">${esc(g.owner)}</span>`:""):"";
   $("#nav-sub").hidden=!(g.subs.length>1||g.owner);
 }
 function render(){
@@ -800,16 +1233,38 @@ async function exportCsv(){
   catch(e){ if(e&&e.code!=="cancelled"&&e.code!=="declined") toast("Não foi possível exportar agora.",true); }
 }
 
+async function copyDin(id){
+  const d=S.din.find(x=>x.id===id), pr=$("#copy-ev")&&$("#copy-ev").value; if(!d||!pr) return;
+  const last=S.prog.filter(b=>b.projeto===pr).sort((a,b)=>(a.fim||"")<(b.fim||"")?1:-1)[0];
+  const st=last&&last.fim?last.fim:"09:00", m=hm(st)+(+d.duracao||30), fim=String(Math.floor(m/60)%24).padStart(2,"0")+":"+String(m%60).padStart(2,"0");
+  try{ await db.collection("programacao").add({projeto:pr,tipo:"Dinâmica",titulo:d.nome,inicio:st,fim,quem:d.facilitador||"",tecnico:"",objetivo:d.objetivo||"",recursos:[d.materiais,d.musica].filter(Boolean).join("\n"),transicao:d.encerramento||"",falaApresentador:"",obsProducao:d.preparacao||"",instrucoesStaff:d.monitores?`${d.monitores} monitores. ${d.passos||""}`:(d.passos||""),criadoEm:now(),atualizadoEm:now()});
+    closeSheet(); toast(`“${d.nome}” adicionada à programação às ${st}. Ajuste o horário em Programação.`); }catch(e){ toast(dbErr(e),true); }
+}
+async function genLog(pid){
+  if(S.logi.some(l=>l.projeto===pid)) return;
+  try{ for(let i=0;i<LOG_PADRAO.length;i++) await db.collection("logistica").doc(pid+"-log-"+(i+1)).set({projeto:pid,categoria:LOG_PADRAO_CAT[i],item:LOG_PADRAO[i],status:"A providenciar",responsavel:"",fornecedor:"",data:"",horario:"",quantidade:null,obs:"",criadoEm:now(),atualizadoEm:now()});
+    toast(LOG_PADRAO.length+" itens de logística criados."); }catch(e){ toast(dbErr(e),true); }
+}
+async function backup(){
+  const dl=await claude.use("downloads").catch(()=>null);
+  if(!dl){ toast("O backup não está disponível nesta visualização.",true); return; }
+  const out={geradoEm:now(),nivel:isAdmin?"Editor":"Time",dados:{}}; Object.keys(COL).forEach(k=>{ if(!RESTRICTED.has(k)||isAdmin) out.dados[COL[k]]=S[k]; });
+  try{ const r=await dl.save({filename:"the-seed-central-backup-"+today()+".json",data:JSON.stringify(out,null,2)}); if(r&&r.status==="saved") toast("Backup salvo"); }
+  catch(e){ if(e&&!["cancelled","declined"].includes(e.code)) toast("Não foi possível gerar o backup agora.",true); }
+}
 document.addEventListener("click", e=>{
   if(e.target.closest("[data-stop]")) return;
-  const t=e.target.closest("[data-move],[data-open],[data-close],[data-new],[data-newp],[data-editp],[data-proj],[data-back],[data-genchk],[data-appr],[data-setflt],[data-export]");
+  const t=e.target.closest("[data-move],[data-open],[data-close],[data-new],[data-newp],[data-editp],[data-proj],[data-back],[data-genchk],[data-appr],[data-setflt],[data-export],[data-copydin],[data-genlog],[data-backup]");
   if(!t){ if(e.target.id==="overlay") closeSheet(); return; }
-  if(t.dataset.setflt){ const [k,v]=t.dataset.setflt.split("="); flt[k]=v; setTimeout(render,0); return; }
+  if(t.dataset.setflt){ const [k,v]=t.dataset.setflt.split("="); flt[k]=v; if(t.dataset.go) location.hash="#"+t.dataset.go; setTimeout(render,0); return; }
+  if(t.dataset.copydin) return copyDin(t.dataset.copydin);
+  if(t.dataset.genlog){ t.disabled=true; return genLog(t.dataset.genlog); }
+  if(t.hasAttribute("data-backup")) return backup();
   if(t.dataset.move){ e.stopPropagation(); return move(t.dataset.move,+t.dataset.dir); }
   if(t.dataset.appr){ e.stopPropagation(); return approve(t.dataset.appr,t.dataset.v); }
   if(t.dataset.open){ const [ent,id]=t.dataset.open.split(":"); return openForm(ent,id); }
   if(t.hasAttribute("data-close")) return closeSheet();
-  if(t.dataset.new){ const preset={}; if(t.dataset.presetProjeto) preset.projeto=t.dataset.presetProjeto; return openForm(t.dataset.new,null,preset); }
+  if(t.dataset.new){ const preset={}; if(t.dataset.presetProjeto) preset.projeto=t.dataset.presetProjeto; if(t.dataset.presetFrente) preset.frente=t.dataset.presetFrente; return openForm(t.dataset.new,null,preset); }
   if(t.hasAttribute("data-newp")) return openPerson();
   if(t.dataset.editp) return openPerson(t.dataset.editp);
   if(t.dataset.proj){ openProject=t.dataset.proj; if(view!=="projetos") location.hash="#projetos"; else render(); window.scrollTo(0,0); return; }
